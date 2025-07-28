@@ -1,6 +1,5 @@
-using krov_nad_glavom_api.Application.Commands.Users.CreateUser;
-using krov_nad_glavom_api.Application.Commands.Users.LoginUser;
-using krov_nad_glavom_api.Application.Queries.Users.GetUserById;
+using krov_nad_glavom_api.Application.Commands.Users;
+using krov_nad_glavom_api.Application.Queries.Users;
 using krov_nad_glavom_api.Data.DTO.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Data.DTO.User;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 
-namespace krov_nad_glavom_api.Application.Queries.Users.GetUserById
+namespace krov_nad_glavom_api.Application.Queries.Users
 {
 	public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserToReturnDto>
 	{

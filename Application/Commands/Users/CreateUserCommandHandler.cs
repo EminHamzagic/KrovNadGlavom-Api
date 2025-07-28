@@ -4,7 +4,7 @@ using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 
-namespace krov_nad_glavom_api.Application.Commands.Users.CreateUser
+namespace krov_nad_glavom_api.Application.Commands.Users
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, string>
     {
