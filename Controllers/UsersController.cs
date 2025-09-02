@@ -1,5 +1,6 @@
 using krov_nad_glavom_api.Application.Commands.Users;
 using krov_nad_glavom_api.Application.Queries.Users;
+using krov_nad_glavom_api.Data.DTO.Google;
 using krov_nad_glavom_api.Data.DTO.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +27,22 @@ namespace krov_nad_glavom_api.Controllers
             try
             {
                 var command = new LoginUserCommand(dto);
+                var user = await _mediator.Send(command);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("google")]
+        public async Task<ActionResult<UserToReturnDto>> GoogleLogin(GoogleAuthRequestDto dto)
+        {
+            try
+            {
+                var command = new GoogleLoginUserCommand(dto);
                 var user = await _mediator.Send(command);
                 return Ok(user);
             }
