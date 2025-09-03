@@ -7,5 +7,8 @@ namespace krov_nad_glavom_api.Domain.Entities
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string Role { get; set; }
+
+        public string ConstructionCompanyId { get; set; }
+        public string AgencyId { get; set; }
     }
 }
