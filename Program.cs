@@ -10,6 +10,7 @@ using krov_nad_glavom_api.Infrastructure.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -67,7 +68,7 @@ public static class Program
         });
 
         ConfigureSwagger(builder.Services);
-        ConfigureDbContext(builder.Services, globalConfig.ConnectionString);
+        ConfigureDbContext(builder.Services, globalConfig.ConnectionString, args);
         ConfigureAuthentication(builder.Services, globalConfig.JWTSettings);
         ConfigureDependencies(builder.Services, globalConfig);
         ConfigureLogging(builder, globalConfig);
@@ -75,24 +76,38 @@ public static class Program
         return builder.Build();
     }
 
-    private static void ConfigureDbContext(IServiceCollection services, string connectionString)
+    private static void ConfigureDbContext(IServiceCollection services, string connectionString, string[] args)
     {
-        services.AddDbContext<krovNadGlavomDbContext>(options =>
+        var isNeo4j = args.Any(a => a == "--neo");
+        var isMongo = args.Any(a => a == "--mongo");
+
+        if (isNeo4j)
         {
-            options.UseMySql(
-                connectionString,
-                ServerVersion.AutoDetect(connectionString),
-                mySqlOptionsAction: mySqlOptions =>
-                {
-                    mySqlOptions.EnableRetryOnFailure(
-                        maxRetryCount: 10,
-                        maxRetryDelay: TimeSpan.FromSeconds(30),
-                        errorNumbersToAdd: null
-                    );
-                }
-            );
-        });
-        services.AddScoped<IUnitofWork, UnitOfWorkMySql>();
+
+        }
+        else if (isMongo)
+        {
+
+        }
+        else
+        {
+            services.AddDbContext<krovNadGlavomDbContext>(options =>
+            {
+                options.UseMySql(
+                    connectionString,
+                    ServerVersion.AutoDetect(connectionString),
+                    mySqlOptionsAction: mySqlOptions =>
+                    {
+                        mySqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 10,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null
+                        );
+                    }
+                );
+            });
+            services.AddScoped<IUnitofWork, UnitOfWorkMySql>();
+        }
     }
 
     private static void ConfigureAuthentication(IServiceCollection services, JWTSettings jWTSettings)
