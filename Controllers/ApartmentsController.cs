@@ -46,5 +46,35 @@ namespace krov_nad_glavom_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateApartment(string id, ApartmentToUpdateDto dto)
+        {
+            try
+            {
+                var command = new UpdateApartmentCommand(dto, id);
+                var apartment = await _mediator.Send(command);
+                return Ok(apartment);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteApartment(string id)
+        {
+            try
+            {
+                var command = new DeleteApartmentCommand(id);
+                var apartment = await _mediator.Send(command);
+                return Ok(apartment);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

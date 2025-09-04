@@ -22,9 +22,11 @@ namespace krov_nad_glavom_api.Data
 
             //Building mappings
             CreateMap<BuildingToAddDto, Building>().ReverseMap();
+            CreateMap<Building, BuildingToUpdateDto>().ReverseMap();
 
             //Apartment mappings
             CreateMap<Apartment, ApartmentToAddDto>().ReverseMap();
+            CreateMap<Apartment, ApartmentToUpdateDto>().ReverseMap();
 
             //PriceList mappings
             CreateMap<PriceList, PriceListToAddDto>().ReverseMap();

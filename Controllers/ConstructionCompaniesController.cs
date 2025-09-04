@@ -32,5 +32,20 @@ namespace krov_nad_glavom_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCompany(string id, ConstructionCompanyToUpdateDto dto)
+        {
+            try
+            {
+                var command = new UpdateConstructionCompanyCommand(id, dto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace krov_nad_glavom_api.Controllers
         {
             _mediator = mediator;
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> CreateBuilding(BuildingToAddDto dto)
         {
@@ -32,7 +32,7 @@ namespace krov_nad_glavom_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [HttpGet("/company/{companyId}")]
         public async Task<ActionResult<Building>> GetCompanyBuildings(string companyId)
         {
@@ -41,6 +41,36 @@ namespace krov_nad_glavom_api.Controllers
                 var command = new GetBuildingsByCompanyIdQuery(companyId);
                 var buildings = await _mediator.Send(command);
                 return Ok(buildings);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBuilding(string id, BuildingToUpdateDto dto)
+        {
+            try
+            {
+                var command = new UpdateBuildingCommand(id, dto);
+                var building = await _mediator.Send(command);
+                return Ok(building);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBuilding(string id)
+        {
+            try
+            {
+                var command = new DeleteBuildingCommand(id);
+                var building = await _mediator.Send(command);
+                return Ok(building);
             }
             catch (Exception ex)
             {
