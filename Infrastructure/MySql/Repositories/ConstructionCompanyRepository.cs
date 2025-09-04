@@ -1,15 +1,21 @@
 using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 {
-    public class ConstructionCompanyRepository : Repository<ConstructionCompany>, IConstructionCompanyRepository
-    {
+	public class ConstructionCompanyRepository : Repository<ConstructionCompany>, IConstructionCompanyRepository
+	{
 		private readonly krovNadGlavomDbContext _context;
 
 		public ConstructionCompanyRepository(krovNadGlavomDbContext context) : base(context)
-        {
+		{
 			_context = context;
 		}
+		
+		public async Task<ConstructionCompany> GetCompanyByName(string name)
+        {
+            return await _context.ConstructionCompanies.Where(u => u.Name == name).FirstOrDefaultAsync();
+        }
     }
 }

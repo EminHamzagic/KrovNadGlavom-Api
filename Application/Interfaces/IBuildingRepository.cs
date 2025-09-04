@@ -1,9 +1,12 @@
+using krov_nad_glavom_api.Data.DTO.Apartment;
 using krov_nad_glavom_api.Domain.Entities;
 
 namespace krov_nad_glavom_api.Application.Interfaces
 {
     public interface IBuildingRepository : IRepository<Building>
     {
-        
+        Task<Building> GetBuildingByParcel(string parcelNum);
+        Task<List<Building>> GetBuildingsByCompanyId(string comapnyId);
+        Task<bool> CanAddApartment(ApartmentToAddDto apartmentToAddDto);
     }
 }

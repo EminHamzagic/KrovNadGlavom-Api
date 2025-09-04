@@ -26,10 +26,10 @@ namespace krov_nad_glavom_api.Application.Commands.Users
         {
             var user = await _unitofWork.Users.GetUserByEmail(request.UserToLoginDto.Email);
             if (user == null)
-                throw new Exception("User not found");
+                throw new Exception("Korisnik nije pronađen");
 
             if (!_securePasswordHasher.Verify(user.PasswordHash, request.UserToLoginDto.Password))
-                throw new Exception("Wrong Password");
+                throw new Exception("Pogrešna lozinka");
 
             var tokens = await _userSessionService.CreateUserSession(user);
 

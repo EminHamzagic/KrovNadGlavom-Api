@@ -21,6 +21,10 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 
         public async Task<string> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            var existingUser = await _unitofWork.Users.GetUserByEmail(request.UserToAddDto.Email);
+            if(existingUser != null)
+                throw new Exception("Postoji korisnik sa unetim email-om");
+                
             var user = _mapper.Map<User>(request.UserToAddDto);
             user.Id = Guid.NewGuid().ToString();
             user.PasswordHash = _securePasswordHasher.Hash(request.UserToAddDto.Password);
