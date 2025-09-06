@@ -13,5 +13,6 @@ namespace krov_nad_glavom_api.Domain.Entities
         public DateTime EndDate { get; set; }
         public DateTime? ExtendedUntil { get; set; }
         public bool IsCompleted { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

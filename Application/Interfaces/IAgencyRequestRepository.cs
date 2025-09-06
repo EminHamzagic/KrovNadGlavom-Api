@@ -1,9 +1,12 @@
+using krov_nad_glavom_api.Data.DTO.AgencyRequest;
 using krov_nad_glavom_api.Domain.Entities;
 
 namespace krov_nad_glavom_api.Application.Interfaces
 {
     public interface IAgencyRequestRepository : IRepository<AgencyRequest>
     {
-        
+        int GetAgencyBuildingCount(string agencyId);
+        Task<int> GetAgencyApartmentCount(string agencyId);
+        Task<bool> CheckForExistingRequest(AgencyRequestToAddDto dto);
     }
 }

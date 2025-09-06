@@ -11,5 +11,6 @@ namespace krov_nad_glavom_api.Domain.Entities
         public string Orientation { get; set; }
         public int Floor { get; set; }
         public bool IsAvailable { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

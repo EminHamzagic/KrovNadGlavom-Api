@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <NullableContextOptions>enable</NullableContextOptions>
     <RootNamespace>krov_nad_glavom_api</RootNamespace>

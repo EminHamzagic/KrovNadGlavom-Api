@@ -14,14 +14,19 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			_context = context;
 		}
 
+		public async Task<Building> GetBuildingById(string id)
+		{
+			return await _context.Buildings.Where(u => u.Id == id && !u.IsDeleted).FirstOrDefaultAsync();
+		}
+
 		public async Task<Building> GetBuildingByParcel(string parcelNum)
 		{
-			return await _context.Buildings.Where(u => u.ParcelNumber == parcelNum).FirstOrDefaultAsync();
+			return await _context.Buildings.Where(u => u.ParcelNumber == parcelNum && !u.IsDeleted).FirstOrDefaultAsync();
 		}
 
 		public async Task<List<Building>> GetBuildingsByCompanyId(string comapnyId)
 		{
-			return await _context.Buildings.Where(u => u.CompanyId == comapnyId).ToListAsync();
+			return await _context.Buildings.Where(u => u.CompanyId == comapnyId && !u.IsDeleted).ToListAsync();
 		}
 
 		public async Task<bool> CanAddApartment(ApartmentToAddDto apartmentToAddDto)

@@ -4,6 +4,9 @@ namespace krov_nad_glavom_api.Application.Interfaces
 {
     public interface IGarageRepository : IRepository<Garage>
     {
-        
+        Task<Garage> GetGarageById(string id);
+        Task<List<Garage>> GetGaragesByBuildingId(string buildingId);
+        int GetBuildingGarageCount(string buildingId);
+        Task<bool> IsSpotNumberFree(string spotNumber, string buildingId);
     }
 }

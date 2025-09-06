@@ -18,7 +18,19 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
             if (building == null)
                 throw new Exception("Zgrada nije pronađena");
 
-            _unitofWork.Buildings.Remove(building);
+            building.IsDeleted = true;
+            var apartments = await _unitofWork.Apartments.GetApartmentsByBuildingId(request.Id);
+            foreach (var item in apartments)
+            {
+                item.IsDeleted = true;
+            }
+
+            var garages = await _unitofWork.Garages.GetGaragesByBuildingId(request.Id);
+            foreach (var item in garages)
+            {
+                item.IsDeleted = true;
+            }
+            
             await _unitofWork.Save();
 
             return building;

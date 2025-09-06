@@ -2,10 +2,12 @@ using krov_nad_glavom_api.Application.Commands.Apartments;
 using krov_nad_glavom_api.Application.Queries.Apartments;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace krov_nad_glavom_api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ApartmentsController : ControllerBase

@@ -100,6 +100,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Orientation")
                         .HasColumnType("longtext");
 
@@ -142,6 +145,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("ParcelNumber")
                         .HasColumnType("longtext");
 
@@ -164,6 +170,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LogoUrl")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -260,6 +269,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<bool>("IsAvailable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SpotNumber")
@@ -367,6 +379,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("longtext");
 
                     b.Property<string>("PasswordHash")

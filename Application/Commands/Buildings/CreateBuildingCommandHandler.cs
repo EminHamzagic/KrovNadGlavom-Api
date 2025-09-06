@@ -20,7 +20,7 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
 
         public async Task<string> Handle(CreateBuildingCommand request, CancellationToken cancellationToken)
         {
-            var existingBuilding = await _unitofWork.Buildings.GetBuildingByParcel(request.BuildingToAddDto.ParcelNumber);
+            var existingBuilding = await _unitofWork.Buildings.GetBuildingById(request.BuildingToAddDto.ParcelNumber);
             if (existingBuilding != null)
                 throw new Exception("Postoji zgrada na sa unetim brojem parcele");
 
@@ -41,9 +41,25 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
             await _unitofWork.Apartments.AddRangeAsync(apartmentsToAdd);
 
             var garagesToAdd = _mapper.Map<List<Garage>>(request.BuildingToAddDto.Garages);
+
+            var duplicates = garagesToAdd
+                .GroupBy(g => g.SpotNumber)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key)
+                .ToList();
+
+            if (duplicates.Any())
+            {
+                throw new Exception($"Duplikat garažnih mesta pronađen: {string.Join(", ", duplicates)}");
+            }
+            
+            if (garagesToAdd.Count() > building.GarageSpotCount)
+                throw new Exception("Broj garažnih mesta je veći od broja garažnih mesta u zgradi");
+
             foreach (var garage in garagesToAdd)
             {
                 garage.Id = Guid.NewGuid().ToString();
+                garage.BuildingId = building.Id;
             }
             await _unitofWork.Garages.AddRangeAsync(garagesToAdd);
 

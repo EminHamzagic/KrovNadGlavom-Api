@@ -4,6 +4,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
 {
     public interface IAgencyRepository : IRepository<Agency>
     {
-        
+        Task<Agency> GetAgencyByName(string name);
     }
 }

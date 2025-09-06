@@ -3,10 +3,12 @@ using krov_nad_glavom_api.Application.Queries.Buildings;
 using krov_nad_glavom_api.Data.DTO.Building;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace krov_nad_glavom_api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class BuildingsController : ControllerBase
@@ -26,6 +28,21 @@ namespace krov_nad_glavom_api.Controllers
                 var command = new CreateBuildingCommand(dto);
                 var id = await _mediator.Send(command);
                 return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSingleBuilding(string id)
+        {
+            try
+            {
+                var command = new GetBuildingByIdQuery(id);
+                var building = await _mediator.Send(command);
+                return Ok(building);
             }
             catch (Exception ex)
             {

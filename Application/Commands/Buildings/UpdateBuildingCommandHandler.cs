@@ -18,7 +18,7 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
 
         public async Task<Building> Handle(UpdateBuildingCommand request, CancellationToken cancellationToken)
         {
-            var building = await _unitofWork.Buildings.GetByIdAsync(request.Id);
+            var building = await _unitofWork.Buildings.GetBuildingById(request.Id);
             if (building == null)
                 throw new Exception("Zgrada nije pronađena");
 

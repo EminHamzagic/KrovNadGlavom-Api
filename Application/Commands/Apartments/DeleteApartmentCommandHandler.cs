@@ -14,7 +14,7 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
 
         public async Task<string> Handle(DeleteApartmentCommand request, CancellationToken cancellationToken)
         {
-            var apartment = await _unitofWork.Apartments.GetByIdAsync(request.Id);
+            var apartment = await _unitofWork.Apartments.GetApartmentById(request.Id);
             if (apartment == null)
                 throw new Exception("Stan nije pronađen");
 

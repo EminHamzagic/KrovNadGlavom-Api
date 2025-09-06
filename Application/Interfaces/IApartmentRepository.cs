@@ -4,6 +4,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
 {
     public interface IApartmentRepository : IRepository<Apartment>
     {
-        
+        Task<List<Apartment>> GetApartmentsByBuildingId(string buildingId);
+        Task<Apartment> GetApartmentById(string id);
     }
 }

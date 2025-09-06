@@ -15,7 +15,7 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
 
         public async Task<Apartment> Handle(GetApartmentByIdQuery request, CancellationToken cancellationToken)
         {
-            var apartment = await _unitofWork.Apartments.GetByIdAsync(request.id);
+            var apartment = await _unitofWork.Apartments.GetApartmentById(request.id);
             if (apartment == null)
                 throw new Exception("Stan nije pronađen");
 
