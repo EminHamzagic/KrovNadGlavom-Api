@@ -7,6 +7,7 @@ using krov_nad_glavom_api.Data.DTO.ConstructionCompany;
 using krov_nad_glavom_api.Data.DTO.Garage;
 using krov_nad_glavom_api.Data.DTO.PriceList;
 using krov_nad_glavom_api.Data.DTO.User;
+using krov_nad_glavom_api.Data.DTO.UserAgencyFollow;
 using krov_nad_glavom_api.Domain.Entities;
 
 namespace krov_nad_glavom_api.Data
@@ -45,6 +46,10 @@ namespace krov_nad_glavom_api.Data
             //AgencyRequest mappings
             CreateMap<AgencyRequest, AgencyRequestToAddDto>().ReverseMap();
             CreateMap<AgencyRequest, AgencyRequestToUpdateDto>().ReverseMap();
+            CreateMap<AgencyRequest, AgencyRequestToReturnDto>().ReverseMap();
+
+            //UserAgencyFollow mappings
+            CreateMap<UserAgencyFollow, UserAgencyFollowToAddDto>().ReverseMap();
         }
     }
 }

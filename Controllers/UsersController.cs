@@ -75,5 +75,20 @@ namespace krov_nad_glavom_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("{id}/followings")]
+        public async Task<IActionResult> GetUserFollowings(string id)
+        {
+            try
+            {
+                var command = new GetUserFollowingsQuery(id);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

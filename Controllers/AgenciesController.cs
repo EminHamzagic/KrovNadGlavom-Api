@@ -49,6 +49,21 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
+        [HttpGet("{id}/followers")]
+        public async Task<IActionResult> GetAgencyFollowers(string id)
+        {
+            try
+            {
+                var command = new GetAgencyFollowersQuery(id);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateAgency(AgencyToAddDto dto)
         {
