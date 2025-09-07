@@ -44,6 +44,7 @@ namespace krov_nad_glavom_api.Data
 
             //AgencyRequest mappings
             CreateMap<AgencyRequest, AgencyRequestToAddDto>().ReverseMap();
+            CreateMap<AgencyRequest, AgencyRequestToUpdateDto>().ReverseMap();
         }
     }
 }
