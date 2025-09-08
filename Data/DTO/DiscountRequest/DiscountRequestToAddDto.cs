@@ -1,14 +1,12 @@
-namespace krov_nad_glavom_api.Domain.Entities
+namespace krov_nad_glavom_api.Data.DTO.DiscountRequest
 {
-    public class DiscountRequest
+    public class DiscountRequestToAddDto
     {
-        public string Id { get; set; }
         public string UserId { get; set; }
         public string AgencyId { get; set; }
         public string ApartmentId { get; set; }
         public string ConstructionCompanyId { get; set; }
         public decimal Percentage { get; set; }
-        public string Status { get; set; }
-        public string Reason { get; set; }
+        public string Status { get; set; } = "Pending";
     }
 }

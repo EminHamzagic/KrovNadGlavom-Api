@@ -8,6 +8,7 @@ namespace krov_nad_glavom_api.Data.DTO.Agency
         public string Address { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public string City { get; set; }
         public int NumberOfBuildings { get; set; }        
         public int NumberOfApartments { get; set; }        
     }

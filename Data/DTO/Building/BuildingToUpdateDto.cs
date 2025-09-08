@@ -10,5 +10,7 @@ namespace krov_nad_glavom_api.Data.DTO.Building
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime? ExtendedUntil { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
     }
 }

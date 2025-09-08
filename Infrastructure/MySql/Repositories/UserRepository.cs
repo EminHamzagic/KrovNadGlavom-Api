@@ -17,5 +17,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         {
             return await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
         }
+
+        public async Task<List<User>> GetUsersByIds(List<string> ids)
+        {
+            return await _context.Users.Where(u => ids.Contains(u.Id)).ToListAsync();
+        }
     }
 }

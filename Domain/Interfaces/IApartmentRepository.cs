@@ -6,5 +6,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<List<Apartment>> GetApartmentsByBuildingId(string buildingId);
         Task<Apartment> GetApartmentById(string id);
+        Task<List<Apartment>> GetApartmentsByIds(List<string> ids);
     }
 }

@@ -1,6 +1,6 @@
-namespace krov_nad_glavom_api.Domain.Entities
+namespace krov_nad_glavom_api.Data.DTO.DiscountRequest
 {
-    public class DiscountRequest
+    public class DiscountRequestToReturnDto
     {
         public string Id { get; set; }
         public string UserId { get; set; }
@@ -10,5 +10,8 @@ namespace krov_nad_glavom_api.Domain.Entities
         public decimal Percentage { get; set; }
         public string Status { get; set; }
         public string Reason { get; set; }
+        public Domain.Entities.User User { get; set; }
+        public Domain.Entities.Apartment Apartment { get; set; }
+        public Domain.Entities.ConstructionCompany ConstructionCompany { get; set; }
     }
 }
