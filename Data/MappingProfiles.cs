@@ -4,8 +4,10 @@ using krov_nad_glavom_api.Data.DTO.AgencyRequest;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using krov_nad_glavom_api.Data.DTO.Building;
 using krov_nad_glavom_api.Data.DTO.ConstructionCompany;
+using krov_nad_glavom_api.Data.DTO.Contract;
 using krov_nad_glavom_api.Data.DTO.DiscountRequest;
 using krov_nad_glavom_api.Data.DTO.Garage;
+using krov_nad_glavom_api.Data.DTO.Installment;
 using krov_nad_glavom_api.Data.DTO.PriceList;
 using krov_nad_glavom_api.Data.DTO.User;
 using krov_nad_glavom_api.Data.DTO.UserAgencyFollow;
@@ -55,6 +57,13 @@ namespace krov_nad_glavom_api.Data
             //DiscountRequest mappings
             CreateMap<DiscountRequest, DiscountRequestToAddDto>().ReverseMap();
             CreateMap<DiscountRequest, DiscountRequestToReturnDto>().ReverseMap();
+            CreateMap<DiscountRequest, DiscountRequestToUpdateDto>().ReverseMap();
+
+            //Contract mappings
+            CreateMap<Contract, ContractToAddDto>().ReverseMap();
+
+            //Installment mappings
+            CreateMap<Installment, InstallmentToAddDto>().ReverseMap();
         }
     }
 }

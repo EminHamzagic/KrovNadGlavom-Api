@@ -78,5 +78,20 @@ namespace krov_nad_glavom_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDiscountRequest(string id, DiscountRequestToUpdateDto dto)
+        {
+            try
+            {
+                var command = new UpdateDiscountRequestCommand(id, dto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
