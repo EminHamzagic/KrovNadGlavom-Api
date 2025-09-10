@@ -6,40 +6,40 @@ using MediatR;
 
 namespace krov_nad_glavom_api.Application.Queries.Contracts
 {
-    public class GetUserContractsQueryHandler : IRequestHandler<GetUserContractsQuery, List<ContractToReturnDto>>
+    public class GetAgencyContractsQueryHandler : IRequestHandler<GetAgencyContractsQuery, List<ContractToReturnDto>>
     {
         private readonly IUnitofWork _unitofWork;
         private readonly IMapper _mapper;
 
-        public GetUserContractsQueryHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetAgencyContractsQueryHandler(IUnitofWork unitofWork, IMapper mapper)
         {
             _unitofWork = unitofWork;
             _mapper = mapper;
         }
-
-        public async Task<List<ContractToReturnDto>> Handle(GetUserContractsQuery request, CancellationToken cancellationToken)
+        
+        public async Task<List<ContractToReturnDto>> Handle(GetAgencyContractsQuery request, CancellationToken cancellationToken)
         {
-            var contracts = await _unitofWork.Contracts.GetContractsByUserId(request.userId);
+            var contracts = await _unitofWork.Contracts.GetContractsByAgencyId(request.agencyId);
 
-            var agencyIds = contracts.Select(c => c.AgencyId).Distinct().ToList();
+            var userIds = contracts.Select(c => c.UserId).Distinct().ToList();
             var apartmentIds = contracts.Select(c => c.ApartmentId).Distinct().ToList();
 
-            var agencies = await _unitofWork.Agencies.GetAgenciesByIds(agencyIds);
+            var users = await _unitofWork.Users.GetUsersByIds(userIds);
             var apartments = await _unitofWork.Apartments.GetApartmentsByIds(apartmentIds);
-            var user = await _unitofWork.Users.GetByIdAsync(request.userId);
+            var agency = await _unitofWork.Agencies.GetByIdAsync(request.agencyId);
 
-            var agencyDict = agencies.ToDictionary(a => a.Id);
+            var userDict = users.ToDictionary(a => a.Id);
             var apartmentDict = apartments.ToDictionary(a => a.Id);
 
             var contractsToReturn = _mapper.Map<List<ContractToReturnDto>>(contracts);
             foreach (var item in contractsToReturn)
             {
-                if (agencyDict.TryGetValue(item.AgencyId, out var agency))
-                    item.Agency = agency;
+                if (userDict.TryGetValue(item.UserId, out var user))
+                    item.User = user;
                 if (apartmentDict.TryGetValue(item.ApartmentId, out var apartment))
                     item.Apartment = _mapper.Map<ApartmentToReturnDto>(apartment);
 
-                item.User = user;
+                item.Agency = agency;
             }
 
             return contractsToReturn;

@@ -12,6 +12,7 @@ namespace krov_nad_glavom_api.Data.DTO.Apartment
         public int Floor { get; set; }
         public bool IsAvailable { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsReserved { get; set; }
         public Domain.Entities.Building Building { get; set; }
     }
 }

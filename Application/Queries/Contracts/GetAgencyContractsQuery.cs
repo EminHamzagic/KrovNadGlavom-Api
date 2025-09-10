@@ -3,5 +3,5 @@ using MediatR;
 
 namespace krov_nad_glavom_api.Application.Queries.Contracts
 {
-    public record GetUserContractsQuery(string userId) : IRequest<List<ContractToReturnDto>>;
+    public record GetAgencyContractsQuery(string agencyId) : IRequest<List<ContractToReturnDto>>;
 }

@@ -19,11 +19,13 @@ namespace krov_nad_glavom_api.Application.Queries.Users
 		public async Task<UserToReturnDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
 		{
 			var user = await _unitofWork.Users.GetByIdAsync(request.Id);
-
 			if (user == null)
-				throw new Exception("User not found");
+				throw new Exception("Korisnik nije pronađen");
 
-			return _mapper.Map<User, UserToReturnDto>(user);
+			var userToReturn = _mapper.Map<User, UserToReturnDto>(user);
+			userToReturn.Reservation = await _unitofWork.Reservations.GetReservationByUserId(user.Id);
+
+			return userToReturn;
         }
 	}
 }
