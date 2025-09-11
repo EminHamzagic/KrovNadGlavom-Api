@@ -1,6 +1,7 @@
 using krov_nad_glavom_api.Application.Commands.Agencies;
 using krov_nad_glavom_api.Application.Queries.Agencies;
 using krov_nad_glavom_api.Data.DTO.Agency;
+using krov_nad_glavom_api.Data.DTO.Installment;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -78,13 +79,28 @@ namespace krov_nad_glavom_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAgency(string id, AgencyToAddDto dto)
         {
             try
             {
                 var command = new UpdateAgencyCommand(id, dto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpPut("image")]
+        public async Task<IActionResult> SetUserPfp([FromForm] InstallmentProofToSendDto dto)
+        {
+            try
+            {
+                var command = new SetAgencyLogoCommand(dto);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }

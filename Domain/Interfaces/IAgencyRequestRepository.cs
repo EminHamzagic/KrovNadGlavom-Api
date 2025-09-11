@@ -10,5 +10,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
         Task<bool> CheckForExistingRequest(AgencyRequestToAddDto dto);
         Task<List<AgencyRequest>> GetAgencyRequestsByAgencyId(string agencyId);
         Task<List<AgencyRequest>> GetAgencyRequestsByCompanyId(string comapnyId);
+        Task<Agency> GetAgencyByBuildingId(string buildingId);
+        Task<List<Agency>> GetAgenciesByBuildingIds(List<string> ids);
     }
 }

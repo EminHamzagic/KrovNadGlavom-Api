@@ -32,7 +32,8 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		public async Task<List<Apartment>> GetAllAvailableApartments()
 		{
 			var reservedApartmentIds = await _context.Reservations.Where(r => r.ToDate > DateTime.Now).Select(r => r.ApartmentId).ToListAsync();
-			return await _context.Apartments.Where(a => !reservedApartmentIds.Contains(a.Id) && !a.IsDeleted && a.IsAvailable).ToListAsync();
+			var availableBuildingIds = await _context.AgencyRequests.Where(a => a.Status == "Approved").Select(a => a.BuildingId).ToListAsync();
+			return await _context.Apartments.Where(a => !reservedApartmentIds.Contains(a.Id) && availableBuildingIds.Contains(a.BuildingId) && !a.IsDeleted && a.IsAvailable).ToListAsync();
 		}
     }
 }

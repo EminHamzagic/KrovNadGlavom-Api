@@ -43,5 +43,17 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			var buildingIds = await _context.Buildings.Where(b => b.CompanyId == comapnyId).Select(b => b.Id).ToListAsync();
 			return await _context.AgencyRequests.Where(ar => buildingIds.Contains(ar.BuildingId)).ToListAsync();
 		}
+
+		public async Task<Agency> GetAgencyByBuildingId(string buildingId)
+		{
+			var agencyRequest = await _context.AgencyRequests.Where(a => a.BuildingId == buildingId && a.Status == "Approved").FirstOrDefaultAsync();
+			return await _context.Agencies.Where(a => a.Id == agencyRequest.AgencyId).FirstOrDefaultAsync();
+		}
+
+		public async Task<List<Agency>> GetAgenciesByBuildingIds(List<string> ids)
+		{
+			var agencyIds = await _context.AgencyRequests.Where(a => ids.Contains(a.BuildingId) && a.Status == "Approved").Select(a => a.AgencyId).ToListAsync();
+			return await _context.Agencies.Where(a => agencyIds.Contains(a.Id)).ToListAsync();
+		}
 	}
 }

@@ -14,5 +14,6 @@ namespace krov_nad_glavom_api.Data.DTO.Apartment
         public bool IsDeleted { get; set; }
         public bool IsReserved { get; set; }
         public Domain.Entities.Building Building { get; set; }
+        public Domain.Entities.Agency Agency { get; set; }
     }
 }

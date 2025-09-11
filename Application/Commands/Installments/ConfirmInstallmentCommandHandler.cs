@@ -19,6 +19,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
                 throw new Exception("Rata nije pronađena");
 
             installment.IsConfirmed = true;
+            installment.PaymentDate = DateTime.Now;
             await _unitofWork.Save();
 
             var contract = await _unitofWork.Contracts.GetByIdAsync(installment.ContractId);

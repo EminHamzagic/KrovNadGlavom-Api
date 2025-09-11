@@ -9,5 +9,7 @@ namespace krov_nad_glavom_api.Domain.Entities
         public string Email { get; set; }
         public string Phone { get; set; }
         public string City { get; set; }
+        public string Description { get; set; }
+        public string LogoUrl { get; set; }
     }
 }

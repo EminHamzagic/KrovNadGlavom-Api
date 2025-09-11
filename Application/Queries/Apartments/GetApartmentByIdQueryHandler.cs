@@ -24,6 +24,7 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
 
             var apartmentToReturn = _mapper.Map<ApartmentToReturnDto>(apartment);
             apartmentToReturn.Building = await _unitofWork.Buildings.GetByIdAsync(apartmentToReturn.BuildingId);
+            apartmentToReturn.Agency = await _unitofWork.AgencyRequests.GetAgencyByBuildingId(apartmentToReturn.BuildingId);
             apartmentToReturn.IsReserved = await _unitofWork.Reservations.IsApartmentReserved(apartmentToReturn.Id);
 
             return apartmentToReturn;
