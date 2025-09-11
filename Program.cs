@@ -158,6 +158,7 @@ public static class Program
 
         services.AddSingleton<ISecurePasswordHasher, SecurePasswordHasher>();
         services.AddSingleton<ITokenService, TokenService>();
+        services.AddSingleton<ICloudinaryService, CloudinaryService>();
         services.AddScoped<IUserSessionService, UserSessionService>();
     }
 

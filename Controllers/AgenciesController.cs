@@ -80,7 +80,7 @@ namespace krov_nad_glavom_api.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> CreateAgency(string id, AgencyToAddDto dto)
+        public async Task<IActionResult> UpdateAgency(string id, AgencyToAddDto dto)
         {
             try
             {

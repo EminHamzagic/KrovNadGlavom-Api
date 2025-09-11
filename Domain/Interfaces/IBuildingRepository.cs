@@ -9,5 +9,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
         Task<List<Building>> GetBuildingsByCompanyId(string comapnyId);
         Task<bool> CanAddApartment(ApartmentToAddDto apartmentToAddDto);
         Task<Building> GetBuildingById(string id);
+        Task<List<Building>> GetBuildingsByIds(List<string> ids);
     }
 }

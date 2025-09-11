@@ -16,5 +16,7 @@ namespace krov_nad_glavom_api.Domain.Entities
         public bool IsDeleted { get; set; }
         public string City { get; set; }
         public string Address { get; set; }
+        public decimal Longitude { get; set; }
+        public decimal Latitude { get; set; }
     }
 }

@@ -42,5 +42,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 
 			return false;
 		}
+
+		public async Task<List<Building>> GetBuildingsByIds(List<string> ids)
+		{
+			return await _context.Buildings.Where(u => ids.Contains(u.Id) && !u.IsDeleted).ToListAsync();
+		}
     }
 }

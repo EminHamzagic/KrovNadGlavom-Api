@@ -33,6 +33,21 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
+        [HttpPost("proof")]
+        public async Task<IActionResult> CreateInstallment([FromForm] InstallmentProofToSendDto dto)
+        {
+            try
+            {
+                var command = new SendInstallmentPaymentProofCommand(dto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> ConfirmInstallment(string id)
         {

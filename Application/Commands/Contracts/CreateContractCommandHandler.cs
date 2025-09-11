@@ -18,10 +18,16 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
 
         public async Task<Contract> Handle(CreateContractCommand request, CancellationToken cancellationToken)
         {
+            var apartment = await _unitofWork.Apartments.GetByIdAsync(request.ContractToAddDto.ApartmentId);
+            if (apartment == null)
+                throw new Exception("Stan nije pronađen");
+
             var contract = _mapper.Map<Contract>(request.ContractToAddDto);
             contract.Id = Guid.NewGuid().ToString();
 
             _unitofWork.Contracts.AddAsync(contract);
+
+            apartment.IsAvailable = false;
             await _unitofWork.Save();
 
             return contract;

@@ -1,6 +1,7 @@
 using krov_nad_glavom_api.Application.Commands.Users;
 using krov_nad_glavom_api.Application.Queries.Users;
 using krov_nad_glavom_api.Data.DTO.Google;
+using krov_nad_glavom_api.Data.DTO.Installment;
 using krov_nad_glavom_api.Data.DTO.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -82,6 +83,21 @@ namespace krov_nad_glavom_api.Controllers
             try
             {
                 var command = new GetUserFollowingsQuery(id);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("image")]
+        public async Task<IActionResult> SetUserPfp([FromForm] InstallmentProofToSendDto dto)
+        {
+            try
+            {
+                var command = new SetUserProfileImageCommand(dto);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }

@@ -1,5 +1,6 @@
 using krov_nad_glavom_api.Application.Commands.Apartments;
 using krov_nad_glavom_api.Application.Queries.Apartments;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +43,21 @@ namespace krov_nad_glavom_api.Controllers
                 var command = new GetApartmentByIdQuery(id);
                 var apartment = await _mediator.Send(command);
                 return Ok(apartment);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableApartments([FromQuery] QueryStringParameters parameters)
+        {
+            try
+            {
+                var command = new GetAvailableApartmentsQuery(parameters);
+                var res = await _mediator.Send(command);
+                return Ok(res);
             }
             catch (Exception ex)
             {
