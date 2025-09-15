@@ -32,7 +32,7 @@ namespace krov_nad_glavom_api.Application.Services
                 issuer: _jWTSettings.Issuer,
                 audience: _jWTSettings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(10),
+                expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256)
             );
 
