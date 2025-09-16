@@ -50,7 +50,7 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
-        [HttpGet("/company/{companyId}")]
+        [HttpGet("company/{companyId}")]
         public async Task<ActionResult<Building>> GetCompanyBuildings(string companyId)
         {
             try

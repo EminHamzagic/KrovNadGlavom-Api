@@ -4,7 +4,6 @@ using System.Text;
 using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Data.Config;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
 
 namespace krov_nad_glavom_api.Application.Services
 {
@@ -32,7 +31,7 @@ namespace krov_nad_glavom_api.Application.Services
                 issuer: _jWTSettings.Issuer,
                 audience: _jWTSettings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddHours(4),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256)
             );
 

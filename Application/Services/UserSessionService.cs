@@ -41,7 +41,7 @@ namespace krov_nad_glavom_api.Application.Services
         {
             var accessToken = _tokenService.GenerateAccessToken(user.Id, user.Role);
             var refreshToken = Guid.NewGuid().ToString();
-            var refreshExpiry = DateTime.UtcNow.AddHours(2);
+            var refreshExpiry = DateTime.UtcNow.AddHours(5);
 
             var session = new UserSession
             {

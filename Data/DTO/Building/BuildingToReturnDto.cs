@@ -1,5 +1,3 @@
-using krov_nad_glavom_api.Data.DTO.ConstructionCompany;
-
 namespace krov_nad_glavom_api.Data.DTO.Building
 {
     public class BuildingToReturnDto
