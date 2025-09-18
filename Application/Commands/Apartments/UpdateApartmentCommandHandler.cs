@@ -1,6 +1,5 @@
 using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
-using krov_nad_glavom_api.Data.DTO.Apartment;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 

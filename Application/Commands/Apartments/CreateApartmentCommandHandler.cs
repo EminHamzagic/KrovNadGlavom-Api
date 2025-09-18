@@ -31,7 +31,6 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
             if (!ableToAdd)
                 throw new Exception("Nije moguće dodati ovaj stan na izabranom spratu");
 
-            apartment.Id = Guid.NewGuid().ToString();
             _unitofWork.Apartments.AddAsync(apartment);
             await _unitofWork.Save();
 

@@ -36,7 +36,6 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
                     throw new Exception($"Zgrada ne sadrži traženi sprat. Zgrada ima {building.FloorCount} spratova");
                     
                 apartment.BuildingId = building.Id;
-                apartment.Id = Guid.NewGuid().ToString();
             }
             await _unitofWork.Apartments.AddRangeAsync(apartmentsToAdd);
 

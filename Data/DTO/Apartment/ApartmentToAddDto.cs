@@ -2,6 +2,7 @@ namespace krov_nad_glavom_api.Data.DTO.Apartment
 {
     public class ApartmentToAddDto
     {
+        public string Id { get; set; }
         public string BuildingId { get; set; }
         public string ApartmentNumber { get; set; }
         public decimal Area { get; set; }
