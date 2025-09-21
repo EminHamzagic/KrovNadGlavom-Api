@@ -24,5 +24,7 @@ namespace krov_nad_glavom_api.Data.DTO.Building
         public List<ApartmentToAddDto> Apartments { get; set; }
         public List<GarageToAddDto> Garages { get; set; }
         public PriceListToAddDto PriceList { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

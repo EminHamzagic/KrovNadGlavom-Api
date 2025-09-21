@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using krov_nad_glavom_api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 
 		public async Task<List<Building>> GetBuildingsByCompanyId(string comapnyId)
 		{
-			return await _context.Buildings.Where(u => u.CompanyId == comapnyId && !u.IsDeleted).ToListAsync();
+			return await _context.Buildings.Where(u => u.CompanyId == comapnyId && !u.IsDeleted).OrderBy(b => b.CreatedAt).ToListAsync();
 		}
 
 		public async Task<bool> CanAddApartment(ApartmentToAddDto apartmentToAddDto)

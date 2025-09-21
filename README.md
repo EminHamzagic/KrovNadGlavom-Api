@@ -19,7 +19,7 @@ http://localhost:5020/swagger/index.html
 To create a new migration for db run the following command at the root of the project:
 
 ```bash
-dotnet ef migrations add MigrationName -o Infrastructure/MySql/Migrations
+dotnet ef migrations add MigrationName
 ```
 
 Then to apply the migrations run the following command at the root of the project:

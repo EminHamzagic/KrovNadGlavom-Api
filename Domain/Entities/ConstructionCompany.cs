@@ -11,5 +11,6 @@ namespace krov_nad_glavom_api.Domain.Entities
         public string LogoUrl { get; set; }
         public string City { get; set; }
         public string Description { get; set; }
+        public string BankAccountNumber { get; set; }
     }
 }

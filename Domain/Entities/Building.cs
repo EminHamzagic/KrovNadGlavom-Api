@@ -19,5 +19,7 @@ namespace krov_nad_glavom_api.Domain.Entities
         public decimal Longitude { get; set; }
         public decimal Latitude { get; set; }
         public string Description { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }
