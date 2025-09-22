@@ -19,6 +19,7 @@ namespace krov_nad_glavom_api.Controllers
             _mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateCompany(ConstructionCompanyToAddDto dto)
         {
@@ -49,6 +50,7 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
+        [AllowAnonymous]
         [HttpPut("image")]
         public async Task<IActionResult> SetUserPfp([FromForm] InstallmentProofToSendDto dto)
         {

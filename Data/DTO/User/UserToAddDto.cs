@@ -8,5 +8,7 @@ namespace krov_nad_glavom_api.Data.DTO.User
         public string Email { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
+        public string ConstructionCompanyId { get; set; }
+        public string AgencyId { get; set; }
     }
 }

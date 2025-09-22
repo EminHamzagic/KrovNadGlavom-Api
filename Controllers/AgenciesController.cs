@@ -20,6 +20,22 @@ namespace krov_nad_glavom_api.Controllers
             _mediator = mediator;
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> CreateAgency(AgencyToAddDto dto)
+        {
+            try
+            {
+                var command = new CreateAgencyCommand(dto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllAgencies()
         {
@@ -65,21 +81,6 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateAgency(AgencyToAddDto dto)
-        {
-            try
-            {
-                var command = new CreateAgencyCommand(dto);
-                var res = await _mediator.Send(command);
-                return Ok(res);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAgency(string id, AgencyToAddDto dto)
         {
@@ -95,6 +96,7 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
+        [AllowAnonymous]
         [HttpPut("image")]
         public async Task<IActionResult> SetUserPfp([FromForm] InstallmentProofToSendDto dto)
         {
