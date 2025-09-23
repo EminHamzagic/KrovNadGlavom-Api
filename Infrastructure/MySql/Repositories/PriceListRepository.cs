@@ -17,5 +17,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		{
 			return await _context.PriceLists.Where(p => p.BuildingId == buildingId).FirstOrDefaultAsync();
 		}
+
+		public async Task<List<PriceList>> GetPriceListsByBuildingIds(List<string> ids)
+        {
+            return await _context.PriceLists.Where(u => ids.Contains(u.BuildingId)).ToListAsync();
+        }
     }
 }

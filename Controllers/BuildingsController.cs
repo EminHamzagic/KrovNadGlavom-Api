@@ -35,6 +35,21 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
+        [HttpGet("{id}/agency")]
+        public async Task<IActionResult> GetAllBuildings(string id)
+        {
+            try
+            {
+                var command = new GetAllBuildingsQuery(id);
+                var building = await _mediator.Send(command);
+                return Ok(building);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSingleBuilding(string id)
         {
