@@ -211,7 +211,28 @@ public static class Program
 
     private static void ConfigureFluentValidataion(IServiceCollection services)
     {
+        // Registracija svih validatora
         services.AddValidatorsFromAssemblyContaining<AgencyToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<InstallmentProofToSendValidator>();
+        services.AddValidatorsFromAssemblyContaining<AgencyRequestToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<AgencyRequestToUpdateValidator>();
+        services.AddValidatorsFromAssemblyContaining<ApartmentToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<ApartmentToUpdateValidator>();
+        services.AddValidatorsFromAssemblyContaining<BuildingToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<BuildingToUpdateValidator>();
+        services.AddValidatorsFromAssemblyContaining<BuildingEndDateToExtendValidator>();
+        services.AddValidatorsFromAssemblyContaining<ConstructionCompanyToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<ConstructionCompanyToUpdateValidator>();
+        services.AddValidatorsFromAssemblyContaining<ContractToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<DiscountRequestToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<DiscountRequestToUpdateValidator>();
+        services.AddValidatorsFromAssemblyContaining<GarageToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<GarageToUpdateValidator>();
+        services.AddValidatorsFromAssemblyContaining<InstallmentToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<ReservationToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<UserAgencyFollowToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<UserToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<PriceListToAddValidator>();
 
         services.AddFluentValidationAutoValidation();
         services.AddFluentValidationClientsideAdapters();
