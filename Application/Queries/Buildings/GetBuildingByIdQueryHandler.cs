@@ -32,6 +32,7 @@ namespace krov_nad_glavom_api.Application.Queries.Buildings
             buildingToReturn.Garages = garages;
             buildingToReturn.PriceList = priceList;
             buildingToReturn.Company = company;
+            buildingToReturn.RequestStatus = await _unitofWork.AgencyRequests.GetBuildingRequestStatus(building.Id);
 
             return buildingToReturn;
         }
