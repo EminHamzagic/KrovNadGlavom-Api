@@ -31,6 +31,7 @@ namespace krov_nad_glavom_api.Data
             CreateMap<BuildingToAddDto, Building>().ReverseMap();
             CreateMap<Building, BuildingToUpdateDto>().ReverseMap();
             CreateMap<Building, BuildingToReturnDto>().ReverseMap();
+            CreateMap<Building, BuildingEndDateToExtendDto>().ReverseMap();
 
             //Apartment mappings
             CreateMap<Apartment, ApartmentToAddDto>().ReverseMap();

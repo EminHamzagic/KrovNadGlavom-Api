@@ -32,5 +32,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 				return false;
 			}
 		}
+
+		public async Task<Reservation> GetByApartmentId(string apartmentId)
+        {
+            return await _context.Reservations.Where(c => c.ApartmentId == apartmentId).FirstOrDefaultAsync();
+        }
     }
 }

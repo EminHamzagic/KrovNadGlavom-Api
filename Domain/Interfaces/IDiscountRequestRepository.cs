@@ -9,5 +9,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
         Task<List<DiscountRequest>> GetDiscountRequestsByUserId(string userId);
         Task<List<DiscountRequest>> GetDiscountRequestsByAgencyId(string agencyId);
         Task<List<DiscountRequest>> GetDiscountRequestsByCompanyId(string companyId);
+        Task<DiscountRequest> GetByApartmentId(string apartmentId);
     }
 }

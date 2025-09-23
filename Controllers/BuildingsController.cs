@@ -80,6 +80,21 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
+        [HttpPut("{id}/extend")]
+        public async Task<IActionResult> ExtendBuildingEndDate(string id, BuildingEndDateToExtendDto dto)
+        {
+            try
+            {
+                var command = new ExtendBuildingEndDateCommand(id, dto);
+                var building = await _mediator.Send(command);
+                return Ok(building);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBuilding(string id)
         {

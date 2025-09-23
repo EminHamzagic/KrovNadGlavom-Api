@@ -13,6 +13,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
             _context = context;
         }
 
+
         public async Task<List<Contract>> GetContractsByUserId(string userId)
         {
             return await _context.Contracts.Where(c => c.UserId == userId).ToListAsync();
@@ -21,6 +22,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         public async Task<List<Contract>> GetContractsByAgencyId(string agencyId)
         {
             return await _context.Contracts.Where(c => c.AgencyId == agencyId).ToListAsync();
+        }
+        public async Task<Contract> GetContractsByApartmentId(string apartmentId)
+        {
+            return await _context.Contracts.Where(c => c.ApartmentId == apartmentId).FirstOrDefaultAsync();
         }
     }
 }

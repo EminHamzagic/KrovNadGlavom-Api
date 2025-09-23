@@ -6,5 +6,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<Reservation> GetReservationByUserId(string userId);
         Task<bool> IsApartmentReserved(string apartmentId);
+        Task<Reservation> GetByApartmentId(string apartmentId);
     }
 }

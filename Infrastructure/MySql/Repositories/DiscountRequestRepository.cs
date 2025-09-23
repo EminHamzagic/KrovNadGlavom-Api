@@ -33,5 +33,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		{
 			return await _context.DiscountRequests.Where(d => d.ConstructionCompanyId == companyId).ToListAsync();
 		}
+
+		public async Task<DiscountRequest> GetByApartmentId(string apartmentId)
+        {
+            return await _context.DiscountRequests.Where(c => c.ApartmentId == apartmentId).FirstOrDefaultAsync();
+        }
 	}
 }

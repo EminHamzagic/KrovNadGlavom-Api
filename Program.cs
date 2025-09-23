@@ -1,8 +1,11 @@
 using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using krov_nad_glavom_api.Application;
 using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Application.Services;
 using krov_nad_glavom_api.Application.Services.Interfaces;
+using krov_nad_glavom_api.Application.Validators;
 using krov_nad_glavom_api.Commands;
 using krov_nad_glavom_api.Data;
 using krov_nad_glavom_api.Data.Config;
@@ -10,7 +13,6 @@ using krov_nad_glavom_api.Infrastructure.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -73,6 +75,7 @@ public static class Program
         ConfigureDependencies(builder.Services, globalConfig);
         ConfigureLogging(builder, globalConfig);
         ConfigureAutoMapper(builder.Services);
+        ConfigureFluentValidataion(builder.Services);
         return builder.Build();
     }
 
@@ -204,5 +207,13 @@ public static class Program
                 }
             });
         });
+    }
+
+    private static void ConfigureFluentValidataion(IServiceCollection services)
+    {
+        services.AddValidatorsFromAssemblyContaining<AgencyToAddValidator>();
+
+        services.AddFluentValidationAutoValidation();
+        services.AddFluentValidationClientsideAdapters();
     }
 }
