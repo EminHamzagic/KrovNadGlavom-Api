@@ -72,7 +72,8 @@ namespace krov_nad_glavom_api.Controllers
             {
                 var command = new GetAvailableApartmentsQuery(parameters);
                 var res = await _mediator.Send(command);
-                return Ok(res);
+                Response.Headers.Append("X-Pagination", res.getMetadata());
+                return Ok(res.Items);
             }
             catch (Exception ex)
             {

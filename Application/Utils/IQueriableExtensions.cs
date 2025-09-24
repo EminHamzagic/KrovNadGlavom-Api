@@ -30,22 +30,22 @@ namespace krov_nad_glavom_api.Application.Utils
         {
             switch (source)
             {
-                case IQueryable<ApartmentToReturnDto> apartments:
+                case IQueryable<ApartmentWithBuildingDto> apartments:
                     {
                         if (!string.IsNullOrEmpty(parameters.City))
-                            apartments = apartments.Where(a => a.Building.City.ToLower().Contains(parameters.City.ToLower()));
+                            apartments = apartments.Where(x => x.Building.City.ToLower().Contains(parameters.City.ToLower()));
                         if (!string.IsNullOrEmpty(parameters.Address))
-                            apartments = apartments.Where(a => a.Building.Address.ToLower().Contains(parameters.Address.ToLower()));
+                            apartments = apartments.Where(x => x.Building.Address.ToLower().Contains(parameters.Address.ToLower()));
                         if (!string.IsNullOrEmpty(parameters.Orientation))
-                            apartments = apartments.Where(a => a.Orientation == parameters.Orientation);
+                            apartments = apartments.Where(x => x.Apartment.Orientation == parameters.Orientation);
                         if (parameters.Area != null)
-                            apartments = apartments.Where(a => a.Area == parameters.Area);
+                            apartments = apartments.Where(x => x.Apartment.Area == parameters.Area);
                         if (parameters.RoomCount != null)
-                            apartments = apartments.Where(a => a.RoomCount == parameters.RoomCount);
+                            apartments = apartments.Where(x => x.Apartment.RoomCount == parameters.RoomCount);
                         if (parameters.BalconyCount != null)
-                            apartments = apartments.Where(a => a.BalconyCount == parameters.BalconyCount);
+                            apartments = apartments.Where(x => x.Apartment.BalconyCount == parameters.BalconyCount);
                         if (parameters.Floor != null)
-                            apartments = apartments.Where(a => a.Floor == parameters.Floor);
+                            apartments = apartments.Where(x => x.Apartment.Floor == parameters.Floor);
 
                         return (IQueryable<T>)apartments;
                     }

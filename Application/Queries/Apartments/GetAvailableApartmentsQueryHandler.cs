@@ -3,10 +3,11 @@ using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace krov_nad_glavom_api.Application.Queries.Apartments
 {
-    public class GetAvailableApartmentsQueryHandler : IRequestHandler<GetAvailableApartmentsQuery, List<ApartmentToReturnDto>>
+    public class GetAvailableApartmentsQueryHandler : IRequestHandler<GetAvailableApartmentsQuery, PaginatedResponse<ApartmentToReturnDto>>
     {
         private readonly IUnitofWork _unitofWork;
         private readonly IMapper _mapper;
@@ -17,34 +18,39 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
             _mapper = mapper;
         }
 
-        public async Task<List<ApartmentToReturnDto>> Handle(GetAvailableApartmentsQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedResponse<ApartmentToReturnDto>> Handle(GetAvailableApartmentsQuery request, CancellationToken cancellationToken)
         {
-            var apartments = await _unitofWork.Apartments.GetAllAvailableApartments();
-
-            var buildingIds = apartments.Select(a => a.BuildingId).Distinct().ToList();
-            var buildings = await _unitofWork.Buildings.GetBuildingsByIds(buildingIds);
-            var buildingDict = buildings.ToDictionary(b => b.Id);
-
-            var apartmentsToReturn = _mapper.Map<List<ApartmentToReturnDto>>(apartments);
-            foreach (var item in apartmentsToReturn)
-            {
-                if (buildingDict.TryGetValue(item.BuildingId, out var building))
-                    item.Building = building;
-            }
-
-            var apartmentsQuery = apartmentsToReturn.AsQueryable();
+            var apartmentsQuery = await _unitofWork.Apartments.GetAllAvailableApartmentsWithBuildings();
 
             apartmentsQuery = apartmentsQuery.Filter(request.parameters).Sort(request.parameters);
 
             var totalCount = apartmentsQuery.Count();
-			request.parameters.checkOverflow(totalCount);
+            request.parameters.checkOverflow(totalCount);
 
-			var apartmentsPage = apartmentsQuery
-				.Skip((request.parameters.PageNumber - 1) * request.parameters.PageSize)
-				.Take(request.parameters.PageSize)
-				.ToList();
+            var apartmentsPage = await apartmentsQuery
+                .Skip((request.parameters.PageNumber - 1) * request.parameters.PageSize)
+                .Take(request.parameters.PageSize)
+                .ToListAsync(cancellationToken);
 
-            return apartmentsPage;
+            // Map to DTOs
+            var apartmentsToReturn = apartmentsPage
+                .Select(x =>
+                {
+                    var dto = _mapper.Map<ApartmentToReturnDto>(x.Apartment);
+                    dto.Building = x.Building;
+                    return dto;
+                })
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / request.parameters.PageSize);
+
+            return new PaginatedResponse<ApartmentToReturnDto>(
+                apartmentsToReturn,
+                totalCount,
+                request.parameters.PageNumber,
+                request.parameters.PageSize,
+                totalPages
+            );
         }
     }
 }
