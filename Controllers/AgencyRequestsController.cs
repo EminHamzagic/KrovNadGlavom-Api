@@ -20,11 +20,11 @@ namespace krov_nad_glavom_api.Controllers
         }
         
         [HttpGet("agency/{id}")]
-        public async Task<IActionResult> GetAgencyRequestsByAgencyId(string id)
+        public async Task<IActionResult> GetAgencyRequestsByAgencyId(string id, [FromQuery] string status)
         {
             try
             {
-                var command = new GetAgencyRequestsByAgencyIdQuery(id);
+                var command = new GetAgencyRequestsByAgencyIdQuery(id, status);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }
@@ -35,11 +35,11 @@ namespace krov_nad_glavom_api.Controllers
         }
         
         [HttpGet("company/{id}")]
-        public async Task<IActionResult> GetAgencyRequestsByComapnyId(string id)
+        public async Task<IActionResult> GetAgencyRequestsByComapnyId(string id, [FromQuery] string status)
         {
             try
             {
-                var command = new GetAgencyRequestsByCompanyIdQuery(id);
+                var command = new GetAgencyRequestsByCompanyIdQuery(id, status);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }

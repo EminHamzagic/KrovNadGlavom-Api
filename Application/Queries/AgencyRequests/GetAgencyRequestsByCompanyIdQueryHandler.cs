@@ -18,9 +18,9 @@ namespace krov_nad_glavom_api.Application.Queries.AgencyRequests
 
         public async Task<List<AgencyRequestToReturnDto>> Handle(GetAgencyRequestsByCompanyIdQuery request, CancellationToken cancellationToken)
         {
-            var requests = await _unitofWork.AgencyRequests.GetAgencyRequestsByCompanyId(request.companyId);
+            var requests = await _unitofWork.AgencyRequests.GetAgencyRequestsByCompanyId(request.companyId, request.status);
             var company = await _unitofWork.ConstructionCompanies.GetByIdAsync(request.companyId);
-            var requestsToReturn = _mapper.Map<List<AgencyRequestToReturnDto>>(requests);
+            var requestsToReturn = _mapper.Map<List<AgencyRequestToReturnDto>>(requests.OrderByDescending(r => r.CreatedAt));
 
             foreach (var item in requestsToReturn)
             {

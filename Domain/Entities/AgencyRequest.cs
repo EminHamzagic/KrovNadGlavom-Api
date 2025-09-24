@@ -9,5 +9,6 @@ namespace krov_nad_glavom_api.Domain.Entities
         public string Status { get; set; }
         public string RejectionReason { get; set; }
         public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

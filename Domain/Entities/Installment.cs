@@ -10,5 +10,6 @@ namespace krov_nad_glavom_api.Domain.Entities
         public DateTime? PaymentDate { get; set; }
         public string PaymentProof { get; set; }
         public bool IsConfirmed { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
