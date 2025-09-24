@@ -35,6 +35,21 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
+        [HttpPost("multiple")]
+        public async Task<IActionResult> CreateMultipleApartment(MultipleApartmentsToAddDto dto)
+        {
+            try
+            {
+                var command = new CreateMultipleApartmentsCommand(dto);
+                var id = await _mediator.Send(command);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetApartmentById(string id)
         {
