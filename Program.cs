@@ -144,7 +144,8 @@ public static class Program
                                     .WithOrigins(config.AllowedOrigins.ToArray())
                                     .AllowCredentials()
                                     .AllowAnyHeader()
-                                    .AllowAnyMethod();
+                                    .AllowAnyMethod()
+                                    .WithExposedHeaders("X-Pagination");
                               });
         });
     }

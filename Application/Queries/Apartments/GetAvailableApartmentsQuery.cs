@@ -4,5 +4,5 @@ using MediatR;
 
 namespace krov_nad_glavom_api.Application.Queries.Apartments
 {
-    public record GetAvailableApartmentsQuery(QueryStringParameters parameters) : IRequest<List<ApartmentToReturnDto>>;
+    public record GetAvailableApartmentsQuery(QueryStringParameters parameters) : IRequest<PaginatedResponse<ApartmentToReturnDto>>;
 }
