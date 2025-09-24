@@ -8,5 +8,6 @@ namespace krov_nad_glavom_api.Data.DTO.DiscountRequest
         public string ConstructionCompanyId { get; set; }
         public decimal Percentage { get; set; }
         public string Status { get; set; } = "Pending";
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

@@ -33,15 +33,15 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.AgencyRequests.AnyAsync(ar => ar.AgencyId == dto.AgencyId && ar.BuildingId == dto.BuildingId && !ar.IsDeleted);
 		}
 
-		public async Task<List<AgencyRequest>> GetAgencyRequestsByAgencyId(string agencyId)
+		public async Task<List<AgencyRequest>> GetAgencyRequestsByAgencyId(string agencyId, string status)
 		{
-			return await _context.AgencyRequests.Where(ar => ar.AgencyId == agencyId && !ar.IsDeleted).ToListAsync();
+			return await _context.AgencyRequests.Where(ar => ar.AgencyId == agencyId && !ar.IsDeleted && ar.Status == status).ToListAsync();
 		}
 
-		public async Task<List<AgencyRequest>> GetAgencyRequestsByCompanyId(string comapnyId)
+		public async Task<List<AgencyRequest>> GetAgencyRequestsByCompanyId(string comapnyId, string status)
 		{
 			var buildingIds = await _context.Buildings.Where(b => b.CompanyId == comapnyId).Select(b => b.Id).ToListAsync();
-			return await _context.AgencyRequests.Where(ar => buildingIds.Contains(ar.BuildingId) && !ar.IsDeleted).ToListAsync();
+			return await _context.AgencyRequests.Where(ar => buildingIds.Contains(ar.BuildingId) && !ar.IsDeleted &&  ar.Status == status).ToListAsync();
 		}
 
 		public async Task<Agency> GetAgencyByBuildingId(string buildingId)

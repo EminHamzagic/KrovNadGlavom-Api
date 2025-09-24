@@ -7,5 +7,6 @@ namespace krov_nad_glavom_api.Data.DTO.Installment
         public decimal Amount { get; set; }
         public DateTime DueDate { get; set; }
         public bool IsConfirmed { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

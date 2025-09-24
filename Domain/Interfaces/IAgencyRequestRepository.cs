@@ -8,8 +8,8 @@ namespace krov_nad_glavom_api.Application.Interfaces
         int GetAgencyBuildingCount(string agencyId);
         Task<int> GetAgencyApartmentCount(string agencyId);
         Task<bool> CheckForExistingRequest(AgencyRequestToAddDto dto);
-        Task<List<AgencyRequest>> GetAgencyRequestsByAgencyId(string agencyId);
-        Task<List<AgencyRequest>> GetAgencyRequestsByCompanyId(string comapnyId);
+        Task<List<AgencyRequest>> GetAgencyRequestsByAgencyId(string agencyId, string status);
+        Task<List<AgencyRequest>> GetAgencyRequestsByCompanyId(string comapnyId, string status);
         Task<Agency> GetAgencyByBuildingId(string buildingId);
         Task<List<Agency>> GetAgenciesByBuildingIds(List<string> ids);
         Task<string> GetBuildingRequestStatus(string buildingId);
