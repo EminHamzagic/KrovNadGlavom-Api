@@ -233,6 +233,7 @@ public static class Program
         services.AddValidatorsFromAssemblyContaining<UserAgencyFollowToAddValidator>();
         services.AddValidatorsFromAssemblyContaining<UserToAddValidator>();
         services.AddValidatorsFromAssemblyContaining<PriceListToAddValidator>();
+        services.AddValidatorsFromAssemblyContaining<MultipleApartmentsToAddValidator>();
 
         services.AddFluentValidationAutoValidation();
         services.AddFluentValidationClientsideAdapters();
