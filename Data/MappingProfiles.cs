@@ -26,6 +26,8 @@ namespace krov_nad_glavom_api.Data
 
             //ConstructionCompany mappings
             CreateMap<ConstructionCompanyToAddDto, ConstructionCompany>().ReverseMap();
+            CreateMap<ConstructionCompany, CompanyToReturnDto>();
+
 
             //Building mappings
             CreateMap<BuildingToAddDto, Building>().ReverseMap();

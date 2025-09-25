@@ -1,4 +1,6 @@
 using krov_nad_glavom_api.Application.Commands.ConstructionCompanies;
+using krov_nad_glavom_api.Application.Queries.Agencies;
+using krov_nad_glavom_api.Application.Queries.ConstructionCompanies;
 using krov_nad_glavom_api.Data.DTO.ConstructionCompany;
 using krov_nad_glavom_api.Data.DTO.Installment;
 using MediatR;
@@ -49,7 +51,22 @@ namespace krov_nad_glavom_api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCompanyById(string id)
+        {
+            try
+            {
+                var command = new GetCompanyByIdQuery(id);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [AllowAnonymous]
         [HttpPut("image")]
         public async Task<IActionResult> SetUserPfp([FromForm] InstallmentProofToSendDto dto)

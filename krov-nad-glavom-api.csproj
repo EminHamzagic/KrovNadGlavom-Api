@@ -5,7 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <NullableContextOptions>enable</NullableContextOptions>
     <RootNamespace>krov_nad_glavom_api</RootNamespace>
-    <Configurations>krov_nad_glavom_api</Configurations>
+	  <Configurations>krov_nad_glavom_api</Configurations>
+	  
   </PropertyGroup>
 
   <ItemGroup>
