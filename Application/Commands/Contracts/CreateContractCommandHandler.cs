@@ -27,6 +27,18 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
 
             _unitofWork.Contracts.AddAsync(contract);
 
+            var firstInstallment = new Installment
+            {
+                Id = Guid.NewGuid().ToString(),
+                ContractId = contract.Id,
+                SequenceNumber = 1,
+                Amount = contract.InstallmentAmount,
+                DueDate = DateTime.Now.AddDays(30),
+                IsConfirmed = false,
+                CreatedAt = DateTime.Now
+            };
+            _unitofWork.Installments.AddAsync(firstInstallment);
+
             apartment.IsAvailable = false;
             await _unitofWork.Save();
 

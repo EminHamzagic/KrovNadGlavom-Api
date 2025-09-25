@@ -2,6 +2,7 @@ using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Apartment;
+using krov_nad_glavom_api.Data.DTO.Building;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +38,7 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
                 .Select(x =>
                 {
                     var dto = _mapper.Map<ApartmentToReturnDto>(x.Apartment);
-                    dto.Building = x.Building;
+                    dto.Building = _mapper.Map<BuildingToReturnDto>(x.Building);
                     return dto;
                 })
                 .ToList();

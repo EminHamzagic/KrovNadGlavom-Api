@@ -1,6 +1,7 @@
 using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Data.DTO.Apartment;
+using krov_nad_glavom_api.Data.DTO.Building;
 using krov_nad_glavom_api.Data.DTO.Contract;
 using MediatR;
 
@@ -34,7 +35,7 @@ namespace krov_nad_glavom_api.Application.Queries.Contracts
             contractToReturn.User = user;
             contractToReturn.Agency = agency;
             contractToReturn.Apartment = _mapper.Map<ApartmentToReturnDto>(apartment);
-            contractToReturn.Apartment.Building = building;
+            contractToReturn.Apartment.Building = _mapper.Map<BuildingToReturnDto>(building);
 
             return contractToReturn;
         }

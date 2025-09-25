@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using krov_nad_glavom_api.Application.Commands.Apartments;
 using krov_nad_glavom_api.Application.Queries.Apartments;
 using krov_nad_glavom_api.Application.Utils;
@@ -55,7 +57,9 @@ namespace krov_nad_glavom_api.Controllers
         {
             try
             {
-                var command = new GetApartmentByIdQuery(id);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) 
+                     ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                var command = new GetApartmentByIdQuery(id, userId);
                 var apartment = await _mediator.Send(command);
                 return Ok(apartment);
             }
