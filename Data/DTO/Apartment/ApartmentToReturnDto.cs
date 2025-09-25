@@ -1,3 +1,5 @@
+using krov_nad_glavom_api.Data.DTO.Building;
+
 namespace krov_nad_glavom_api.Data.DTO.Apartment
 {
     public class ApartmentToReturnDto
@@ -13,7 +15,8 @@ namespace krov_nad_glavom_api.Data.DTO.Apartment
         public bool IsAvailable { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsReserved { get; set; }
-        public Domain.Entities.Building Building { get; set; }
+        public bool CanReserve { get; set; }
+        public BuildingToReturnDto Building { get; set; }
         public Domain.Entities.Agency Agency { get; set; }
     }
 }

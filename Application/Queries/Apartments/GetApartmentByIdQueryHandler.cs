@@ -1,6 +1,7 @@
 using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Data.DTO.Apartment;
+using krov_nad_glavom_api.Data.DTO.Building;
 using MediatR;
 
 namespace krov_nad_glavom_api.Application.Queries.Apartments
@@ -22,10 +23,16 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
             if (apartment == null)
                 throw new Exception("Stan nije pronađen");
 
+
             var apartmentToReturn = _mapper.Map<ApartmentToReturnDto>(apartment);
-            apartmentToReturn.Building = await _unitofWork.Buildings.GetByIdAsync(apartmentToReturn.BuildingId);
+            var building = await _unitofWork.Buildings.GetByIdAsync(apartmentToReturn.BuildingId);
+            var priceList = await _unitofWork.PriceLists.GetPriceListByBuildingId(building.Id);
+
+            apartmentToReturn.Building = _mapper.Map<BuildingToReturnDto>(building);
+            apartmentToReturn.Building.PriceList = priceList;
             apartmentToReturn.Agency = await _unitofWork.AgencyRequests.GetAgencyByBuildingId(apartmentToReturn.BuildingId);
             apartmentToReturn.IsReserved = await _unitofWork.Reservations.IsApartmentReserved(apartmentToReturn.Id);
+            apartmentToReturn.CanReserve = _unitofWork.Reservations.CanUserReserve(request.userId, apartmentToReturn.Agency.Id);
 
             return apartmentToReturn;
         }
