@@ -9,5 +9,6 @@ namespace krov_nad_glavom_api.Data.DTO.ConstructionCompany
         public string Phone { get; set; }
         public string City { get; set; }
         public string Description { get; set; }
+        public string BankAccountNumber { get; set; }
     }
 }

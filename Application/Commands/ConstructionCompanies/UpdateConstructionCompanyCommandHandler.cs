@@ -23,7 +23,7 @@ namespace krov_nad_glavom_api.Application.Commands.ConstructionCompanies
                 throw new Exception("Kompanija nije pronađena");
 
             var existingCompany = await _unitofWork.ConstructionCompanies.GetCompanyByName(request.ConstructionCompanyToUpdateDto.Name);
-            if (existingCompany != null)
+            if (existingCompany != null && existingCompany.Id != company.Id)
                 throw new Exception("Ime kompanije je već zauzeto");
 
             _mapper.Map(request.ConstructionCompanyToUpdateDto, company);
