@@ -21,6 +21,11 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
             if (installment == null)
                 throw new Exception("Rata nije pronađena");
 
+            if (!string.IsNullOrEmpty(installment.PaymentProof))
+            {
+                await _cloudinaryService.DeleteImageAsync(installment.PaymentProof);
+            }
+
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.InstallmentProofToSendDto.File, "KrovNadGlavom");
             installment.PaymentProof = imageUrl;
             await _unitofWork.Save();

@@ -27,9 +27,33 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
             if (contract.InstallmentCount == confirmedInstallments)
             {
                 contract.Status = "Paid";
-                await _unitofWork.Save();
+            }
+            else
+            {
+                var seqNumber = await _unitofWork.Installments.GetNextSequenceNumber(contract.Id);
+
+                decimal amount = contract.InstallmentAmount;
+
+                if (seqNumber == contract.InstallmentCount)
+                {
+                    var totalPaid = await _unitofWork.Installments.GetTotalPaidAmountAsync(contract.Id);
+                    amount = contract.Price - totalPaid;
+                }
+                var nextInstallment = new Installment
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ContractId = contract.Id,
+                    SequenceNumber = seqNumber,
+                    Amount = amount,
+                    DueDate = DateTime.Now.AddDays(30),
+                    IsConfirmed = false,
+                    CreatedAt = DateTime.Now
+                };
+
+                _unitofWork.Installments.AddAsync(nextInstallment);
             }
 
+            await _unitofWork.Save();
             return installment;
         }
     }
