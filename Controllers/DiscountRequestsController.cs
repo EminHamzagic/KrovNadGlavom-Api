@@ -34,12 +34,12 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
-        [HttpGet("{id}/user")]
-        public async Task<IActionResult> GetUserDiscountRequest(string id)
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserDiscountRequest(string id, [FromQuery] string status)
         {
             try
             {
-                var command = new GetUserDiscountRequestsQuery(id);
+                var command = new GetUserDiscountRequestsQuery(id, status);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }
@@ -49,12 +49,12 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
-        [HttpGet("{id}/agency")]
-        public async Task<IActionResult> GetAgencyDiscountRequest(string id)
+        [HttpGet("agency/{id}")]
+        public async Task<IActionResult> GetAgencyDiscountRequest(string id, [FromQuery] string status)
         {
             try
             {
-                var command = new GetAgencyDiscountRequestsQuery(id);
+                var command = new GetAgencyDiscountRequestsQuery(id, status);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }
@@ -64,12 +64,12 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
-        [HttpGet("{id}/company")]
-        public async Task<IActionResult> GetCompanyDiscountRequest(string id)
+        [HttpGet("company/{id}")]
+        public async Task<IActionResult> GetCompanyDiscountRequest(string id, [FromQuery] string status)
         {
             try
             {
-                var command = new GetCompanyDiscountRequestsQuery(id);
+                var command = new GetCompanyDiscountRequestsQuery(id, status);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }
@@ -85,6 +85,21 @@ namespace krov_nad_glavom_api.Controllers
             try
             {
                 var command = new UpdateDiscountRequestCommand(id, dto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDiscountRequest(string id)
+        {
+            try
+            {
+                var command = new DeleteDiscountRequestCommand(id);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }

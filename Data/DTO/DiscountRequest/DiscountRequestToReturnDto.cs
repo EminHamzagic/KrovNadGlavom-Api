@@ -13,5 +13,6 @@ namespace krov_nad_glavom_api.Data.DTO.DiscountRequest
         public Domain.Entities.User User { get; set; }
         public Domain.Entities.Apartment Apartment { get; set; }
         public Domain.Entities.ConstructionCompany ConstructionCompany { get; set; }
+        public Domain.Entities.Agency Agency { get; set; }
     }
 }

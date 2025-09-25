@@ -3,5 +3,5 @@ using MediatR;
 
 namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
 {
-    public record GetAgencyDiscountRequestsQuery(string agencyId) : IRequest<List<DiscountRequestToReturnDto>>;
+    public record GetAgencyDiscountRequestsQuery(string agencyId, string status) : IRequest<List<DiscountRequestToReturnDto>>;
 }

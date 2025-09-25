@@ -19,10 +19,6 @@ namespace krov_nad_glavom_api.Application.Validators
                 .NotEmpty().WithMessage("ApartmentId je obavezan.")
                 .Must(id => Guid.TryParse(id, out _)).WithMessage("ApartmentId mora biti validan GUID.");
 
-            RuleFor(x => x.ConstructionCompanyId)
-                .NotEmpty().WithMessage("ConstructionCompanyId je obavezan.")
-                .Must(id => Guid.TryParse(id, out _)).WithMessage("ConstructionCompanyId mora biti validan GUID.");
-
             RuleFor(x => x.Percentage)
                 .InclusiveBetween(1, 100).WithMessage("Procenat popusta mora biti između 1 i 100.");
 
