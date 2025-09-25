@@ -15,7 +15,7 @@ namespace krov_nad_glavom_api.Data.DTO.Apartment
         public bool IsAvailable { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsReserved { get; set; }
-        public bool CanReserve { get; set; }
+        public bool CanRequestDiscount { get; set; }
         public BuildingToReturnDto Building { get; set; }
         public Domain.Entities.Agency Agency { get; set; }
     }

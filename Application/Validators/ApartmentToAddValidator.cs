@@ -17,7 +17,7 @@ namespace krov_nad_glavom_api.Application.Validators
 
             RuleFor(x => x.ApartmentNumber)
                 .NotEmpty().WithMessage("Broj stana je obavezan.")
-                .MaximumLength(20).WithMessage("Broj stana ne sme imati više od 20 karaktera.");
+                .MaximumLength(15).WithMessage("Broj stana ne sme imati više od 15 karaktera.");
 
             RuleFor(x => x.Area)
                 .GreaterThan(0).WithMessage("Površina mora biti veća od 0.");
