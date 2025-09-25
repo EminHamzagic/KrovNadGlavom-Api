@@ -18,17 +18,20 @@ namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
 
         public async Task<List<DiscountRequestToReturnDto>> Handle(GetUserDiscountRequestsQuery request, CancellationToken cancellationToken)
         {
-            var discountRequests = await _unitofWork.DiscountRequests.GetDiscountRequestsByUserId(request.userId);
+            var discountRequests = await _unitofWork.DiscountRequests.GetDiscountRequestsByUserId(request.userId, request.status);
             var user = await _unitofWork.Users.GetByIdAsync(request.userId);
 
             var aparmentsIds = discountRequests.Select(d => d.ApartmentId).Distinct().ToList();
             var companyIds = discountRequests.Select(d => d.ConstructionCompanyId).Distinct().ToList();
+            var agencyIds = discountRequests.Select(d => d.AgencyId).Distinct().ToList();
 
             var apartments = await _unitofWork.Apartments.GetApartmentsByIds(aparmentsIds);
             var companies = await _unitofWork.ConstructionCompanies.GetCompaniesByIds(companyIds);
+            var agencies = await _unitofWork.Agencies.GetAgenciesByIds(agencyIds);
 
             var apartmentDict = apartments.ToDictionary(a => a.Id);
             var companyDict = companies.ToDictionary(c => c.Id);
+            var agencyDict = agencies.ToDictionary(u => u.Id);
 
             var requestsToReturn = _mapper.Map<List<DiscountRequestToReturnDto>>(discountRequests);
             foreach (var item in requestsToReturn)
@@ -40,6 +43,8 @@ namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
                     if (companyDict.TryGetValue(item.ConstructionCompanyId, out var company))
                         item.ConstructionCompany = company;
                 }
+                if (agencyDict.TryGetValue(item.AgencyId, out var agency))
+                    item.Agency = agency;
                 
                 item.User = user;
             }

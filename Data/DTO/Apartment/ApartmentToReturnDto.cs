@@ -18,5 +18,6 @@ namespace krov_nad_glavom_api.Data.DTO.Apartment
         public bool CanRequestDiscount { get; set; }
         public BuildingToReturnDto Building { get; set; }
         public Domain.Entities.Agency Agency { get; set; }
+        public Domain.Entities.DiscountRequest DiscountRequest { get; set; }
     }
 }

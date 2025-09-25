@@ -18,7 +18,7 @@ namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
 
         public async Task<List<DiscountRequestToReturnDto>> Handle(GetAgencyDiscountRequestsQuery request, CancellationToken cancellationToken)
         {
-            var discountRequests = await _unitofWork.DiscountRequests.GetDiscountRequestsByAgencyId(request.agencyId);
+            var discountRequests = await _unitofWork.DiscountRequests.GetDiscountRequestsByAgencyId(request.agencyId, request.status);
 
             var aparmentsIds = discountRequests.Select(d => d.ApartmentId).Distinct().ToList();
             var userIds = discountRequests.Select(d => d.UserId).Distinct().ToList();
