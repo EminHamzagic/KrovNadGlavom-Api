@@ -6,5 +6,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<ConstructionCompany> GetCompanyByName(string name);
         Task<List<ConstructionCompany>> GetCompaniesByIds(List<string> ids);
+        
+        Task <ConstructionCompany> GetCompanyById(string id);
     }
 }
