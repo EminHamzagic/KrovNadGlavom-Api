@@ -49,13 +49,21 @@ namespace krov_nad_glavom_api.Application.Utils
 
                         return (IQueryable<T>)apartments;
                     }
-
                 case IQueryable<Agency> agencies:
                     {
                         if (!string.IsNullOrEmpty(parameters.SearchText))
                             agencies = agencies.Where(x => x.Name.ToLower().Contains(parameters.SearchText.ToLower()));
 
                         return (IQueryable<T>)agencies;
+                    }
+                case IQueryable<Building> buildings:
+                    {
+                        if (!string.IsNullOrEmpty(parameters.SearchText))
+                            buildings = buildings.Where(x => x.ParcelNumber.ToLower().Contains(parameters.SearchText.ToLower())
+                            || x.City.ToLower().Contains(parameters.SearchText.ToLower())
+                            || x.Address.ToLower().Contains(parameters.SearchText.ToLower()));
+
+                        return (IQueryable<T>)buildings;
                     }
             }
             return source;
@@ -73,12 +81,10 @@ namespace krov_nad_glavom_api.Application.Utils
                             {
                                 if (parameters.SortType == "asc")
                                 {
-                                    Log.Information($"Ordered in ascending order by {parameters.SortProperty}");
                                     return (IQueryable<T>)apartments.OrderBy(parameters.SortProperty);
                                 }
                                 else
                                 {
-                                    Log.Information($"Ordered in descending order by {parameters.SortProperty}");
                                     return (IQueryable<T>)apartments.OrderByDescending(parameters.SortProperty);
                                 }
                             }
@@ -89,7 +95,6 @@ namespace krov_nad_glavom_api.Application.Utils
                         }
                         return (IQueryable<T>)apartments.OrderByDescending(a => a.Id);
                     }
-
                 case IQueryable<Agency> agencies:
                     {
                         try
@@ -98,12 +103,10 @@ namespace krov_nad_glavom_api.Application.Utils
                             {
                                 if (parameters.SortType == "asc")
                                 {
-                                    Log.Information($"Ordered in ascending order by {parameters.SortProperty}");
                                     return (IQueryable<T>)agencies.OrderBy(parameters.SortProperty);
                                 }
                                 else
                                 {
-                                    Log.Information($"Ordered in descending order by {parameters.SortProperty}");
                                     return (IQueryable<T>)agencies.OrderByDescending(parameters.SortProperty);
                                 }
                             }
@@ -113,6 +116,28 @@ namespace krov_nad_glavom_api.Application.Utils
                             Log.Information("You tried to order by property that does not exist");
                         }
                         return (IQueryable<T>)agencies.OrderByDescending(a => a.Id);
+                    }
+                case IQueryable<Building> buildings:
+                    {
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(parameters.SortProperty))
+                            {
+                                if (parameters.SortType == "asc")
+                                {
+                                    return (IQueryable<T>)buildings.OrderBy(parameters.SortProperty);
+                                }
+                                else
+                                {
+                                    return (IQueryable<T>)buildings.OrderByDescending(parameters.SortProperty);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            Log.Information("You tried to order by property that does not exist");
+                        }
+                        return (IQueryable<T>)buildings.OrderByDescending(a => a.Id);
                     }
             }
             return source;

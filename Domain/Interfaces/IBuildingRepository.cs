@@ -6,10 +6,10 @@ namespace krov_nad_glavom_api.Application.Interfaces
     public interface IBuildingRepository : IRepository<Building>
     {
         Task<Building> GetBuildingByParcel(string parcelNum);
-        Task<List<Building>> GetBuildingsByCompanyId(string comapnyId);
+        IQueryable<Building> GetBuildingsByCompanyId(string comapnyId);
         Task<bool> CanAddApartment(ApartmentToAddDto apartmentToAddDto);
         Task<Building> GetBuildingById(string id);
         Task<List<Building>> GetBuildingsByIds(List<string> ids);
-        Task<List<Building>> GetAllValidBuildings(string agencyId);
+        Task<IQueryable<Building>> GetAllValidBuildings(string agencyId);
     }
 }

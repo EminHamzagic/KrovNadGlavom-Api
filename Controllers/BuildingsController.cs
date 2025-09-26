@@ -1,5 +1,6 @@
 using krov_nad_glavom_api.Application.Commands.Buildings;
 using krov_nad_glavom_api.Application.Queries.Buildings;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Building;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
@@ -37,14 +38,32 @@ namespace krov_nad_glavom_api.Controllers
         }
 
         [Authorize(Roles = "Manager")]
-        [HttpGet("{id}/agency")]
-        public async Task<IActionResult> GetAllBuildings(string id)
+        [HttpGet("company/{companyId}")]
+        public async Task<ActionResult<Building>> GetCompanyBuildings(string companyId, [FromQuery] QueryStringParameters parameters)
         {
             try
             {
-                var command = new GetAllBuildingsQuery(id);
-                var building = await _mediator.Send(command);
-                return Ok(building);
+                var command = new GetBuildingsByCompanyIdQuery(companyId, parameters);
+                var res = await _mediator.Send(command);
+                Response.Headers.Append("X-Pagination", res.getMetadata());
+                return Ok(res.Items);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Manager")]
+        [HttpGet("agency/{id}")]
+        public async Task<IActionResult> GetAllBuildings(string id, [FromQuery] QueryStringParameters parameters)
+        {
+            try
+            {
+                var command = new GetAllBuildingsQuery(id, parameters);
+                var res = await _mediator.Send(command);
+                Response.Headers.Append("X-Pagination", res.getMetadata());
+                return Ok(res.Items);
             }
             catch (Exception ex)
             {
@@ -60,21 +79,6 @@ namespace krov_nad_glavom_api.Controllers
                 var command = new GetBuildingByIdQuery(id);
                 var building = await _mediator.Send(command);
                 return Ok(building);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("company/{companyId}")]
-        public async Task<ActionResult<Building>> GetCompanyBuildings(string companyId)
-        {
-            try
-            {
-                var command = new GetBuildingsByCompanyIdQuery(companyId);
-                var buildings = await _mediator.Send(command);
-                return Ok(buildings);
             }
             catch (Exception ex)
             {
