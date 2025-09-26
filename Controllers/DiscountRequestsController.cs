@@ -94,6 +94,21 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
+        [HttpPut("{id}/forward")]
+        public async Task<IActionResult> ForwardDiscountRequest(string id)
+        {
+            try
+            {
+                var command = new ForwardDiscountRequestCommand(id);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiscountRequest(string id)
         {

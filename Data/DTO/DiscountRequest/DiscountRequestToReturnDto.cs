@@ -10,6 +10,8 @@ namespace krov_nad_glavom_api.Data.DTO.DiscountRequest
         public decimal Percentage { get; set; }
         public string Status { get; set; }
         public string Reason { get; set; }
+        public string RejectReason { get; set; }
+        public bool MustForward { get; set; } = false;
         public Domain.Entities.User User { get; set; }
         public Domain.Entities.Apartment Apartment { get; set; }
         public Domain.Entities.ConstructionCompany ConstructionCompany { get; set; }

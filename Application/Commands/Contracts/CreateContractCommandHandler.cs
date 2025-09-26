@@ -22,6 +22,9 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
             if (apartment == null)
                 throw new Exception("Stan nije pronađen");
 
+            if(!apartment.IsAvailable)
+                throw new Exception("Stan je već kupljen");
+
             var contract = _mapper.Map<Contract>(request.ContractToAddDto);
             contract.Id = Guid.NewGuid().ToString();
 
