@@ -14,14 +14,14 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         }
 
 
-        public async Task<List<Contract>> GetContractsByUserId(string userId)
+        public IQueryable<Contract> GetContractsByUserId(string userId, string status)
         {
-            return await _context.Contracts.Where(c => c.UserId == userId).ToListAsync();
+            return _context.Contracts.Where(c => c.UserId == userId && c.Status == status).AsQueryable();
         }
 
-        public async Task<List<Contract>> GetContractsByAgencyId(string agencyId)
+        public IQueryable<Contract> GetContractsByAgencyId(string agencyId, string status)
         {
-            return await _context.Contracts.Where(c => c.AgencyId == agencyId).ToListAsync();
+            return _context.Contracts.Where(c => c.AgencyId == agencyId && c.Status == status).AsQueryable();
         }
         public async Task<Contract> GetContractsByApartmentId(string apartmentId)
         {
