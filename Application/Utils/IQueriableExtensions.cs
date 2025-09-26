@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using krov_nad_glavom_api.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver.Linq;
 using Serilog;
 
 namespace krov_nad_glavom_api.Application.Utils
@@ -25,6 +27,30 @@ namespace krov_nad_glavom_api.Application.Utils
 
             return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
         }
+
+        // public static async Task<int> CountSafeAsync<T>(
+        //     this IQueryable<T> query, 
+        //     CancellationToken cancellationToken = default)
+        // {
+        //     if (query is IMongoQueryable<T> mongoQuery)
+        //     {
+        //         return await mongoQuery.CountAsync(cancellationToken);
+        //     }
+
+        //     return await EntityFrameworkQueryableExtensions.CountAsync(query, cancellationToken);
+        // }
+
+        // public static async Task<List<T>> ToListSafeAsync<T>(
+        //     this IQueryable<T> query,
+        //     CancellationToken cancellationToken = default)
+        // {
+        //     if (query is IMongoQueryable<T> mongoQuery)
+        //     {
+        //         return await mongoQuery.ToListAsync(cancellationToken);
+        //     }
+
+        //     return await EntityFrameworkQueryableExtensions.ToListAsync(query, cancellationToken);
+        // }
 
         public static IQueryable<T> Filter<T>(this IQueryable<T> source, QueryStringParameters parameters)
         {

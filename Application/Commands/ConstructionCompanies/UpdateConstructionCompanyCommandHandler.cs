@@ -27,6 +27,7 @@ namespace krov_nad_glavom_api.Application.Commands.ConstructionCompanies
                 throw new Exception("Ime kompanije je već zauzeto");
 
             _mapper.Map(request.ConstructionCompanyToUpdateDto, company);
+            _unitofWork.ConstructionCompanies.Update(company);
             await _unitofWork.Save();
 
             return company;

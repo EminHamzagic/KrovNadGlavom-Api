@@ -28,6 +28,7 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.InstallmentProofToSendDto.File, "KrovNadGlavom");
             user.ImageUrl = imageUrl;
+            _unitofWork.Users.Update(user);
             await _unitofWork.Save();
 
             return imageUrl;

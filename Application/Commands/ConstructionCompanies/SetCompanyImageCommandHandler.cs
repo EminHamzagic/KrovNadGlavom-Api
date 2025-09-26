@@ -28,6 +28,7 @@ namespace krov_nad_glavom_api.Application.Commands.ConstructionCompanies
 
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.Dto.File, "KrovNadGlavom");
             company.LogoUrl = imageUrl;
+            _unitofWork.ConstructionCompanies.Update(company);
             await _unitofWork.Save();
 
             return imageUrl;

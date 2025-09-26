@@ -1,7 +1,12 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace krov_nad_glavom_api.Domain.Entities
 {
     public class User
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.String)]
         public string Id { get; set; }
         public string Name { get; set; }
         public string Lastname { get; set; }

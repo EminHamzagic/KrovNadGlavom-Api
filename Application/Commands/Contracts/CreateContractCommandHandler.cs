@@ -43,6 +43,7 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
             _unitofWork.Installments.AddAsync(firstInstallment);
 
             apartment.IsAvailable = false;
+            _unitofWork.Apartments.Update(apartment);
             await _unitofWork.Save();
 
             return contract;

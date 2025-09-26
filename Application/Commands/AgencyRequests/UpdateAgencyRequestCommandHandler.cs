@@ -23,6 +23,7 @@ namespace krov_nad_glavom_api.Application.Commands.AgencyRequests
                 throw new Exception("Zahtev nije pronađen");
 
             _mapper.Map(request.AgencyRequestToUpdateDto, agencyRequest);
+            _unitofWork.AgencyRequests.Update(agencyRequest);
             await _unitofWork.Save();
 
             return agencyRequest;

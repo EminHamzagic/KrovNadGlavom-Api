@@ -28,6 +28,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
 
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.InstallmentProofToSendDto.File, "KrovNadGlavom");
             installment.PaymentProof = imageUrl;
+            _unitofWork.Installments.Update(installment);
             await _unitofWork.Save();
 
             return imageUrl;

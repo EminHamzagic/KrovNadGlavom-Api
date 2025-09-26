@@ -3,7 +3,6 @@ using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
-using ZstdSharp.Unsafe;
 
 namespace krov_nad_glavom_api.Application.Commands.Buildings
 {
@@ -37,7 +36,11 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
                     
                 apartment.BuildingId = building.Id;
             }
-            await _unitofWork.Apartments.AddRangeAsync(apartmentsToAdd);
+
+            if (request.BuildingToAddDto.Apartments.Count() > 0)
+            {   
+                await _unitofWork.Apartments.AddRangeAsync(apartmentsToAdd);
+            }
 
             var garagesToAdd = _mapper.Map<List<Garage>>(request.BuildingToAddDto.Garages);
 
@@ -60,7 +63,10 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
                 garage.Id = Guid.NewGuid().ToString();
                 garage.BuildingId = building.Id;
             }
-            await _unitofWork.Garages.AddRangeAsync(garagesToAdd);
+            if (request.BuildingToAddDto.Garages.Count() > 0)
+            {   
+                await _unitofWork.Garages.AddRangeAsync(garagesToAdd);
+            }
 
             var priceList = _mapper.Map<PriceList>(request.BuildingToAddDto.PriceList);
             priceList.Id = Guid.NewGuid().ToString();

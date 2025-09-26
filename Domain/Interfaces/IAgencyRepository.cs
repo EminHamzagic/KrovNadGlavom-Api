@@ -1,3 +1,4 @@
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Domain.Entities;
 
 namespace krov_nad_glavom_api.Application.Interfaces
@@ -6,6 +7,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<Agency> GetAgencyByName(string name);
         Task<List<Agency>> GetAgenciesByIds(List<string> ids);
-        IQueryable<Agency> GetAgenciesQuery();
+        Task<(List<Agency> agenciesPage, int totalCount, int totalPages)> GetAgenciesQuery(QueryStringParameters parameters);
     }
 }

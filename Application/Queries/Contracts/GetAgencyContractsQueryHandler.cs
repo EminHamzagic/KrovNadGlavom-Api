@@ -21,15 +21,7 @@ namespace krov_nad_glavom_api.Application.Queries.Contracts
         
         public async Task<PaginatedResponse<ContractToReturnDto>> Handle(GetAgencyContractsQuery request, CancellationToken cancellationToken)
         {
-            var contractsQuery = _unitofWork.Contracts.GetContractsByAgencyId(request.agencyId, request.parameters.Status);
-
-            var totalCount = contractsQuery.Count();
-            request.parameters.checkOverflow(totalCount);
-
-            var contractsPage = await contractsQuery
-                .Skip((request.parameters.PageNumber - 1) * request.parameters.PageSize)
-                .Take(request.parameters.PageSize)
-                .ToListAsync(cancellationToken);
+            var (contractsPage, totalCount, totalPages) = await _unitofWork.Contracts.GetContractsByAgencyId(request.agencyId, request.parameters);
 
             var userIds = contractsPage.Select(c => c.UserId).Distinct().ToList();
             var apartmentIds = contractsPage.Select(c => c.ApartmentId).Distinct().ToList();
@@ -51,8 +43,6 @@ namespace krov_nad_glavom_api.Application.Queries.Contracts
 
                 item.Agency = agency;
             }
-
-            var totalPages = (int)Math.Ceiling((double)totalCount / request.parameters.PageSize);
 
             return new PaginatedResponse<ContractToReturnDto>(
                 contractsToReturn,

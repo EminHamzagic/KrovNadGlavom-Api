@@ -49,10 +49,24 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Buildings.Where(u => ids.Contains(u.Id) && !u.IsDeleted).ToListAsync();
 		}
 
-		public async Task<IQueryable<Building>> GetAllValidBuildings(string agencyId)
+		public async Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetAllValidBuildings(string agencyId, QueryStringParameters parameters)
 		{
 			var validBuildings = await _context.AgencyRequests.Where(a => a.Status == "Approved").Select(a => a.BuildingId).ToListAsync();
-			return _context.Buildings.Where(u => !validBuildings.Contains(u.Id) && !u.IsDeleted).AsQueryable();
+			var buildingsQuery = _context.Buildings.Where(u => !validBuildings.Contains(u.Id) && !u.IsDeleted).AsQueryable();
+
+			buildingsQuery = buildingsQuery.Filter(parameters).Sort(parameters);
+
+			var totalCount = buildingsQuery.Count();
+			parameters.checkOverflow(totalCount);
+
+			var buildingsPage = await buildingsQuery
+				.Skip((parameters.PageNumber - 1) * parameters.PageSize)
+				.Take(parameters.PageSize)
+				.ToListAsync();
+
+			var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+
+			return (buildingsPage, totalCount, totalPages);
 		}
     }
 }

@@ -21,6 +21,7 @@ namespace krov_nad_glavom_api.Application.Commands.DiscountRequests
             var building = await _unitofWork.Buildings.GetByIdAsync(apartment.BuildingId);
 
             discountRequest.ConstructionCompanyId = building.CompanyId;
+            _unitofWork.DiscountRequests.Update(discountRequest);
             await _unitofWork.Save();
 
             return discountRequest.Id;

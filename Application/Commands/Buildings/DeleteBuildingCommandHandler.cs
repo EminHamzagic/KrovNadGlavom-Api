@@ -23,14 +23,17 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
             foreach (var item in apartments)
             {
                 item.IsDeleted = true;
+                _unitofWork.Apartments.Update(item);
             }
 
             var garages = await _unitofWork.Garages.GetGaragesByBuildingId(request.Id);
             foreach (var item in garages)
             {
                 item.IsDeleted = true;
+                _unitofWork.Garages.Update(item);
             }
-            
+
+            _unitofWork.Buildings.Update(building);
             await _unitofWork.Save();
 
             return building;

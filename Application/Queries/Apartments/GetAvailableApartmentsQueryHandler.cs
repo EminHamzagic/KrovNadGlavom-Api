@@ -21,19 +21,8 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
 
         public async Task<PaginatedResponse<ApartmentToReturnDto>> Handle(GetAvailableApartmentsQuery request, CancellationToken cancellationToken)
         {
-            var apartmentsQuery = await _unitofWork.Apartments.GetAllAvailableApartmentsWithBuildings();
+            var (apartmentsPage, totalCount, totalPages) = await _unitofWork.Apartments.GetAllAvailableApartmentsWithBuildings(request.parameters);
 
-            apartmentsQuery = apartmentsQuery.Filter(request.parameters).Sort(request.parameters);
-
-            var totalCount = apartmentsQuery.Count();
-            request.parameters.checkOverflow(totalCount);
-
-            var apartmentsPage = await apartmentsQuery
-                .Skip((request.parameters.PageNumber - 1) * request.parameters.PageSize)
-                .Take(request.parameters.PageSize)
-                .ToListAsync(cancellationToken);
-
-            // Map to DTOs
             var apartmentsToReturn = apartmentsPage
                 .Select(x =>
                 {
@@ -42,8 +31,6 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
                     return dto;
                 })
                 .ToList();
-
-            var totalPages = (int)Math.Ceiling((double)totalCount / request.parameters.PageSize);
 
             return new PaginatedResponse<ApartmentToReturnDto>(
                 apartmentsToReturn,
