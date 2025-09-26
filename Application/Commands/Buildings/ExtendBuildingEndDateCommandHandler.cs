@@ -25,6 +25,7 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
                 throw new Exception("Datum produžetka ne može biti manji od prvobitnog datuma završetka zgrade");
 
             _mapper.Map(request.BuildingEndDateToExtendDto, building);
+            _unitofWork.Buildings.Update(building);
             await _unitofWork.Save();
 
             return true;

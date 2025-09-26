@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using krov_nad_glavom_api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Apartments.Where(a => ids.Contains(a.Id) && !a.IsDeleted).ToListAsync();
 		}
 
-		public async Task<IQueryable<ApartmentWithBuildingDto>> GetAllAvailableApartmentsWithBuildings()
+		public async Task<(List<ApartmentWithBuildingDto> apartmentsPage, int totalCount, int totalPages)> GetAllAvailableApartmentsWithBuildings(QueryStringParameters parameters)
 		{
 			var reservedApartmentIds = await _context.Reservations
 				.Where(r => r.ToDate > DateTime.Now)
@@ -41,7 +42,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 				.Select(a => a.BuildingId)
 				.ToListAsync();
 
-			var query =
+			var apartmentsQuery =
 				from a in _context.Apartments
 				join b in _context.Buildings on a.BuildingId equals b.Id
 				where !reservedApartmentIds.Contains(a.Id)
@@ -54,7 +55,19 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 					Building = b
 				};
 
-			return query;
+			apartmentsQuery = apartmentsQuery.Filter(parameters).Sort(parameters);
+
+            var totalCount = apartmentsQuery.Count();
+            parameters.checkOverflow(totalCount);
+
+            var apartmentsPage = await apartmentsQuery
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToListAsync();
+
+			var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+
+			return (apartmentsPage, totalCount, totalPages);
 		}
     }
 }

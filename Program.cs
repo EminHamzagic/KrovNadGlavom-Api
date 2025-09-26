@@ -9,12 +9,14 @@ using krov_nad_glavom_api.Application.Validators;
 using krov_nad_glavom_api.Commands;
 using krov_nad_glavom_api.Data;
 using krov_nad_glavom_api.Data.Config;
+using krov_nad_glavom_api.Infrastructure.MongoDB;
 using krov_nad_glavom_api.Infrastructure.MySql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson.Serialization.Conventions;
 using Serilog;
 
 public static class Program
@@ -90,7 +92,11 @@ public static class Program
         }
         else if (isMongo)
         {
+            // var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
+            // ConventionRegistry.Register("camelCase", conventionPack, t => true);
 
+            services.AddSingleton<krovNadGlavomMongoDbContext>();
+            services.AddScoped<IUnitofWork, UnitOfWorkMongo>();
         }
         else
         {

@@ -20,6 +20,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
 
             installment.IsConfirmed = true;
             installment.PaymentDate = DateTime.Now;
+            _unitofWork.Installments.Update(installment);
             await _unitofWork.Save();
 
             var contract = await _unitofWork.Contracts.GetByIdAsync(installment.ContractId);
@@ -52,6 +53,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
 
                 _unitofWork.Installments.AddAsync(nextInstallment);
             }
+            _unitofWork.Contracts.Update(contract);
 
             await _unitofWork.Save();
             return installment;

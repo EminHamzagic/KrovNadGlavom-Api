@@ -23,6 +23,7 @@ namespace krov_nad_glavom_api.Application.Commands.DiscountRequests
                 throw new Exception("Zahtev za popust nije pronađen");
 
             _mapper.Map(request.DiscountRequestToUpdateDto, discountRequest);
+            _unitofWork.DiscountRequests.Update(discountRequest);
             await _unitofWork.Save();
 
             return discountRequest;

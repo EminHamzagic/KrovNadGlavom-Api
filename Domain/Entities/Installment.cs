@@ -1,3 +1,6 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace krov_nad_glavom_api.Domain.Entities
 {
     public class Installment
@@ -5,6 +8,8 @@ namespace krov_nad_glavom_api.Domain.Entities
         public string Id { get; set; }
         public string ContractId { get; set; }
         public int SequenceNumber { get; set; }
+        
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal Amount { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime? PaymentDate { get; set; }

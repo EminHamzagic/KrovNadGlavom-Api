@@ -11,10 +11,6 @@ namespace krov_nad_glavom_api.Application.Validators
                 .NotEmpty().WithMessage("Id je obavezan.")
                 .Must(id => Guid.TryParse(id, out _)).WithMessage("Id mora biti validan GUID.");
 
-            RuleFor(x => x.BuildingId)
-                .NotEmpty().WithMessage("BuildingId je obavezan.")
-                .Must(id => Guid.TryParse(id, out _)).WithMessage("BuildingId mora biti validan GUID.");
-
             RuleFor(x => x.ApartmentNumber)
                 .NotEmpty().WithMessage("Broj stana je obavezan.")
                 .MaximumLength(15).WithMessage("Broj stana ne sme imati više od 15 karaktera.");

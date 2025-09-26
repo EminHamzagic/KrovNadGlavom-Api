@@ -22,6 +22,7 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
                 throw new Exception("Stan nije pronađen");
 
             _mapper.Map(request.ApartmentToUpdateDto, apartment);
+            _unitofWork.Apartments.Update(apartment);
 
             await _unitofWork.Save();
 

@@ -23,6 +23,7 @@ namespace krov_nad_glavom_api.Application.Commands.Agencies
                 throw new Exception("Agencija nije pronađena");
 
             _mapper.Map(request.AgencyToUpdateDto, agency);
+            _unitofWork.Agencies.Update(agency);
             await _unitofWork.Save();
 
             return agency;

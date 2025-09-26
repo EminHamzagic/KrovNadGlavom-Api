@@ -4,7 +4,6 @@ using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Apartment;
 using krov_nad_glavom_api.Data.DTO.Contract;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace krov_nad_glavom_api.Application.Queries.Contracts
 {
@@ -21,15 +20,7 @@ namespace krov_nad_glavom_api.Application.Queries.Contracts
 
         public async Task<PaginatedResponse<ContractToReturnDto>> Handle(GetUserContractsQuery request, CancellationToken cancellationToken)
         {
-            var contractsQuery = _unitofWork.Contracts.GetContractsByUserId(request.userId, request.parameters.Status);
-
-            var totalCount = contractsQuery.Count();
-            request.parameters.checkOverflow(totalCount);
-
-            var contractsPage = await contractsQuery
-                .Skip((request.parameters.PageNumber - 1) * request.parameters.PageSize)
-                .Take(request.parameters.PageSize)
-                .ToListAsync(cancellationToken);
+            var (contractsPage, totalCount, totalPages) = await _unitofWork.Contracts.GetContractsByUserId(request.userId, request.parameters);
 
             var agencyIds = contractsPage.Select(c => c.AgencyId).Distinct().ToList();
             var apartmentIds = contractsPage.Select(c => c.ApartmentId).Distinct().ToList();
@@ -51,8 +42,6 @@ namespace krov_nad_glavom_api.Application.Queries.Contracts
 
                 item.User = user;
             }
-
-            var totalPages = (int)Math.Ceiling((double)totalCount / request.parameters.PageSize);
 
             return new PaginatedResponse<ContractToReturnDto>(
                 contractsToReturn,

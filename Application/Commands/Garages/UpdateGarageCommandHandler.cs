@@ -27,6 +27,7 @@ namespace krov_nad_glavom_api.Application.Commands.Garages
                 throw new Exception("Broj garažnog mesta je zauzet");
 
             _mapper.Map(request.GarageToUpdateDto, garage);
+            _unitofWork.Garages.Update(garage);
 
             return garage;
         }

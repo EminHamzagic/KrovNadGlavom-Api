@@ -17,17 +17,18 @@ namespace krov_nad_glavom_api.Application.Commands.Agencies
         
         public async Task<string> Handle(SetAgencyLogoCommand request, CancellationToken cancellationToken)
         {
-            var company = await _unitofWork.Agencies.GetByIdAsync(request.Dto.Id);
-            if (company == null)
+            var agency = await _unitofWork.Agencies.GetByIdAsync(request.Dto.Id);
+            if (agency == null)
                 throw new Exception("Agencija nije pronađena");
 
-            if (company.LogoUrl != null)
+            if (agency.LogoUrl != null)
             {
-                await _cloudinaryService.DeleteImageAsync(company.LogoUrl);
+                await _cloudinaryService.DeleteImageAsync(agency.LogoUrl);
             }
 
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.Dto.File, "KrovNadGlavom");
-            company.LogoUrl = imageUrl;
+            agency.LogoUrl = imageUrl;
+            _unitofWork.Agencies.Update(agency);
             await _unitofWork.Save();
 
             return imageUrl;

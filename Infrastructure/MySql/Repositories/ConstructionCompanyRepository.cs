@@ -1,5 +1,4 @@
 using krov_nad_glavom_api.Application.Interfaces;
-using krov_nad_glavom_api.Data.DTO.ConstructionCompany;
 using krov_nad_glavom_api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

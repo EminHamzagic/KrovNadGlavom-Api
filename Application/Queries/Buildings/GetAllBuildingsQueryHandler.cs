@@ -19,16 +19,7 @@ namespace krov_nad_glavom_api.Application.Queries.Buildings
 
         public async Task<PaginatedResponse<BuildingToReturnDto>> Handle(GetAllBuildingsQuery request, CancellationToken cancellationToken)
         {
-            var buildingsQuery = await _unitofWork.Buildings.GetAllValidBuildings(request.agencyId);
-            buildingsQuery = buildingsQuery.Filter(request.parameters).Sort(request.parameters);
-
-            var totalCount = buildingsQuery.Count();
-            request.parameters.checkOverflow(totalCount);
-
-            var buildingsPage = await buildingsQuery
-                .Skip((request.parameters.PageNumber - 1) * request.parameters.PageSize)
-                .Take(request.parameters.PageSize)
-                .ToListAsync(cancellationToken);
+            var (buildingsPage, totalCount, totalPages) = await _unitofWork.Buildings.GetAllValidBuildings(request.agencyId, request.parameters);
 
             var buildingsToRetrun = _mapper.Map<List<BuildingToReturnDto>>(buildingsPage);
 
@@ -45,9 +36,6 @@ namespace krov_nad_glavom_api.Application.Queries.Buildings
                 if (companyDict.TryGetValue(item.CompanyId, out var company))
                     item.Company = company;
             }
-
-            // return buildingsToRetrun;
-            var totalPages = (int)Math.Ceiling((double)totalCount / request.parameters.PageSize);
 
             return new PaginatedResponse<BuildingToReturnDto>(
                 buildingsToRetrun,

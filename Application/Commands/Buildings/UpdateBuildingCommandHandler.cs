@@ -23,6 +23,7 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
                 throw new Exception("Zgrada nije pronađena");
 
             _mapper.Map(request.BuildingToUpdateDto, building);
+            _unitofWork.Buildings.Update(building);
             await _unitofWork.Save();
 
             return building;

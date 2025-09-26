@@ -20,6 +20,7 @@ namespace krov_nad_glavom_api.Application.Commands.AgencyRequests
                 throw new Exception("Zahtev nije pronađen");
 
             agencyRequest.IsDeleted = true;
+            _unitofWork.AgencyRequests.Update(agencyRequest);
             await _unitofWork.Save();
 
             return agencyRequest;

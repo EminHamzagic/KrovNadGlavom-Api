@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,9 +24,22 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Agencies.Where(a => ids.Contains(a.Id)).ToListAsync();
 		}
 
-		public IQueryable<Agency> GetAgenciesQuery()
+		public async Task<(List<Agency> agenciesPage, int totalCount, int totalPages)> GetAgenciesQuery(QueryStringParameters parameters)
 		{
-			return _context.Agencies.AsQueryable();
+			var agenciesQuery = _context.Agencies.AsQueryable();
+			agenciesQuery = agenciesQuery.Filter(parameters).Sort(parameters);
+
+			var totalCount = agenciesQuery.Count();
+			parameters.checkOverflow(totalCount);
+
+			var agenciesPage = await agenciesQuery
+				.Skip((parameters.PageNumber - 1) * parameters.PageSize)
+				.Take(parameters.PageSize)
+				.ToListAsync();
+
+			var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+				
+			return (agenciesPage, totalCount, totalPages);
 		}
     }
 }

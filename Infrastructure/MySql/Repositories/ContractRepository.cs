@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,14 +15,38 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         }
 
 
-        public IQueryable<Contract> GetContractsByUserId(string userId, string status)
+        public async Task<(List<Contract> constractPage, int totalCount, int totalPages)> GetContractsByUserId(string userId, QueryStringParameters parameters)
         {
-            return _context.Contracts.Where(c => c.UserId == userId && c.Status == status).AsQueryable();
+            var contractsQuery = _context.Contracts.Where(c => c.UserId == userId && c.Status == parameters.Status).AsQueryable();
+
+            var totalCount = contractsQuery.Count();
+            parameters.checkOverflow(totalCount);
+
+            var contractsPage = await contractsQuery
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToListAsync();
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+            
+            return (contractsPage, totalCount, totalPages);
         }
 
-        public IQueryable<Contract> GetContractsByAgencyId(string agencyId, string status)
+        public async Task<(List<Contract> constractPage, int totalCount, int totalPages)> GetContractsByAgencyId(string agencyId, QueryStringParameters parameters)
         {
-            return _context.Contracts.Where(c => c.AgencyId == agencyId && c.Status == status).AsQueryable();
+            var contractsQuery = _context.Contracts.Where(c => c.AgencyId == agencyId && c.Status == parameters.Status).AsQueryable();
+
+            var totalCount = contractsQuery.Count();
+            parameters.checkOverflow(totalCount);
+
+            var contractsPage = await contractsQuery
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToListAsync();
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+            
+            return (contractsPage, totalCount, totalPages);
         }
         public async Task<Contract> GetContractsByApartmentId(string apartmentId)
         {

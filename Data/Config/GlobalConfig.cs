@@ -5,12 +5,14 @@ namespace krov_nad_glavom_api.Data.Config
         public GlobalConfig(ConfigurationManager configuration)
         {
             ConnectionString = configuration.GetConnectionString("DbConnectionString") ?? throw new InvalidOperationException("Missing DbConnectionString in configuration.");
+            MongoDb = configuration.GetConnectionString("MongoDb") ?? throw new InvalidOperationException("Missing MongoDb in configuration.");
             AllowedOrigins = configuration.GetSection("AllowedOrigins").Get<List<string>>() ?? throw new InvalidOperationException("Missing AllowedOrigins in configuration.");
             JWTSettings = configuration.GetSection("JWTSettings").Get<JWTSettings>();
             ApplyEnvOverrides();
         }
 
         public string ConnectionString { get; set; }
+        public string MongoDb { get; set; }
         public List<string> AllowedOrigins { get; set; }
         public JWTSettings JWTSettings { get; set; }
         private void ApplyEnvOverrides()
