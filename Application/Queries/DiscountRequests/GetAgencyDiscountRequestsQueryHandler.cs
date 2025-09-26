@@ -22,15 +22,12 @@ namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
 
             var aparmentsIds = discountRequests.Select(d => d.ApartmentId).Distinct().ToList();
             var userIds = discountRequests.Select(d => d.UserId).Distinct().ToList();
-            var companyIds = discountRequests.Select(d => d.ConstructionCompanyId).Distinct().ToList();
 
             var apartments = await _unitofWork.Apartments.GetApartmentsByIds(aparmentsIds);
             var users = await _unitofWork.Users.GetUsersByIds(userIds);
-            var companies = await _unitofWork.ConstructionCompanies.GetCompaniesByIds(companyIds);
 
             var apartmentDict = apartments.ToDictionary(a => a.Id);
             var userDict = users.ToDictionary(u => u.Id);
-            var companyDict = companies.ToDictionary(c => c.Id);
 
             var requestsToReturn = _mapper.Map<List<DiscountRequestToReturnDto>>(discountRequests);
             foreach (var item in requestsToReturn)
@@ -39,10 +36,11 @@ namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
                     item.Apartment = apartment;
                 if (userDict.TryGetValue(item.UserId, out var user))
                     item.User = user;
-                if (item.ConstructionCompanyId != null)
+
+                var commission = await _unitofWork.AgencyRequests.GetAgencyCommissionForBuilding(item.Apartment.BuildingId);
+                if (item.Percentage > commission)
                 {
-                    if (companyDict.TryGetValue(item.ConstructionCompanyId, out var company))
-                        item.ConstructionCompany = company;
+                    item.MustForward = true;
                 }
             }
 

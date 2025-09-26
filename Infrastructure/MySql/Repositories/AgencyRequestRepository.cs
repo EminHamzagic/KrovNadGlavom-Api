@@ -60,5 +60,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		{
 			return await _context.AgencyRequests.Where(a => a.BuildingId == buildingId && !a.IsDeleted).Select(a => a.Status).FirstOrDefaultAsync();
 		}
+
+		public async Task<decimal> GetAgencyCommissionForBuilding(string buildingId)
+		{
+			return await _context.AgencyRequests.Where(a => a.BuildingId == buildingId && !a.IsDeleted).Select(a => a.CommissionPercentage).FirstOrDefaultAsync();
+		}
 	}
 }

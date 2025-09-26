@@ -10,6 +10,7 @@ namespace krov_nad_glavom_api.Domain.Entities
         public decimal Percentage { get; set; }
         public string Status { get; set; }
         public string Reason { get; set; }
+        public string RejectReason { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
