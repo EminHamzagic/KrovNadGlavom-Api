@@ -5,8 +5,8 @@ namespace krov_nad_glavom_api.Application.Interfaces
     public interface IReservationRepository : IRepository<Reservation>
     {
         Task<Reservation> GetReservationByUserId(string userId);
-        Task<bool> IsApartmentReserved(string apartmentId);
         Task<Reservation> GetByApartmentId(string apartmentId);
         bool CanUserReserve(string userId, string agencyId);
+        Task<Reservation> GetUserReservation(string userId);
     }
 }

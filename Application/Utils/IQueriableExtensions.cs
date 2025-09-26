@@ -49,6 +49,14 @@ namespace krov_nad_glavom_api.Application.Utils
 
                         return (IQueryable<T>)apartments;
                     }
+
+                case IQueryable<Agency> agencies:
+                    {
+                        if (!string.IsNullOrEmpty(parameters.SearchText))
+                            agencies = agencies.Where(x => x.Name.ToLower().Contains(parameters.SearchText.ToLower()));
+
+                        return (IQueryable<T>)agencies;
+                    }
             }
             return source;
         }
@@ -80,6 +88,31 @@ namespace krov_nad_glavom_api.Application.Utils
                             Log.Information("You tried to order by property that does not exist");
                         }
                         return (IQueryable<T>)apartments.OrderByDescending(a => a.Id);
+                    }
+
+                case IQueryable<Agency> agencies:
+                    {
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(parameters.SortProperty))
+                            {
+                                if (parameters.SortType == "asc")
+                                {
+                                    Log.Information($"Ordered in ascending order by {parameters.SortProperty}");
+                                    return (IQueryable<T>)agencies.OrderBy(parameters.SortProperty);
+                                }
+                                else
+                                {
+                                    Log.Information($"Ordered in descending order by {parameters.SortProperty}");
+                                    return (IQueryable<T>)agencies.OrderByDescending(parameters.SortProperty);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            Log.Information("You tried to order by property that does not exist");
+                        }
+                        return (IQueryable<T>)agencies.OrderByDescending(a => a.Id);
                     }
             }
             return source;

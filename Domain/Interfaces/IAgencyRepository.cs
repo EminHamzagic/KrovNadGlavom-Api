@@ -6,5 +6,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<Agency> GetAgencyByName(string name);
         Task<List<Agency>> GetAgenciesByIds(List<string> ids);
+        IQueryable<Agency> GetAgenciesQuery();
     }
 }

@@ -1,5 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using krov_nad_glavom_api.Application.Commands.Agencies;
 using krov_nad_glavom_api.Application.Queries.Agencies;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Agency;
 using krov_nad_glavom_api.Data.DTO.Installment;
 using MediatR;
@@ -37,13 +40,14 @@ namespace krov_nad_glavom_api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAgencies()
+        public async Task<IActionResult> GetAllAgencies([FromQuery] QueryStringParameters parameters)
         {
             try
             {
-                var command = new GetAllAgenciesQuery();
+                var command = new GetAllAgenciesQuery(parameters);
                 var res = await _mediator.Send(command);
-                return Ok(res);
+                Response.Headers.Append("X-Pagination", res.getMetadata());
+                return Ok(res.Items);
             }
             catch (Exception ex)
             {
@@ -56,7 +60,9 @@ namespace krov_nad_glavom_api.Controllers
         {
             try
             {
-                var command = new GetAgencyByIdQuery(id);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) 
+                     ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                var command = new GetAgencyByIdQuery(id, userId);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }
