@@ -77,6 +77,23 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword(UserChangePasswordDto dto)
+        {
+            try
+            {
+                var userId = User.FindFirst("id")?.Value; // iz JWT tokena
+                var command = new ChangePasswordCommand(userId, dto);
+                var result = await _mediator.Send(command);
+                return Ok(new { success = result, message = "Lozinka uspešno promenjena." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("{id}/followings")]
         public async Task<IActionResult> GetUserFollowings(string id)
         {
