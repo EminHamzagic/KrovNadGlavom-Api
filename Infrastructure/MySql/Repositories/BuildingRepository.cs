@@ -25,9 +25,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Buildings.Where(u => u.ParcelNumber == parcelNum && !u.IsDeleted).FirstOrDefaultAsync();
 		}
 
-		public async Task<List<Building>> GetBuildingsByCompanyId(string comapnyId)
+		public IQueryable<Building> GetBuildingsByCompanyId(string comapnyId)
 		{
-			return await _context.Buildings.Where(u => u.CompanyId == comapnyId && !u.IsDeleted).OrderBy(b => b.CreatedAt).ToListAsync();
+			return _context.Buildings.Where(u => u.CompanyId == comapnyId && !u.IsDeleted).OrderBy(b => b.CreatedAt).AsQueryable();
 		}
 
 		public async Task<bool> CanAddApartment(ApartmentToAddDto apartmentToAddDto)
@@ -49,10 +49,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Buildings.Where(u => ids.Contains(u.Id) && !u.IsDeleted).ToListAsync();
 		}
 
-		public async Task<List<Building>> GetAllValidBuildings(string agencyId)
+		public async Task<IQueryable<Building>> GetAllValidBuildings(string agencyId)
 		{
 			var validBuildings = await _context.AgencyRequests.Where(a => a.Status == "Approved").Select(a => a.BuildingId).ToListAsync();
-			return await _context.Buildings.Where(u => !validBuildings.Contains(u.Id) && !u.IsDeleted).ToListAsync();
+			return _context.Buildings.Where(u => !validBuildings.Contains(u.Id) && !u.IsDeleted).AsQueryable();
 		}
     }
 }
