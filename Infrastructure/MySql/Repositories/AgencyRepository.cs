@@ -22,5 +22,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		{
 			return await _context.Agencies.Where(a => ids.Contains(a.Id)).ToListAsync();
 		}
+
+		public IQueryable<Agency> GetAgenciesQuery()
+		{
+			return _context.Agencies.AsQueryable();
+		}
     }
 }

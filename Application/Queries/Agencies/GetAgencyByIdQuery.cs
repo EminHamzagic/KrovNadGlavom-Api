@@ -3,5 +3,5 @@ using MediatR;
 
 namespace krov_nad_glavom_api.Application.Queries.Agencies
 {
-    public record GetAgencyByIdQuery(string Id) : IRequest<AgencyToReturnDto>;
+    public record GetAgencyByIdQuery(string Id, string userId) : IRequest<AgencyToReturnDto>;
 }

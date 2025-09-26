@@ -14,5 +14,6 @@ namespace krov_nad_glavom_api.Data.DTO.Agency
         public string BankAccountNumber { get; set; }
         public int NumberOfBuildings { get; set; }        
         public int NumberOfApartments { get; set; }        
+        public Domain.Entities.UserAgencyFollow Follow { get; set; }    
     }
 }

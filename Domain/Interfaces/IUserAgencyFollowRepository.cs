@@ -6,5 +6,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<List<User>> GetAgencyFollowers(string agencyId);
         Task<List<Agency>> GetUserFollowing(string userId);
+        Task<UserAgencyFollow> IsUserFollowing(string userId, string agencyId);
     }
 }

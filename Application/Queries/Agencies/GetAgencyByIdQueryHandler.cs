@@ -26,6 +26,7 @@ namespace krov_nad_glavom_api.Application.Queries.Agencies
 
             agencyToReturn.NumberOfBuildings = _unitofWork.AgencyRequests.GetAgencyBuildingCount(agency.Id);
             agencyToReturn.NumberOfApartments = await _unitofWork.AgencyRequests.GetAgencyApartmentCount(agency.Id);
+            agencyToReturn.Follow = await _unitofWork.UserAgencyFollows.IsUserFollowing(request.userId, request.Id);
 
             return agencyToReturn;
         }

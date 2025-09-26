@@ -1,4 +1,7 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using krov_nad_glavom_api.Application.Commands.Reservations;
+using krov_nad_glavom_api.Application.Queries.Reservations;
 using krov_nad_glavom_api.Data.DTO.Reservation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +19,23 @@ namespace krov_nad_glavom_api.Controllers
         public ReservationsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetReservation()
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) 
+                     ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                var command = new GetReservationsQuery(userId);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         
         [HttpPost]

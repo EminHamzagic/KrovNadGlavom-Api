@@ -20,6 +20,7 @@ namespace krov_nad_glavom_api.Controllers
             _mediator = mediator;
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> CreateBuilding(BuildingToAddDto dto)
         {
@@ -35,6 +36,7 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet("{id}/agency")]
         public async Task<IActionResult> GetAllBuildings(string id)
         {
