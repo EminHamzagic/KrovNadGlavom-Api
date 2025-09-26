@@ -30,6 +30,7 @@ namespace krov_nad_glavom_api.Application.Utils
         public int? RoomCount { get; set; }
         public int? BalconyCount { get; set; }
         public int? Floor { get; set; }
+        public string Status { get; set; }
         public string Orientation { get; set; }
 
         public void checkOverflow(int count) {

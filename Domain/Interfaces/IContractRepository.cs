@@ -4,8 +4,8 @@ namespace krov_nad_glavom_api.Application.Interfaces
 {
     public interface IContractRepository : IRepository<Contract>
     {
-        Task<List<Contract>> GetContractsByUserId(string userId);
-        Task<List<Contract>> GetContractsByAgencyId(string agencyId);
+        IQueryable<Contract> GetContractsByUserId(string userId, string status);
+        IQueryable<Contract> GetContractsByAgencyId(string agencyId, string status);
         Task<Contract> GetContractsByApartmentId(string apartmentId);
     }
 }

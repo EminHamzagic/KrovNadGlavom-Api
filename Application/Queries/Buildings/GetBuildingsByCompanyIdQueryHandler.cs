@@ -28,7 +28,7 @@ namespace krov_nad_glavom_api.Application.Queries.Buildings
                 .Take(request.parameters.PageSize)
                 .ToListAsync(cancellationToken);
 
-             var totalPages = (int)Math.Ceiling((double)totalCount / request.parameters.PageSize);
+            var totalPages = (int)Math.Ceiling((double)totalCount / request.parameters.PageSize);
 
             return new PaginatedResponse<Building>(
                 buildingsPage,

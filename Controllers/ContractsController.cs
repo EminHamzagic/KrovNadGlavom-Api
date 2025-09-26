@@ -1,5 +1,6 @@
 using krov_nad_glavom_api.Application.Commands.Contracts;
 using krov_nad_glavom_api.Application.Queries.Contracts;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Contract;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -50,13 +51,14 @@ namespace krov_nad_glavom_api.Controllers
         }
         
         [HttpGet("user/{id}")]
-        public async Task<IActionResult> GetUserContracts(string id)
+        public async Task<IActionResult> GetUserContracts(string id, [FromQuery] QueryStringParameters parameters)
         {
             try
             {
-                var command = new GetUserContractsQuery(id);
+                var command = new GetUserContractsQuery(id, parameters);
                 var res = await _mediator.Send(command);
-                return Ok(res);
+                Response.Headers.Append("X-Pagination", res.getMetadata());
+                return Ok(res.Items);
             }
             catch (Exception ex)
             {
@@ -65,13 +67,14 @@ namespace krov_nad_glavom_api.Controllers
         }
 
         [HttpGet("agency/{id}")]
-        public async Task<IActionResult> GetAgencyContracts(string id)
+        public async Task<IActionResult> GetAgencyContracts(string id, [FromQuery] QueryStringParameters parameters)
         {
             try
             {
-                var command = new GetAgencyContractsQuery(id);
+                var command = new GetAgencyContractsQuery(id, parameters);
                 var res = await _mediator.Send(command);
-                return Ok(res);
+                Response.Headers.Append("X-Pagination", res.getMetadata());
+                return Ok(res.Items);
             }
             catch (Exception ex)
             {
