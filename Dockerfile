@@ -18,4 +18,4 @@ COPY --from=build /app/publish .
 EXPOSE 8080
 
 # Run the app DLL
-CMD ["dotnet", "krov-nad-glavom-api.dll"]
+CMD ["dotnet", "krov-nad-glavom-api.dll", "serve"]
