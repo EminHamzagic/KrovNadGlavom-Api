@@ -26,7 +26,7 @@ namespace krov_nad_glavom_api.Application.Queries.Agencies
 
             foreach (var agency in agenciesToReturn)
             {
-                agency.NumberOfBuildings = _unitofWork.AgencyRequests.GetAgencyBuildingCount(agency.Id);
+                agency.NumberOfBuildings = await _unitofWork.AgencyRequests.GetAgencyBuildingCount(agency.Id);
                 agency.NumberOfApartments = await _unitofWork.AgencyRequests.GetAgencyApartmentCount(agency.Id);
             }
 

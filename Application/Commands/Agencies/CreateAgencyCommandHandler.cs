@@ -24,7 +24,7 @@ namespace krov_nad_glavom_api.Application.Commands.Agencies
 
             var agency = _mapper.Map<Agency>(request.AgencyToAddDto);
             agency.Id = Guid.NewGuid().ToString();
-            _unitofWork.Agencies.AddAsync(agency);
+            await _unitofWork.Agencies.AddAsync(agency);
             await _unitofWork.Save();
 
             return agency.Id;

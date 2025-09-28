@@ -15,7 +15,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         }
 
 
-        public async Task<(List<Contract> constractPage, int totalCount, int totalPages)> GetContractsByUserId(string userId, QueryStringParameters parameters)
+        public async Task<(List<Contract> contractPage, int totalCount, int totalPages)> GetContractsByUserId(string userId, QueryStringParameters parameters)
         {
             var contractsQuery = _context.Contracts.Where(c => c.UserId == userId && c.Status == parameters.Status).AsQueryable();
 
@@ -32,7 +32,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
             return (contractsPage, totalCount, totalPages);
         }
 
-        public async Task<(List<Contract> constractPage, int totalCount, int totalPages)> GetContractsByAgencyId(string agencyId, QueryStringParameters parameters)
+        public async Task<(List<Contract> contractPage, int totalCount, int totalPages)> GetContractsByAgencyId(string agencyId, QueryStringParameters parameters)
         {
             var contractsQuery = _context.Contracts.Where(c => c.AgencyId == agencyId && c.Status == parameters.Status).AsQueryable();
 

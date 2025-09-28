@@ -26,7 +26,7 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
             var building = _mapper.Map<Building>(request.BuildingToAddDto);
             building.Id = Guid.NewGuid().ToString();
 
-            _unitofWork.Buildings.AddAsync(building);
+            await _unitofWork.Buildings.AddAsync(building);
 
             var apartmentsToAdd = _mapper.Map<List<ApartmentToAddDto>, List<Apartment>>(request.BuildingToAddDto.Apartments);
             foreach (var apartment in apartmentsToAdd)
@@ -71,7 +71,7 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
             var priceList = _mapper.Map<PriceList>(request.BuildingToAddDto.PriceList);
             priceList.Id = Guid.NewGuid().ToString();
             priceList.BuildingId = building.Id;
-            _unitofWork.PriceLists.AddAsync(priceList);
+            await _unitofWork.PriceLists.AddAsync(priceList);
 
             await _unitofWork.Save();
 

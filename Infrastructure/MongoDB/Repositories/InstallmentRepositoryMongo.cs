@@ -22,10 +22,10 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .ToListAsync();
         }
 
-        public int GetConfirmedInstallmentsCount(string contractId)
+        public Task<int> GetConfirmedInstallmentsCount(string contractId)
         {
-            return (int)_installments
-                .CountDocuments(i => i.ContractId == contractId && i.IsConfirmed);
+            return Task.FromResult((int)_installments
+                .CountDocuments(i => i.ContractId == contractId && i.IsConfirmed));
         }
 
         public async Task<int> GetNextSequenceNumber(string contractId)

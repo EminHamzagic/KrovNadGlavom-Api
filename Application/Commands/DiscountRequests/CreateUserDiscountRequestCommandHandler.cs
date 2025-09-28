@@ -24,7 +24,7 @@ namespace krov_nad_glavom_api.Application.Commands.DiscountRequests
 
             var discountRequest = _mapper.Map<DiscountRequest>(request.DiscountRequestToAddDto);
             discountRequest.Id = Guid.NewGuid().ToString();
-            _unitofWork.DiscountRequests.AddAsync(discountRequest);
+            await _unitofWork.DiscountRequests.AddAsync(discountRequest);
             await _unitofWork.Save();
 
             return discountRequest;

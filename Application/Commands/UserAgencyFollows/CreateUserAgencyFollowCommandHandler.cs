@@ -27,7 +27,7 @@ namespace krov_nad_glavom_api.Application.Commands.UserAgencyFollows
                 
             var userFollow = _mapper.Map<UserAgencyFollow>(request.UserAgencyFollowToAddDto);
             userFollow.Id = Guid.NewGuid().ToString();
-            _unitofWork.UserAgencyFollows.AddAsync(userFollow);
+            await _unitofWork.UserAgencyFollows.AddAsync(userFollow);
             await _unitofWork.Save();
 
             return userFollow;

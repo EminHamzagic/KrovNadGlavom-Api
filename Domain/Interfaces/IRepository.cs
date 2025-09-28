@@ -13,7 +13,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
         Task<IReadOnlyList<T>> FindAllAsync(Expression<Func<T, bool>> predicate);
 
         // add methods
-        void AddAsync(T entity);
+        Task AddAsync(T entity);
         Task AddRangeAsync(IEnumerable<T> entities);
 
         // update methods

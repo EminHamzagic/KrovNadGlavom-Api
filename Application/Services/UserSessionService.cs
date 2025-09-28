@@ -52,7 +52,7 @@ namespace krov_nad_glavom_api.Application.Services
                 Role = user.Role
             };
 
-            _unitofWork.UserSessions.AddAsync(session);
+            await _unitofWork.UserSessions.AddAsync(session);
             await _unitofWork.Save();
 
             var tokensToReturn = new UserTokensDto

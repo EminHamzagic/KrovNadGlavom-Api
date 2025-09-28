@@ -36,7 +36,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
         }
 
         // add methods
-        public async void AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
             await _collection.InsertOneAsync(entity);
         }

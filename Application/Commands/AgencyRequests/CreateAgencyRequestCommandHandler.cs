@@ -23,7 +23,7 @@ namespace krov_nad_glavom_api.Application.Commands.AgencyRequests
 
             var agencyRequest = _mapper.Map<AgencyRequest>(request.AgencyRequestToAddDto);
             agencyRequest.Id = Guid.NewGuid().ToString();
-            _unitofWork.AgencyRequests.AddAsync(agencyRequest);
+            await _unitofWork.AgencyRequests.AddAsync(agencyRequest);
             await _unitofWork.Save();
 
             return agencyRequest;

@@ -1,4 +1,3 @@
-using krov_nad_glavom_api.Data.Config;
 using krov_nad_glavom_api.Domain.Entities;
 using MongoDB.Driver;
 
@@ -8,9 +7,8 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB
     {
         private readonly IMongoDatabase _database;
 
-        public krovNadGlavomMongoDbContext(IConfiguration configuration)
+        public krovNadGlavomMongoDbContext(string connectionString)
         {
-            var connectionString = configuration.GetConnectionString("MongoDb");
             var client = new MongoClient(connectionString);
             _database = client.GetDatabase("KrovNadGlavom");
         }

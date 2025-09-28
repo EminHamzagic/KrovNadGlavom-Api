@@ -33,14 +33,6 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public IQueryable<Building> GetBuildingsByCompanyId(string companyId)
-        {
-            return _buildings
-                .AsQueryable()
-                .Where(u => u.CompanyId == companyId && !u.IsDeleted)
-                .OrderBy(b => b.CreatedAt);
-        }
-
         public async Task<bool> CanAddApartment(ApartmentToAddDto apartmentToAddDto)
         {
             var building = await _buildings
@@ -68,38 +60,51 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
 
         public async Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetAllValidBuildings(string agencyId, QueryStringParameters parameters)
         {
-            // Get approved building IDs
             var validBuildings = await _agencyRequests
                 .Find(a => a.Status == "Approved" && !a.IsDeleted)
                 .Project(a => a.BuildingId)
                 .ToListAsync();
 
-            // Base query for buildings not approved and not deleted
             var buildingsQuery = _buildings
                 .AsQueryable()
                 .Where(u => !validBuildings.Contains(u.Id) && !u.IsDeleted);
 
-            // Apply filtering (you need to implement a Mongo-compatible Filter extension)
-            buildingsQuery = buildingsQuery.Filter(parameters);
+            buildingsQuery = buildingsQuery.Filter(parameters).Sort(parameters);
 
-            // Apply sorting (you need to implement a Mongo-compatible Sort extension)
-            buildingsQuery = buildingsQuery.Sort(parameters);
-
-            // Total count before pagination
             var totalCount = buildingsQuery.Count();
 
             parameters.checkOverflow(totalCount);
 
-            // Pagination
             var buildingsPage = buildingsQuery
                 .Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
-                .ToList(); // MongoDB IQueryable uses synchronous ToList(), but you can use ToListAsync() if you convert to IMongoQueryable
+                .ToList();
 
-            // Total pages
             var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
 
             return (buildingsPage, totalCount, totalPages);
+        }
+
+        public Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetCompanyBuildings(string companyId, QueryStringParameters parameters)
+        {
+            var buildingsQuery = _buildings
+                .AsQueryable()
+                .Where(u => u.CompanyId == companyId && !u.IsDeleted);
+
+            buildingsQuery = buildingsQuery.Filter(parameters).Sort(parameters);
+
+            var totalCount = buildingsQuery.Count();
+
+            parameters.checkOverflow(totalCount);
+
+            var buildingsPage = buildingsQuery
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+
+            return Task.FromResult((buildingsPage, totalCount, totalPages));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
             _contracts = context.Contracts;
         }
 
-        public Task<(List<Contract> constractPage, int totalCount, int totalPages)> GetContractsByUserId(string userId, QueryStringParameters parameters)
+        public Task<(List<Contract> contractPage, int totalCount, int totalPages)> GetContractsByUserId(string userId, QueryStringParameters parameters)
         {
             var contractsQuery = _contracts
                 .AsQueryable()
@@ -33,7 +33,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
             return Task.FromResult((contractsPage, totalCount, totalPages));
         }
 
-        public Task<(List<Contract> constractPage, int totalCount, int totalPages)> GetContractsByAgencyId(string agencyId, QueryStringParameters parameters)
+        public Task<(List<Contract> contractPage, int totalCount, int totalPages)> GetContractsByAgencyId(string agencyId, QueryStringParameters parameters)
         {
             var contractsQuery = _contracts
                 .AsQueryable()

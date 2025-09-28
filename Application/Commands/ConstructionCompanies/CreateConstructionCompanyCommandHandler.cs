@@ -25,7 +25,7 @@ namespace krov_nad_glavom_api.Application.Commands.ConstructionCompanies
             var company = _mapper.Map<ConstructionCompany>(request.ConstructionCompanyToAddDto);
             company.Id = Guid.NewGuid().ToString();
 
-            _unitofWork.ConstructionCompanies.AddAsync(company);
+            await _unitofWork.ConstructionCompanies.AddAsync(company);
             await _unitofWork.Save();
             return company.Id;
         }

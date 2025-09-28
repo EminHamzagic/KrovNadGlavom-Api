@@ -25,11 +25,6 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Buildings.Where(u => u.ParcelNumber == parcelNum && !u.IsDeleted).FirstOrDefaultAsync();
 		}
 
-		public IQueryable<Building> GetBuildingsByCompanyId(string comapnyId)
-		{
-			return _context.Buildings.Where(u => u.CompanyId == comapnyId && !u.IsDeleted).OrderBy(b => b.CreatedAt).AsQueryable();
-		}
-
 		public async Task<bool> CanAddApartment(ApartmentToAddDto apartmentToAddDto)
 		{
 			var building = await _context.Buildings.Where(b => b.Id == apartmentToAddDto.BuildingId).FirstOrDefaultAsync();
@@ -53,6 +48,25 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		{
 			var validBuildings = await _context.AgencyRequests.Where(a => a.Status == "Approved").Select(a => a.BuildingId).ToListAsync();
 			var buildingsQuery = _context.Buildings.Where(u => !validBuildings.Contains(u.Id) && !u.IsDeleted).AsQueryable();
+
+			buildingsQuery = buildingsQuery.Filter(parameters).Sort(parameters);
+
+			var totalCount = buildingsQuery.Count();
+			parameters.checkOverflow(totalCount);
+
+			var buildingsPage = await buildingsQuery
+				.Skip((parameters.PageNumber - 1) * parameters.PageSize)
+				.Take(parameters.PageSize)
+				.ToListAsync();
+
+			var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+
+			return (buildingsPage, totalCount, totalPages);
+		}
+
+		public async Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetCompanyBuildings(string companyId, QueryStringParameters parameters)
+		{
+			var buildingsQuery = _context.Buildings.Where(u => u.CompanyId == companyId && !u.IsDeleted).AsQueryable();
 
 			buildingsQuery = buildingsQuery.Filter(parameters).Sort(parameters);
 

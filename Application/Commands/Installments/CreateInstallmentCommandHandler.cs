@@ -21,7 +21,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
             var installment = _mapper.Map<Installment>(request.InstallmentToAddDto);
             installment.Id = Guid.NewGuid().ToString();
 
-            _unitofWork.Installments.AddAsync(installment);
+            await _unitofWork.Installments.AddAsync(installment);
             await _unitofWork.Save();
 
             return installment;
