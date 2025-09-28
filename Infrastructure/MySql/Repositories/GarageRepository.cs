@@ -23,9 +23,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Garages.Where(a => a.BuildingId == buildingId).ToListAsync();
 		}
 
-		public int GetBuildingGarageCount(string buildingId)
+		public Task<int> GetBuildingGarageCount(string buildingId)
 		{
-			return _context.Garages.Where(a => a.BuildingId == buildingId).Count();
+			return Task.FromResult(_context.Garages.Where(a => a.BuildingId == buildingId).Count());
 		}
 		
 		public async Task<bool> IsSpotNumberFree(string spotNumber, string buildingId)

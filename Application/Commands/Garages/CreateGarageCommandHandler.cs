@@ -19,7 +19,7 @@ namespace krov_nad_glavom_api.Application.Commands.Garages
         public async Task<string> Handle(CreateGarageCommand request, CancellationToken cancellationToken)
         {
             var building = await _unitofWork.Buildings.GetBuildingById(request.GarageToAddDto.BuildingId);
-            if ((_unitofWork.Garages.GetBuildingGarageCount(request.GarageToAddDto.BuildingId) + 1) > building.GarageSpotCount)
+            if ((await _unitofWork.Garages.GetBuildingGarageCount(request.GarageToAddDto.BuildingId) + 1) > building.GarageSpotCount)
                 throw new Exception("Njie moguće dodati novo garažno mesto, sva su popunjena");
 
             var isSpotFree = await _unitofWork.Garages.IsSpotNumberFree(request.GarageToAddDto.SpotNumber, building.Id);
@@ -28,7 +28,7 @@ namespace krov_nad_glavom_api.Application.Commands.Garages
 
             var garage = _mapper.Map<Garage>(request.GarageToAddDto);
             garage.Id = Guid.NewGuid().ToString();
-            _unitofWork.Garages.AddAsync(garage);
+            await _unitofWork.Garages.AddAsync(garage);
             await _unitofWork.Save();
 
             return garage.Id;

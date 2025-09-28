@@ -14,9 +14,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			_context = context;
 		}
 
-		public int GetAgencyBuildingCount(string agencyId)
+		public Task<int> GetAgencyBuildingCount(string agencyId)
 		{
-			return _context.AgencyRequests.Where(a => a.AgencyId == agencyId && !a.IsDeleted).Count();
+			return Task.FromResult(_context.AgencyRequests.Where(a => a.AgencyId == agencyId && !a.IsDeleted).Count());
 		}
 
 		public async Task<int> GetAgencyApartmentCount(string agencyId)

@@ -20,9 +20,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Installments.Where(i => i.ContractId == contractId).OrderByDescending(i => i.SequenceNumber).ToListAsync();
 		}
 
-		public int GetConfirmedInstallmentsCount(string contractId)
+		public Task<int> GetConfirmedInstallmentsCount(string contractId)
 		{
-			return _context.Installments.Where(i => i.ContractId == contractId && i.IsConfirmed).Count();
+			return Task.FromResult(_context.Installments.Where(i => i.ContractId == contractId && i.IsConfirmed).Count());
 		}
 
 		public async Task<int> GetNextSequenceNumber(string contractId)

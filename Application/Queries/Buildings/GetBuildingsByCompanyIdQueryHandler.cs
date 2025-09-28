@@ -17,7 +17,7 @@ namespace krov_nad_glavom_api.Application.Queries.Buildings
 
         public async Task<PaginatedResponse<Building>> Handle(GetBuildingsByCompanyIdQuery request, CancellationToken cancellationToken)
         {
-            var (buildingsPage, totalCount, totalPages) = await _unitofWork.Buildings.GetAllValidBuildings(request.comapnyId, request.parameters);
+            var (buildingsPage, totalCount, totalPages) = await _unitofWork.Buildings.GetCompanyBuildings(request.comapnyId, request.parameters);
 
             return new PaginatedResponse<Building>(
                 buildingsPage,

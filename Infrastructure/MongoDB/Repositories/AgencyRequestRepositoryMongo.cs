@@ -20,11 +20,11 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
             _agencies = context.Agencies;
         }
 
-        public int GetAgencyBuildingCount(string agencyId)
+        public Task<int> GetAgencyBuildingCount(string agencyId)
         {
-            return (int)_agencyRequests
+            return Task.FromResult((int)_agencyRequests
                 .Find(a => a.AgencyId == agencyId && !a.IsDeleted)
-                .CountDocuments();
+                .CountDocuments());
         }
 
         public async Task<int> GetAgencyApartmentCount(string agencyId)

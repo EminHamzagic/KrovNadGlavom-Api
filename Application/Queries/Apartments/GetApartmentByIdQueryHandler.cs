@@ -32,7 +32,7 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
             apartmentToReturn.Building.PriceList = priceList;
             apartmentToReturn.Agency = await _unitofWork.AgencyRequests.GetAgencyByBuildingId(apartmentToReturn.BuildingId);
             apartmentToReturn.Reservation = await _unitofWork.Reservations.GetByApartmentId(apartmentToReturn.Id);
-            apartmentToReturn.CanRequestDiscount = _unitofWork.Reservations.CanUserReserve(request.userId, apartmentToReturn.Agency.Id);
+            apartmentToReturn.CanRequestDiscount = await _unitofWork.Reservations.CanUserReserve(request.userId, apartmentToReturn.Agency.Id);
             apartmentToReturn.DiscountRequest = await _unitofWork.DiscountRequests.GetByApartmentAndUserId(apartmentToReturn.Id, request.userId);
 
             return apartmentToReturn;

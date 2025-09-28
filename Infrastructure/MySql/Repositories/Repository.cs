@@ -35,7 +35,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         }
 
         // add methods
-        public async void AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
         }

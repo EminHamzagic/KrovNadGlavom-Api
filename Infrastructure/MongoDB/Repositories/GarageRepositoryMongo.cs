@@ -27,10 +27,10 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .ToListAsync();
         }
 
-        public int GetBuildingGarageCount(string buildingId)
+        public Task<int> GetBuildingGarageCount(string buildingId)
         {
             // synchronous version
-            return (int)_garages.CountDocuments(a => a.BuildingId == buildingId);
+            return Task.FromResult((int)_garages.CountDocuments(a => a.BuildingId == buildingId));
         }
 
         public async Task<bool> IsSpotNumberFree(string spotNumber, string buildingId)

@@ -29,11 +29,11 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public bool CanUserReserve(string userId, string agencyId)
+        public Task<bool> CanUserReserve(string userId, string agencyId)
         {
-            return _userAgencyFollows
+            return Task.FromResult(_userAgencyFollows
                 .AsQueryable()
-                .Any(c => c.AgencyId == agencyId && c.UserId == userId);
+                .Any(c => c.AgencyId == agencyId && c.UserId == userId));
         }
 
         public async Task<Reservation> GetUserReservation(string userId)

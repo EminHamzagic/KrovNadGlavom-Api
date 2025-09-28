@@ -8,6 +8,7 @@ namespace krov_nad_glavom_api.Data.Config
             MongoDb = configuration.GetConnectionString("MongoDb") ?? throw new InvalidOperationException("Missing MongoDb in configuration.");
             AllowedOrigins = configuration.GetSection("AllowedOrigins").Get<List<string>>() ?? throw new InvalidOperationException("Missing AllowedOrigins in configuration.");
             JWTSettings = configuration.GetSection("JWTSettings").Get<JWTSettings>();
+            Neo4jConfig = configuration.GetSection("Neo4jConfig").Get<Neo4jConfig>();
             ApplyEnvOverrides();
         }
 
@@ -15,6 +16,7 @@ namespace krov_nad_glavom_api.Data.Config
         public string MongoDb { get; set; }
         public List<string> AllowedOrigins { get; set; }
         public JWTSettings JWTSettings { get; set; }
+        public Neo4jConfig Neo4jConfig { get; set; }
         private void ApplyEnvOverrides()
         {
             ApplyIfExists("DB_CONNECTION_STRING", value => ConnectionString = value);

@@ -5,7 +5,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
 {
     public interface IAgencyRequestRepository : IRepository<AgencyRequest>
     {
-        int GetAgencyBuildingCount(string agencyId);
+        Task<int> GetAgencyBuildingCount(string agencyId);
         Task<int> GetAgencyApartmentCount(string agencyId);
         Task<bool> CheckForExistingRequest(AgencyRequestToAddDto dto);
         Task<List<AgencyRequest>> GetAgencyRequestsByAgencyId(string agencyId, string status);

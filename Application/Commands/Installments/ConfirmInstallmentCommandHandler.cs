@@ -24,7 +24,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
             await _unitofWork.Save();
 
             var contract = await _unitofWork.Contracts.GetByIdAsync(installment.ContractId);
-            var confirmedInstallments = _unitofWork.Installments.GetConfirmedInstallmentsCount(installment.ContractId);
+            var confirmedInstallments = await _unitofWork.Installments.GetConfirmedInstallmentsCount(installment.ContractId);
             if (contract.InstallmentCount == confirmedInstallments)
             {
                 contract.Status = "Paid";
@@ -51,7 +51,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
                     CreatedAt = DateTime.Now
                 };
 
-                _unitofWork.Installments.AddAsync(nextInstallment);
+                await _unitofWork.Installments.AddAsync(nextInstallment);
             }
             _unitofWork.Contracts.Update(contract);
 

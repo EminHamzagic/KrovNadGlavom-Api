@@ -29,7 +29,7 @@ namespace krov_nad_glavom_api.Application.Commands.Users
             user.Id = Guid.NewGuid().ToString();
             user.PasswordHash = _securePasswordHasher.Hash(request.UserToAddDto.Password);
 
-            _unitofWork.Users.AddAsync(user);
+            await _unitofWork.Users.AddAsync(user);
             await _unitofWork.Save();
 
             return user.Id;

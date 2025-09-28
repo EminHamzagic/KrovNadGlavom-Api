@@ -35,7 +35,7 @@ namespace krov_nad_glavom_api.Application.Commands.Reservations
             reservation.FromDate = DateTime.Now;
             reservation.ToDate = DateTime.Now.AddDays(5);
 
-            _unitofWork.Reservations.AddAsync(reservation);
+            await _unitofWork.Reservations.AddAsync(reservation);
             await _unitofWork.Save();
 
             return reservation;

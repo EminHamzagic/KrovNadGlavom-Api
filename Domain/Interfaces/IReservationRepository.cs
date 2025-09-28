@@ -6,7 +6,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<Reservation> GetReservationByUserId(string userId);
         Task<Reservation> GetByApartmentId(string apartmentId);
-        bool CanUserReserve(string userId, string agencyId);
+        Task<bool> CanUserReserve(string userId, string agencyId);
         Task<Reservation> GetUserReservation(string userId);
     }
 }

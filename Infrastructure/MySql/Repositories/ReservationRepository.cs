@@ -23,9 +23,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 			return await _context.Reservations.Where(c => c.ApartmentId == apartmentId).FirstOrDefaultAsync();
 		}
 
-		public bool CanUserReserve(string userId, string agencyId)
+		public Task<bool> CanUserReserve(string userId, string agencyId)
 		{
-			return _context.UserAgencyFollows.Any(c => c.AgencyId == agencyId && c.UserId == userId);
+			return Task.FromResult(_context.UserAgencyFollows.Any(c => c.AgencyId == agencyId && c.UserId == userId));
 		}
 		
 		public async Task<Reservation> GetUserReservation(string userId)

@@ -28,7 +28,7 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
             var contract = _mapper.Map<Contract>(request.ContractToAddDto);
             contract.Id = Guid.NewGuid().ToString();
 
-            _unitofWork.Contracts.AddAsync(contract);
+            await _unitofWork.Contracts.AddAsync(contract);
 
             var firstInstallment = new Installment
             {
@@ -40,7 +40,7 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
                 IsConfirmed = false,
                 CreatedAt = DateTime.Now
             };
-            _unitofWork.Installments.AddAsync(firstInstallment);
+            await _unitofWork.Installments.AddAsync(firstInstallment);
 
             apartment.IsAvailable = false;
             _unitofWork.Apartments.Update(apartment);

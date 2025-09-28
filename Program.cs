@@ -11,12 +11,14 @@ using krov_nad_glavom_api.Data;
 using krov_nad_glavom_api.Data.Config;
 using krov_nad_glavom_api.Infrastructure.MongoDB;
 using krov_nad_glavom_api.Infrastructure.MySql;
+using krov_nad_glavom_api.Infrastructure.Neo4j;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Bson.Serialization.Conventions;
+using Neo4j.Driver;
 using Serilog;
 
 public static class Program
@@ -72,7 +74,7 @@ public static class Program
         });
 
         ConfigureSwagger(builder.Services);
-        ConfigureDbContext(builder.Services, globalConfig.ConnectionString, args);
+        ConfigureDbContext(builder.Services, globalConfig, args);
         ConfigureAuthentication(builder.Services, globalConfig.JWTSettings);
         ConfigureDependencies(builder.Services, globalConfig);
         ConfigureLogging(builder, globalConfig);
@@ -81,21 +83,26 @@ public static class Program
         return builder.Build();
     }
 
-    private static void ConfigureDbContext(IServiceCollection services, string connectionString, string[] args)
+    private static void ConfigureDbContext(IServiceCollection services, GlobalConfig globalConfig, string[] args)
     {
         var isNeo4j = args.Any(a => a == "--neo");
         var isMongo = args.Any(a => a == "--mongo");
 
         if (isNeo4j)
         {
-
+            services.AddSingleton<IDriver>(sp =>
+            {
+                var config = globalConfig.Neo4jConfig;
+                return GraphDatabase.Driver(
+                    config.Uri,
+                    AuthTokens.Basic(config.User, config.Password));
+            });
+            services.AddScoped<krovNadGlavomNeo4jDbContext>();
+            services.AddScoped<IUnitofWork, UnitOfWorkNeo4j>();
         }
         else if (isMongo)
         {
-            // var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
-            // ConventionRegistry.Register("camelCase", conventionPack, t => true);
-
-            services.AddSingleton<krovNadGlavomMongoDbContext>();
+            services.AddSingleton(new krovNadGlavomMongoDbContext(globalConfig.MongoDb));
             services.AddScoped<IUnitofWork, UnitOfWorkMongo>();
         }
         else
@@ -103,8 +110,8 @@ public static class Program
             services.AddDbContext<krovNadGlavomDbContext>(options =>
             {
                 options.UseMySql(
-                    connectionString,
-                    ServerVersion.AutoDetect(connectionString),
+                    globalConfig.ConnectionString,
+                    ServerVersion.AutoDetect(globalConfig.ConnectionString),
                     mySqlOptionsAction: mySqlOptions =>
                     {
                         mySqlOptions.EnableRetryOnFailure(
