@@ -7,24 +7,24 @@ namespace krov_nad_glavom_api.Application.Commands.DiscountRequests
 {
     public class UpdateDiscountRequestCommandHandler : IRequestHandler<UpdateDiscountRequestCommand, DiscountRequest>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UpdateDiscountRequestCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public UpdateDiscountRequestCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<DiscountRequest> Handle(UpdateDiscountRequestCommand request, CancellationToken cancellationToken)
         {
-            var discountRequest = await _unitofWork.DiscountRequests.GetByIdAsync(request.Id);
+            var discountRequest = await _unitOfWork.DiscountRequests.GetByIdAsync(request.Id);
             if (discountRequest == null)
                 throw new Exception("Zahtev za popust nije pronađen");
 
             _mapper.Map(request.DiscountRequestToUpdateDto, discountRequest);
-            _unitofWork.DiscountRequests.Update(discountRequest);
-            await _unitofWork.Save();
+            _unitOfWork.DiscountRequests.Update(discountRequest);
+            await _unitOfWork.Save();
 
             return discountRequest;
         }

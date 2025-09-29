@@ -1,6 +1,6 @@
 namespace krov_nad_glavom_api.Application.Interfaces
 {
-    public interface IUnitofWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IUserRepository Users { get; }
         IUserSessionRepository UserSessions { get; }

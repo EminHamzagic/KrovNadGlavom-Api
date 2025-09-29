@@ -7,24 +7,24 @@ namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
 {
     public class GetAgencyDiscountRequestsQueryHandler : IRequestHandler<GetAgencyDiscountRequestsQuery, List<DiscountRequestToReturnDto>>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetAgencyDiscountRequestsQueryHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetAgencyDiscountRequestsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<List<DiscountRequestToReturnDto>> Handle(GetAgencyDiscountRequestsQuery request, CancellationToken cancellationToken)
         {
-            var discountRequests = await _unitofWork.DiscountRequests.GetDiscountRequestsByAgencyId(request.agencyId, request.status);
+            var discountRequests = await _unitOfWork.DiscountRequests.GetDiscountRequestsByAgencyId(request.agencyId, request.status);
 
             var aparmentsIds = discountRequests.Select(d => d.ApartmentId).Distinct().ToList();
             var userIds = discountRequests.Select(d => d.UserId).Distinct().ToList();
 
-            var apartments = await _unitofWork.Apartments.GetApartmentsByIds(aparmentsIds);
-            var users = await _unitofWork.Users.GetUsersByIds(userIds);
+            var apartments = await _unitOfWork.Apartments.GetApartmentsByIds(aparmentsIds);
+            var users = await _unitOfWork.Users.GetUsersByIds(userIds);
 
             var apartmentDict = apartments.ToDictionary(a => a.Id);
             var userDict = users.ToDictionary(u => u.Id);
@@ -37,7 +37,7 @@ namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
                 if (userDict.TryGetValue(item.UserId, out var user))
                     item.User = user;
 
-                var commission = await _unitofWork.AgencyRequests.GetAgencyCommissionForBuilding(item.Apartment.BuildingId);
+                var commission = await _unitOfWork.AgencyRequests.GetAgencyCommissionForBuilding(item.Apartment.BuildingId);
                 if (item.Percentage > commission)
                 {
                     item.MustForward = true;

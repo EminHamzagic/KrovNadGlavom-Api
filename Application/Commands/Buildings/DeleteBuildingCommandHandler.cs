@@ -6,35 +6,35 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
 {
     public class DeleteBuildingCommandHandler : IRequestHandler<DeleteBuildingCommand, Building>
     {
-        private readonly IUnitofWork _unitofWork;
-        public DeleteBuildingCommandHandler(IUnitofWork unitofWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public DeleteBuildingCommandHandler(IUnitOfWork unitOfWork)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Building> Handle(DeleteBuildingCommand request, CancellationToken cancellationToken)
         {
-            var building = await _unitofWork.Buildings.GetByIdAsync(request.Id);
+            var building = await _unitOfWork.Buildings.GetByIdAsync(request.Id);
             if (building == null)
                 throw new Exception("Zgrada nije pronađena");
 
             building.IsDeleted = true;
-            var apartments = await _unitofWork.Apartments.GetApartmentsByBuildingId(request.Id);
+            var apartments = await _unitOfWork.Apartments.GetApartmentsByBuildingId(request.Id);
             foreach (var item in apartments)
             {
                 item.IsDeleted = true;
-                _unitofWork.Apartments.Update(item);
+                _unitOfWork.Apartments.Update(item);
             }
 
-            var garages = await _unitofWork.Garages.GetGaragesByBuildingId(request.Id);
+            var garages = await _unitOfWork.Garages.GetGaragesByBuildingId(request.Id);
             foreach (var item in garages)
             {
                 item.IsDeleted = true;
-                _unitofWork.Garages.Update(item);
+                _unitOfWork.Garages.Update(item);
             }
 
-            _unitofWork.Buildings.Update(building);
-            await _unitofWork.Save();
+            _unitOfWork.Buildings.Update(building);
+            await _unitOfWork.Save();
 
             return building;
         }

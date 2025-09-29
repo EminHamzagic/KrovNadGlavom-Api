@@ -7,32 +7,32 @@ namespace krov_nad_glavom_api.Application.Queries.Buildings
 {
     public class GetBuildingByIdQueryHandler : IRequestHandler<GetBuildingByIdQuery, BuildingToReturnDto>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetBuildingByIdQueryHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetBuildingByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<BuildingToReturnDto> Handle(GetBuildingByIdQuery request, CancellationToken cancellationToken)
         {
-            var building = await _unitofWork.Buildings.GetBuildingById(request.id);
+            var building = await _unitOfWork.Buildings.GetBuildingById(request.id);
             if (building == null)
                 throw new Exception("Zgrada nije pronađena");
 
-            var apartments = await _unitofWork.Apartments.GetApartmentsByBuildingId(building.Id);
-            var garages = await _unitofWork.Garages.GetGaragesByBuildingId(building.Id);
-            var priceList = await _unitofWork.PriceLists.GetPriceListByBuildingId(building.Id);
-            var company = await _unitofWork.ConstructionCompanies.GetByIdAsync(building.CompanyId);
+            var apartments = await _unitOfWork.Apartments.GetApartmentsByBuildingId(building.Id);
+            var garages = await _unitOfWork.Garages.GetGaragesByBuildingId(building.Id);
+            var priceList = await _unitOfWork.PriceLists.GetPriceListByBuildingId(building.Id);
+            var company = await _unitOfWork.ConstructionCompanies.GetByIdAsync(building.CompanyId);
 
             var buildingToReturn = _mapper.Map<BuildingToReturnDto>(building);
             buildingToReturn.Apartments = apartments;
             buildingToReturn.Garages = garages;
             buildingToReturn.PriceList = priceList;
             buildingToReturn.Company = company;
-            buildingToReturn.RequestStatus = await _unitofWork.AgencyRequests.GetBuildingRequestStatus(building.Id);
+            buildingToReturn.RequestStatus = await _unitOfWork.AgencyRequests.GetBuildingRequestStatus(building.Id);
 
             return buildingToReturn;
         }

@@ -6,22 +6,22 @@ namespace krov_nad_glavom_api.Application.Commands.AgencyRequests
 {
     public class DeleteAgencyRequestCommandHandler : IRequestHandler<DeleteAgencyRequestCommand, AgencyRequest>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteAgencyRequestCommandHandler(IUnitofWork unitofWork)
+        public DeleteAgencyRequestCommandHandler(IUnitOfWork unitOfWork)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<AgencyRequest> Handle(DeleteAgencyRequestCommand request, CancellationToken cancellationToken)
         {
-            var agencyRequest = await _unitofWork.AgencyRequests.GetByIdAsync(request.Id);
+            var agencyRequest = await _unitOfWork.AgencyRequests.GetByIdAsync(request.Id);
             if (agencyRequest == null)
                 throw new Exception("Zahtev nije pronađen");
 
             agencyRequest.IsDeleted = true;
-            _unitofWork.AgencyRequests.Update(agencyRequest);
-            await _unitofWork.Save();
+            _unitOfWork.AgencyRequests.Update(agencyRequest);
+            await _unitOfWork.Save();
 
             return agencyRequest;
         }

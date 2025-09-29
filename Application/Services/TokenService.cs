@@ -9,8 +9,8 @@ namespace krov_nad_glavom_api.Application.Services
 {
     public class TokenService : ITokenService
     {
-		private readonly JWTSettings _jWTSettings;
-		private readonly byte[] _key;
+        private readonly JWTSettings _jWTSettings;
+        private readonly byte[] _key;
 
         public TokenService(JWTSettings jWTSettings)
         {
@@ -70,6 +70,27 @@ namespace krov_nad_glavom_api.Application.Services
                 Console.WriteLine(ex.Message);
                 return null;
             }
+        }
+        
+        public string GenerateEmailVerificationToken(string userId, string email)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userId),
+                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim("purpose", "emailVerification"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _jWTSettings.Issuer,
+                audience: _jWTSettings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(30),
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256)
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

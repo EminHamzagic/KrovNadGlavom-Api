@@ -7,24 +7,24 @@ namespace krov_nad_glavom_api.Application.Commands.AgencyRequests
 {
     public class UpdateAgencyRequestCommandHandler : IRequestHandler<UpdateAgencyRequestCommand, AgencyRequest>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UpdateAgencyRequestCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public UpdateAgencyRequestCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<AgencyRequest> Handle(UpdateAgencyRequestCommand request, CancellationToken cancellationToken)
         {
-            var agencyRequest = await _unitofWork.AgencyRequests.GetByIdAsync(request.Id);
+            var agencyRequest = await _unitOfWork.AgencyRequests.GetByIdAsync(request.Id);
             if (agencyRequest == null)
                 throw new Exception("Zahtev nije pronađen");
 
             _mapper.Map(request.AgencyRequestToUpdateDto, agencyRequest);
-            _unitofWork.AgencyRequests.Update(agencyRequest);
-            await _unitofWork.Save();
+            _unitOfWork.AgencyRequests.Update(agencyRequest);
+            await _unitOfWork.Save();
 
             return agencyRequest;
         }

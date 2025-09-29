@@ -6,21 +6,21 @@ namespace krov_nad_glavom_api.Application.Commands.Garages
 {
     public class DeleteGarageCommandHandler : IRequestHandler<DeleteGarageCommand, Garage>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteGarageCommandHandler(IUnitofWork unitofWork)
+        public DeleteGarageCommandHandler(IUnitOfWork unitOfWork)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Garage> Handle(DeleteGarageCommand request, CancellationToken cancellationToken)
         {
-            var garage = await _unitofWork.Garages.GetGarageById(request.Id);
+            var garage = await _unitOfWork.Garages.GetGarageById(request.Id);
             if (garage == null)
                 throw new Exception("Garaža nije pronađena");
 
-            _unitofWork.Garages.Remove(garage);
-            await _unitofWork.Save();
+            _unitOfWork.Garages.Remove(garage);
+            await _unitOfWork.Save();
 
             return garage;
         }

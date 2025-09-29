@@ -10,18 +10,18 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
 {
     public class GetAvailableApartmentsQueryHandler : IRequestHandler<GetAvailableApartmentsQuery, PaginatedResponse<ApartmentToReturnDto>>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetAvailableApartmentsQueryHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetAvailableApartmentsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<PaginatedResponse<ApartmentToReturnDto>> Handle(GetAvailableApartmentsQuery request, CancellationToken cancellationToken)
         {
-            var (apartmentsPage, totalCount, totalPages) = await _unitofWork.Apartments.GetAllAvailableApartmentsWithBuildings(request.parameters);
+            var (apartmentsPage, totalCount, totalPages) = await _unitOfWork.Apartments.GetAllAvailableApartmentsWithBuildings(request.parameters);
 
             var apartmentsToReturn = apartmentsPage
                 .Select(x =>

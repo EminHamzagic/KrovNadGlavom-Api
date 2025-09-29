@@ -9,27 +9,30 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, UserToReturnDto>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ISecurePasswordHasher _securePasswordHasher;
         private readonly IUserSessionService _userSessionService;
 
-        public LoginUserCommandHandler(IUnitofWork unitofWork, IMapper mapper, ISecurePasswordHasher securePasswordHasher, IUserSessionService userSessionService)
+        public LoginUserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ISecurePasswordHasher securePasswordHasher, IUserSessionService userSessionService)
         {
             _userSessionService = userSessionService;
             _securePasswordHasher = securePasswordHasher;
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         
         public async Task<UserToReturnDto> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _unitofWork.Users.GetUserByEmail(request.UserToLoginDto.Email);
+            var user = await _unitOfWork.Users.GetUserByEmail(request.UserToLoginDto.Email);
             if (user == null)
                 throw new Exception("Korisnik nije pronađen");
 
             if (!_securePasswordHasher.Verify(user.PasswordHash, request.UserToLoginDto.Password))
                 throw new Exception("Pogrešna lozinka");
+
+            if (!user.IsVerified)
+                throw new Exception("Profil nije verifikovan. Molimo vas varifikujte vaš profil");
 
             var tokens = await _userSessionService.CreateUserSession(user);
 

@@ -8,25 +8,25 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
 {
     public class CreateBuildingCommandHandler : IRequestHandler<CreateBuildingCommand, string>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CreateBuildingCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public CreateBuildingCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<string> Handle(CreateBuildingCommand request, CancellationToken cancellationToken)
         {
-            var existingBuilding = await _unitofWork.Buildings.GetBuildingById(request.BuildingToAddDto.ParcelNumber);
+            var existingBuilding = await _unitOfWork.Buildings.GetBuildingById(request.BuildingToAddDto.ParcelNumber);
             if (existingBuilding != null)
                 throw new Exception("Postoji zgrada na sa unetim brojem parcele");
 
             var building = _mapper.Map<Building>(request.BuildingToAddDto);
             building.Id = Guid.NewGuid().ToString();
 
-            await _unitofWork.Buildings.AddAsync(building);
+            await _unitOfWork.Buildings.AddAsync(building);
 
             var apartmentsToAdd = _mapper.Map<List<ApartmentToAddDto>, List<Apartment>>(request.BuildingToAddDto.Apartments);
             foreach (var apartment in apartmentsToAdd)
@@ -39,7 +39,7 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
 
             if (request.BuildingToAddDto.Apartments.Count() > 0)
             {   
-                await _unitofWork.Apartments.AddRangeAsync(apartmentsToAdd);
+                await _unitOfWork.Apartments.AddRangeAsync(apartmentsToAdd);
             }
 
             var garagesToAdd = _mapper.Map<List<Garage>>(request.BuildingToAddDto.Garages);
@@ -65,15 +65,15 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
             }
             if (request.BuildingToAddDto.Garages.Count() > 0)
             {   
-                await _unitofWork.Garages.AddRangeAsync(garagesToAdd);
+                await _unitOfWork.Garages.AddRangeAsync(garagesToAdd);
             }
 
             var priceList = _mapper.Map<PriceList>(request.BuildingToAddDto.PriceList);
             priceList.Id = Guid.NewGuid().ToString();
             priceList.BuildingId = building.Id;
-            await _unitofWork.PriceLists.AddAsync(priceList);
+            await _unitOfWork.PriceLists.AddAsync(priceList);
 
-            await _unitofWork.Save();
+            await _unitOfWork.Save();
 
             return building.Id;
         }

@@ -7,12 +7,12 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
 {
     public class CreateInstallmentCommandHandler : IRequestHandler<CreateInstallmentCommand, Installment>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CreateInstallmentCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public CreateInstallmentCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -21,8 +21,8 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
             var installment = _mapper.Map<Installment>(request.InstallmentToAddDto);
             installment.Id = Guid.NewGuid().ToString();
 
-            await _unitofWork.Installments.AddAsync(installment);
-            await _unitofWork.Save();
+            await _unitOfWork.Installments.AddAsync(installment);
+            await _unitOfWork.Save();
 
             return installment;
         }

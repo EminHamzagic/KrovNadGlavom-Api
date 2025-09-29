@@ -7,28 +7,28 @@ namespace krov_nad_glavom_api.Application.Commands.UserAgencyFollows
 {
     public class CreateUserAgencyFollowCommandHandler : IRequestHandler<CreateUserAgencyFollowCommand, UserAgencyFollow>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CreateUserAgencyFollowCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public CreateUserAgencyFollowCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<UserAgencyFollow> Handle(CreateUserAgencyFollowCommand request, CancellationToken cancellationToken)
         {
-            var user = await _unitofWork.Users.GetByIdAsync(request.UserAgencyFollowToAddDto.UserId);
+            var user = await _unitOfWork.Users.GetByIdAsync(request.UserAgencyFollowToAddDto.UserId);
             if (user == null)
                 throw new Exception("Korisnik nije pronađen");
 
-            var agency = await _unitofWork.Agencies.GetByIdAsync(request.UserAgencyFollowToAddDto.AgencyId);
+            var agency = await _unitOfWork.Agencies.GetByIdAsync(request.UserAgencyFollowToAddDto.AgencyId);
             if (agency == null)
                 throw new Exception("Agencija nije pronađena");
                 
             var userFollow = _mapper.Map<UserAgencyFollow>(request.UserAgencyFollowToAddDto);
             userFollow.Id = Guid.NewGuid().ToString();
-            await _unitofWork.UserAgencyFollows.AddAsync(userFollow);
-            await _unitofWork.Save();
+            await _unitOfWork.UserAgencyFollows.AddAsync(userFollow);
+            await _unitOfWork.Save();
 
             return userFollow;
         }

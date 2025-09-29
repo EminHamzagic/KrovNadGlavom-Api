@@ -5,20 +5,20 @@ namespace krov_nad_glavom_api.Application.Commands.DiscountRequests
 {
     public class DeleteDiscountRequestCommandHandler : IRequestHandler<DeleteDiscountRequestCommand, bool>
     {
-        private readonly IUnitofWork _unitofWork;
-        public DeleteDiscountRequestCommandHandler(IUnitofWork unitofWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public DeleteDiscountRequestCommandHandler(IUnitOfWork unitOfWork)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(DeleteDiscountRequestCommand request, CancellationToken cancellationToken)
         {
-            var discountRequest = await _unitofWork.DiscountRequests.GetByIdAsync(request.Id);
+            var discountRequest = await _unitOfWork.DiscountRequests.GetByIdAsync(request.Id);
             if (discountRequest == null)
                 throw new Exception("Zahtev za popust nije pronađen");
 
-            _unitofWork.DiscountRequests.Remove(discountRequest);
-            await _unitofWork.Save();
+            _unitOfWork.DiscountRequests.Remove(discountRequest);
+            await _unitOfWork.Save();
 
             return true;
         }

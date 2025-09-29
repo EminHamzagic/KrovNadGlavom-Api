@@ -3,7 +3,7 @@ using krov_nad_glavom_api.Infrastructure.MongoDB.Repositories;
 
 namespace krov_nad_glavom_api.Infrastructure.MongoDB
 {
-    public class UnitOfWorkMongo : IUnitofWork
+    public class UnitOfWorkMongo : IUnitOfWork
     {
         private readonly krovNadGlavomMongoDbContext _context;
 

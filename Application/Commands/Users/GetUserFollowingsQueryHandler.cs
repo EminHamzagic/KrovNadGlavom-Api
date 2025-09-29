@@ -6,16 +6,16 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 {
     public class GetUserFollowingsQueryHandler : IRequestHandler<GetUserFollowingsQuery, List<Agency>>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetUserFollowingsQueryHandler(IUnitofWork unitofWork)
+        public GetUserFollowingsQueryHandler(IUnitOfWork unitOfWork)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<Agency>> Handle(GetUserFollowingsQuery request, CancellationToken cancellationToken)
         {
-            var agencies = await _unitofWork.UserAgencyFollows.GetUserFollowing(request.Id);
+            var agencies = await _unitOfWork.UserAgencyFollows.GetUserFollowing(request.Id);
             return agencies;
         }
     }

@@ -7,18 +7,18 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
 {
     public class CreateContractCommandHandler : IRequestHandler<CreateContractCommand, Contract>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CreateContractCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public CreateContractCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<Contract> Handle(CreateContractCommand request, CancellationToken cancellationToken)
         {
-            var apartment = await _unitofWork.Apartments.GetByIdAsync(request.ContractToAddDto.ApartmentId);
+            var apartment = await _unitOfWork.Apartments.GetByIdAsync(request.ContractToAddDto.ApartmentId);
             if (apartment == null)
                 throw new Exception("Stan nije pronađen");
 
@@ -28,7 +28,7 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
             var contract = _mapper.Map<Contract>(request.ContractToAddDto);
             contract.Id = Guid.NewGuid().ToString();
 
-            await _unitofWork.Contracts.AddAsync(contract);
+            await _unitOfWork.Contracts.AddAsync(contract);
 
             var firstInstallment = new Installment
             {
@@ -40,11 +40,11 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
                 IsConfirmed = false,
                 CreatedAt = DateTime.Now
             };
-            await _unitofWork.Installments.AddAsync(firstInstallment);
+            await _unitOfWork.Installments.AddAsync(firstInstallment);
 
             apartment.IsAvailable = false;
-            _unitofWork.Apartments.Update(apartment);
-            await _unitofWork.Save();
+            _unitOfWork.Apartments.Update(apartment);
+            await _unitOfWork.Save();
 
             return contract;
         }

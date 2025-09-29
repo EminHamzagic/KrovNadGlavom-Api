@@ -4,7 +4,7 @@ using krov_nad_glavom_api.Infrastructure.Neo4j.Repositories;
 
 namespace krov_nad_glavom_api.Application
 {
-    public class UnitOfWorkNeo4j : IUnitofWork
+    public class UnitOfWorkNeo4j : IUnitOfWork
     {
         private readonly krovNadGlavomNeo4jDbContext _context;
 

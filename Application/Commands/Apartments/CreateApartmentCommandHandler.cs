@@ -7,18 +7,18 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
 {
     public class CreateApartmentCommandHandler : IRequestHandler<CreateApartmentCommand, string>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CreateApartmentCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public CreateApartmentCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<string> Handle(CreateApartmentCommand request, CancellationToken cancellationToken)
         {
-            var building = await _unitofWork.Buildings.GetByIdAsync(request.ApartmentToAddDto.BuildingId);
+            var building = await _unitOfWork.Buildings.GetByIdAsync(request.ApartmentToAddDto.BuildingId);
             if (building == null)
                 throw new Exception("Zgrada nije pronađena");
 
@@ -27,12 +27,12 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
 
             var apartment = _mapper.Map<Apartment>(request.ApartmentToAddDto);
 
-            var ableToAdd = await _unitofWork.Buildings.CanAddApartment(request.ApartmentToAddDto);
+            var ableToAdd = await _unitOfWork.Buildings.CanAddApartment(request.ApartmentToAddDto);
             if (!ableToAdd)
                 throw new Exception("Nije moguće dodati ovaj stan na izabranom spratu");
 
-            await _unitofWork.Apartments.AddAsync(apartment);
-            await _unitofWork.Save();
+            await _unitOfWork.Apartments.AddAsync(apartment);
+            await _unitOfWork.Save();
 
             return apartment.Id;
         }

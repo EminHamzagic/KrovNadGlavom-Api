@@ -10,22 +10,25 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 {
     public class GoogleLoginUserCommandHandler : IRequestHandler<GoogleLoginUserCommand, UserToReturnDto>
     {
-		private readonly IUnitofWork _unitofWork;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IUserSessionService _userSessionService;
 		private readonly IMapper _mapper;
 
-		public GoogleLoginUserCommandHandler(IUnitofWork unitofWork, IUserSessionService userSessionService, IMapper mapper)
+		public GoogleLoginUserCommandHandler(IUnitOfWork unitOfWork, IUserSessionService userSessionService, IMapper mapper)
         {
-			_unitofWork = unitofWork;
+			_unitOfWork = unitOfWork;
 			_userSessionService = userSessionService;
 			_mapper = mapper;
 		}
         public async Task<UserToReturnDto> Handle(GoogleLoginUserCommand request, CancellationToken cancellationToken)
         {
             var payload = await GoogleJsonWebSignature.ValidateAsync(request.GoogleAuthRequest.IdToken);
-            var user = await _unitofWork.Users.GetUserByEmail(payload.Email);
+            var user = await _unitOfWork.Users.GetUserByEmail(payload.Email);
             if (user == null)
-                throw new Exception("User not found");
+                throw new Exception("Korisnik nije pronađen");
+
+            if (!user.IsVerified)
+                throw new Exception("Profil nije verifikovan. Molimo vas varifikujte vaš profil");
 
             var tokens = await _userSessionService.CreateUserSession(user);
 

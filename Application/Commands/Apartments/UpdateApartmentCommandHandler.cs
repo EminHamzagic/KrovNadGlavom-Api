@@ -7,24 +7,24 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
 {
     public class UpdateApartmentCommandHandler : IRequestHandler<UpdateApartmentCommand, Apartment>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UpdateApartmentCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public UpdateApartmentCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Apartment> Handle(UpdateApartmentCommand request, CancellationToken cancellationToken)
         {
-            var apartment = await _unitofWork.Apartments.GetApartmentById(request.Id);
+            var apartment = await _unitOfWork.Apartments.GetApartmentById(request.Id);
             if (apartment == null)
                 throw new Exception("Stan nije pronađen");
 
             _mapper.Map(request.ApartmentToUpdateDto, apartment);
-            _unitofWork.Apartments.Update(apartment);
+            _unitOfWork.Apartments.Update(apartment);
 
-            await _unitofWork.Save();
+            await _unitOfWork.Save();
 
             return apartment;
         }

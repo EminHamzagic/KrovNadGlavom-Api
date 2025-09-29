@@ -7,27 +7,27 @@ namespace krov_nad_glavom_api.Application.Queries.DiscountRequests
 {
     public class GetUserDiscountRequestsQueryHandler : IRequestHandler<GetUserDiscountRequestsQuery, List<DiscountRequestToReturnDto>>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetUserDiscountRequestsQueryHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetUserDiscountRequestsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<List<DiscountRequestToReturnDto>> Handle(GetUserDiscountRequestsQuery request, CancellationToken cancellationToken)
         {
-            var discountRequests = await _unitofWork.DiscountRequests.GetDiscountRequestsByUserId(request.userId, request.status);
-            var user = await _unitofWork.Users.GetByIdAsync(request.userId);
+            var discountRequests = await _unitOfWork.DiscountRequests.GetDiscountRequestsByUserId(request.userId, request.status);
+            var user = await _unitOfWork.Users.GetByIdAsync(request.userId);
 
             var aparmentsIds = discountRequests.Select(d => d.ApartmentId).Distinct().ToList();
             var companyIds = discountRequests.Select(d => d.ConstructionCompanyId).Distinct().ToList();
             var agencyIds = discountRequests.Select(d => d.AgencyId).Distinct().ToList();
 
-            var apartments = await _unitofWork.Apartments.GetApartmentsByIds(aparmentsIds);
-            var companies = await _unitofWork.ConstructionCompanies.GetCompaniesByIds(companyIds);
-            var agencies = await _unitofWork.Agencies.GetAgenciesByIds(agencyIds);
+            var apartments = await _unitOfWork.Apartments.GetApartmentsByIds(aparmentsIds);
+            var companies = await _unitOfWork.ConstructionCompanies.GetCompaniesByIds(companyIds);
+            var agencies = await _unitOfWork.Agencies.GetAgenciesByIds(agencyIds);
 
             var apartmentDict = apartments.ToDictionary(a => a.Id);
             var companyDict = companies.ToDictionary(c => c.Id);

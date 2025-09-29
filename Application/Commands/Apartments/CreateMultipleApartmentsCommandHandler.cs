@@ -7,18 +7,18 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
 {
     public class CreateMultipleApartmentsCommandHandler : IRequestHandler<CreateMultipleApartmentsCommand, bool>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CreateMultipleApartmentsCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public CreateMultipleApartmentsCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
         
         public async Task<bool> Handle(CreateMultipleApartmentsCommand request, CancellationToken cancellationToken)
         {
-            var building = await _unitofWork.Buildings.GetByIdAsync(request.MultipleApartmentsToAddDto.Apartments.First().BuildingId);
+            var building = await _unitOfWork.Buildings.GetByIdAsync(request.MultipleApartmentsToAddDto.Apartments.First().BuildingId);
             if (building == null)
                 throw new Exception("Zgrada nije pronađena");
 
@@ -28,15 +28,15 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
                 throw new Exception($"Zgrada ne sadrži traženi sprat. Zgrada ima {building.FloorCount} spratova");
 
 
-                var ableToAdd = await _unitofWork.Buildings.CanAddApartment(item);
+                var ableToAdd = await _unitOfWork.Buildings.CanAddApartment(item);
                 if (!ableToAdd)
                     throw new Exception("Nije moguće dodati ovaj stan na izabranom spratu");    
             }
 
             var apartments = _mapper.Map<List<Apartment>>(request.MultipleApartmentsToAddDto.Apartments);
 
-            await _unitofWork.Apartments.AddRangeAsync(apartments);
-            await _unitofWork.Save();
+            await _unitOfWork.Apartments.AddRangeAsync(apartments);
+            await _unitOfWork.Save();
 
             return true;
         }
