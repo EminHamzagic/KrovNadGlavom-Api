@@ -8,33 +8,33 @@ namespace krov_nad_glavom_api.Application.Services
 {
     public class UserSessionService : IUserSessionService
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
 		private readonly ITokenService _tokenService;
 
-		public UserSessionService(IUnitofWork unitofWork, ITokenService tokenService)
+		public UserSessionService(IUnitOfWork unitOfWork, ITokenService tokenService)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
 			_tokenService = tokenService;
 		}
 
         public async Task<UserSession> GetSessionByRefreshToken(string refreshToken)
         {
-            var session = await _unitofWork.UserSessions.GetSessionByRefreshToken(refreshToken);
+            var session = await _unitOfWork.UserSessions.GetSessionByRefreshToken(refreshToken);
             return session;
         }
 
         public async Task UpdateRefreshTokenExpiry(string refreshToken, DateTime newExpiry)
         {
-            var session = await _unitofWork.UserSessions.GetSessionByRefreshToken(refreshToken);
+            var session = await _unitOfWork.UserSessions.GetSessionByRefreshToken(refreshToken);
             session.RefreshTokenExpiry = newExpiry;
-            await _unitofWork.Save();
+            await _unitOfWork.Save();
         }
 
         public async Task DeleteSession(string refreshToken)
         {
-            var session = await _unitofWork.UserSessions.GetSessionByRefreshToken(refreshToken);
-            _unitofWork.UserSessions.Remove(session);
-            await _unitofWork.Save();
+            var session = await _unitOfWork.UserSessions.GetSessionByRefreshToken(refreshToken);
+            _unitOfWork.UserSessions.Remove(session);
+            await _unitOfWork.Save();
         }
 
         public async Task<UserTokensDto> CreateUserSession(User user)
@@ -52,8 +52,8 @@ namespace krov_nad_glavom_api.Application.Services
                 Role = user.Role
             };
 
-            await _unitofWork.UserSessions.AddAsync(session);
-            await _unitofWork.Save();
+            await _unitOfWork.UserSessions.AddAsync(session);
+            await _unitOfWork.Save();
 
             var tokensToReturn = new UserTokensDto
             {

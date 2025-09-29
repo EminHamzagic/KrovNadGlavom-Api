@@ -9,25 +9,25 @@ namespace krov_nad_glavom_api.Application.Queries.Contracts
 {
     public class GetUserContractsQueryHandler : IRequestHandler<GetUserContractsQuery, PaginatedResponse<ContractToReturnDto>>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetUserContractsQueryHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetUserContractsQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<PaginatedResponse<ContractToReturnDto>> Handle(GetUserContractsQuery request, CancellationToken cancellationToken)
         {
-            var (contractsPage, totalCount, totalPages) = await _unitofWork.Contracts.GetContractsByUserId(request.userId, request.parameters);
+            var (contractsPage, totalCount, totalPages) = await _unitOfWork.Contracts.GetContractsByUserId(request.userId, request.parameters);
 
             var agencyIds = contractsPage.Select(c => c.AgencyId).Distinct().ToList();
             var apartmentIds = contractsPage.Select(c => c.ApartmentId).Distinct().ToList();
 
-            var agencies = await _unitofWork.Agencies.GetAgenciesByIds(agencyIds);
-            var apartments = await _unitofWork.Apartments.GetApartmentsByIds(apartmentIds);
-            var user = await _unitofWork.Users.GetByIdAsync(request.userId);
+            var agencies = await _unitOfWork.Agencies.GetAgenciesByIds(agencyIds);
+            var apartments = await _unitOfWork.Apartments.GetApartmentsByIds(apartmentIds);
+            var user = await _unitOfWork.Users.GetByIdAsync(request.userId);
 
             var agencyDict = agencies.ToDictionary(a => a.Id);
             var apartmentDict = apartments.ToDictionary(a => a.Id);

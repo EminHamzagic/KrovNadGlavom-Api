@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MongoDB.Bson.Serialization.Conventions;
 using Neo4j.Driver;
 using Serilog;
 
@@ -33,11 +32,14 @@ public static class Program
         app.UseCors(ALLOWED_SPECIFIC_ORIGINS_KEY);
         using var scope = app.Services.CreateScope();
 
-        var allCommands = scope.ServiceProvider.GetServices<krov_nad_glavom_api.Commands.ICommand>().ToList();
+        var allCommands = scope.ServiceProvider.GetServices<ICommand>().ToList();
         allCommands.Add(new ServeCommand(app, ALLOWED_SPECIFIC_ORIGINS_KEY));
 
         var matchingCommands = allCommands.Where(c => c.MatchCommand(command));
         var commandNames = allCommands.Select(c => c.GetCommandName()).ToList();
+
+        if (string.IsNullOrEmpty(command)) return ExitAndLogNoMatchingCommands(commandNames);
+        if (!matchingCommands.Any()) return ExitAndLogNoMatchingCommands(commandNames);
 
         foreach (var commandClass in matchingCommands)
         {
@@ -98,12 +100,12 @@ public static class Program
                     AuthTokens.Basic(config.User, config.Password));
             });
             services.AddScoped<krovNadGlavomNeo4jDbContext>();
-            services.AddScoped<IUnitofWork, UnitOfWorkNeo4j>();
+            services.AddScoped<IUnitOfWork, UnitOfWorkNeo4j>();
         }
         else if (isMongo)
         {
             services.AddSingleton(new krovNadGlavomMongoDbContext(globalConfig.MongoDb));
-            services.AddScoped<IUnitofWork, UnitOfWorkMongo>();
+            services.AddScoped<IUnitOfWork, UnitOfWorkMongo>();
         }
         else
         {
@@ -122,7 +124,7 @@ public static class Program
                     }
                 );
             });
-            services.AddScoped<IUnitofWork, UnitOfWorkMySql>();
+            services.AddScoped<IUnitOfWork, UnitOfWorkMySql>();
         }
     }
 
@@ -172,10 +174,13 @@ public static class Program
             cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
         });
         services.AddSingleton(ac => config.JWTSettings);
+        services.AddSingleton(ac => config.Neo4jConfig);
+        services.AddSingleton(ac => config.EmailConfig);
 
         services.AddSingleton<ISecurePasswordHasher, SecurePasswordHasher>();
         services.AddSingleton<ITokenService, TokenService>();
         services.AddSingleton<ICloudinaryService, CloudinaryService>();
+        services.AddSingleton<IEmailService, EmailService>();
         services.AddScoped<IUserSessionService, UserSessionService>();
     }
 
@@ -251,5 +256,12 @@ public static class Program
 
         services.AddFluentValidationAutoValidation();
         services.AddFluentValidationClientsideAdapters();
+    }
+
+    private static int ExitAndLogNoMatchingCommands(List<string> availableCommands)
+    {
+        Log.Error("Error: No command specified. Please provide a command.");
+        Log.Error($"Available commands are {string.Join(", ", availableCommands)}");
+        return 1;
     }
 }

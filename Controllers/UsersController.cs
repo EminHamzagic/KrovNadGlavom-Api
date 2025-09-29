@@ -57,9 +57,32 @@ namespace krov_nad_glavom_api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> CreateUser(UserToAddDto dto)
         {
-            var command = new CreateUserCommand(dto);
-            var userId = await _mediator.Send(command);
-            return Ok(userId);
+            try
+            {
+                var command = new CreateUserCommand(dto);
+                var userId = await _mediator.Send(command);
+                return Ok(userId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("verify-email")]
+        public async Task<IActionResult> VerifyUserEmail(VerifyEmailRequestDto verifyEmailRequestDto)
+        {
+            try
+            {
+                var command = new VerifyUserEmailCommand(verifyEmailRequestDto.Token);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
@@ -85,7 +108,7 @@ namespace krov_nad_glavom_api.Controllers
                 var userId = User.FindFirst("id")?.Value; // iz JWT tokena
                 var command = new ChangePasswordCommand(userId, dto);
                 var result = await _mediator.Send(command);
-                return Ok(new { success = result, message = "Lozinka uspešno promenjena." });
+                return Ok(new { success = result, message = "Lozinka uspeï¿½no promenjena." });
             }
             catch (Exception ex)
             {

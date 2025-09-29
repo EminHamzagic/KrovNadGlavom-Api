@@ -6,18 +6,18 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
 {
     public class ExtendBuildingEndDateCommandHandler : IRequestHandler<ExtendBuildingEndDateCommand, bool>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ExtendBuildingEndDateCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public ExtendBuildingEndDateCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<bool> Handle(ExtendBuildingEndDateCommand request, CancellationToken cancellationToken)
         {
-            var building = await _unitofWork.Buildings.GetByIdAsync(request.Id);
+            var building = await _unitOfWork.Buildings.GetByIdAsync(request.Id);
             if (building == null)
                 throw new Exception("Zgrada nije pronađena");
 
@@ -25,8 +25,8 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
                 throw new Exception("Datum produžetka ne može biti manji od prvobitnog datuma završetka zgrade");
 
             _mapper.Map(request.BuildingEndDateToExtendDto, building);
-            _unitofWork.Buildings.Update(building);
-            await _unitofWork.Save();
+            _unitOfWork.Buildings.Update(building);
+            await _unitOfWork.Save();
 
             return true;
         }

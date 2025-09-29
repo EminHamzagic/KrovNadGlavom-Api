@@ -6,18 +6,18 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 {
     public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, bool>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ISecurePasswordHasher _securePasswordHasher;
 
-        public ChangePasswordCommandHandler(IUnitofWork unitofWork, ISecurePasswordHasher securePasswordHasher)
+        public ChangePasswordCommandHandler(IUnitOfWork unitOfWork, ISecurePasswordHasher securePasswordHasher)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _securePasswordHasher = securePasswordHasher;
         }
 
         public async Task<bool> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _unitofWork.Users.GetByIdAsync(request.UserId);
+            var user = await _unitOfWork.Users.GetByIdAsync(request.UserId);
             if (user == null)
                 throw new Exception("Korisnik nije pronađen");
 
@@ -28,8 +28,8 @@ namespace krov_nad_glavom_api.Application.Commands.Users
             // Hesiraj novu lozinku
             user.PasswordHash = _securePasswordHasher.Hash(request.ChangePasswordDto.NewPassword);
 
-            _unitofWork.Users.Update(user);
-            await _unitofWork.Save();
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.Save();
 
             return true;
         }

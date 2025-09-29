@@ -6,18 +6,18 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
 {
     public class SendInstallmentPaymentProofCommandHandler : IRequestHandler<SendInstallmentPaymentProofCommand, string>
     {
-		private readonly IUnitofWork _unitofWork;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly ICloudinaryService _cloudinaryService;
 
-        public SendInstallmentPaymentProofCommandHandler(IUnitofWork unitofWork, ICloudinaryService cloudinaryService)
+        public SendInstallmentPaymentProofCommandHandler(IUnitOfWork unitOfWork, ICloudinaryService cloudinaryService)
         {
-			_unitofWork = unitofWork;
+			_unitOfWork = unitOfWork;
 			_cloudinaryService = cloudinaryService;
         }
 
         public async Task<string> Handle(SendInstallmentPaymentProofCommand request, CancellationToken cancellationToken)
         {
-            var installment = await _unitofWork.Installments.GetByIdAsync(request.InstallmentProofToSendDto.Id);
+            var installment = await _unitOfWork.Installments.GetByIdAsync(request.InstallmentProofToSendDto.Id);
             if (installment == null)
                 throw new Exception("Rata nije pronađena");
 
@@ -28,8 +28,8 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
 
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.InstallmentProofToSendDto.File, "KrovNadGlavom");
             installment.PaymentProof = imageUrl;
-            _unitofWork.Installments.Update(installment);
-            await _unitofWork.Save();
+            _unitOfWork.Installments.Update(installment);
+            await _unitOfWork.Save();
 
             return imageUrl;
         }

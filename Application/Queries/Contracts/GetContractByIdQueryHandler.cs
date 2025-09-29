@@ -9,26 +9,26 @@ namespace krov_nad_glavom_api.Application.Queries.Contracts
 {
     public class GetContractByIdQueryHandler : IRequestHandler<GetContractByIdQuery, ContractToReturnDto>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetContractByIdQueryHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetContractByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<ContractToReturnDto> Handle(GetContractByIdQuery request, CancellationToken cancellationToken)
         {
-            var contract = await _unitofWork.Contracts.GetByIdAsync(request.Id);
+            var contract = await _unitOfWork.Contracts.GetByIdAsync(request.Id);
             if (contract == null)
                 throw new Exception("Ugovor nije pronađen");
 
-            var installments = await _unitofWork.Installments.GetInstallmentsByContractId(contract.Id);
-            var user = await _unitofWork.Users.GetByIdAsync(contract.UserId);
-            var agency = await _unitofWork.Agencies.GetByIdAsync(contract.AgencyId);
-            var apartment = await _unitofWork.Apartments.GetByIdAsync(contract.ApartmentId);
-            var building = await _unitofWork.Buildings.GetByIdAsync(apartment.BuildingId);
+            var installments = await _unitOfWork.Installments.GetInstallmentsByContractId(contract.Id);
+            var user = await _unitOfWork.Users.GetByIdAsync(contract.UserId);
+            var agency = await _unitOfWork.Agencies.GetByIdAsync(contract.AgencyId);
+            var apartment = await _unitOfWork.Apartments.GetByIdAsync(contract.ApartmentId);
+            var building = await _unitOfWork.Buildings.GetByIdAsync(apartment.BuildingId);
 
             var contractToReturn = _mapper.Map<ContractToReturnDto>(contract);
             contractToReturn.Installments = installments;

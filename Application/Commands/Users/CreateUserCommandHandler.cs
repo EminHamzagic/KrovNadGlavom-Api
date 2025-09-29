@@ -1,6 +1,7 @@
 using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
 using krov_nad_glavom_api.Application.Services.Interfaces;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 
@@ -8,29 +9,39 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, string>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 		private readonly ISecurePasswordHasher _securePasswordHasher;
+        private readonly IEmailService _emailService;
+		private readonly ITokenService _tokenService;
 
-		public CreateUserCommandHandler(IUnitofWork unitofWork, IMapper mapper, ISecurePasswordHasher securePasswordHasher)
+		public CreateUserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ISecurePasswordHasher securePasswordHasher, IEmailService emailService, ITokenService tokenService)
         {
-            _mapper = mapper;
+            _emailService = emailService;
+			_tokenService = tokenService;
+			_mapper = mapper;
 			_securePasswordHasher = securePasswordHasher;
-			_unitofWork = unitofWork;
+			_unitOfWork = unitOfWork;
         }
 
         public async Task<string> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var existingUser = await _unitofWork.Users.GetUserByEmail(request.UserToAddDto.Email);
+            var existingUser = await _unitOfWork.Users.GetUserByEmail(request.UserToAddDto.Email);
             if(existingUser != null)
                 throw new Exception("Postoji korisnik sa unetim email-om");
                 
             var user = _mapper.Map<User>(request.UserToAddDto);
             user.Id = Guid.NewGuid().ToString();
             user.PasswordHash = _securePasswordHasher.Hash(request.UserToAddDto.Password);
+            user.IsVerified = false;
 
-            await _unitofWork.Users.AddAsync(user);
-            await _unitofWork.Save();
+            await _unitOfWork.Users.AddAsync(user);
+
+            var token = _tokenService.GenerateEmailVerificationToken(user.Id, user.Email);
+            var link = $"http://localhost:5173/verify-email?token={token}";
+
+            await _emailService.SendEmailAsync(user.Email, "Verifikacija email-a", "Verifikacija email-a", _emailService.GetEmailVerificationHtmlBody(link));
+            await _unitOfWork.Save();
 
             return user.Id;
         }

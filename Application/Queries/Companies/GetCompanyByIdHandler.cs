@@ -7,19 +7,19 @@ namespace krov_nad_glavom_api.Application.Queries.ConstructionCompanies
 {
     public class GetCompanyByIdHandler : IRequestHandler<GetCompanyByIdQuery, CompanyToReturnDto>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetCompanyByIdHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetCompanyByIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<CompanyToReturnDto> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
         {
             // Dohvati kompaniju po Id-u
-            var company = await _unitofWork.ConstructionCompanies.GetCompanyById(request.Id);
+            var company = await _unitOfWork.ConstructionCompanies.GetCompanyById(request.Id);
 
             if (company == null)
                 throw new Exception("Kompanija nije pronađena");

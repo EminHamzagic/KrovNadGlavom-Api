@@ -7,26 +7,26 @@ namespace krov_nad_glavom_api.Application.Queries.Agencies
 {
     public class GetAgencyByIdQueryHandler : IRequestHandler<GetAgencyByIdQuery, AgencyToReturnDto>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetAgencyByIdQueryHandler(IUnitofWork unitofWork, IMapper mapper)
+        public GetAgencyByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<AgencyToReturnDto> Handle(GetAgencyByIdQuery request, CancellationToken cancellationToken)
         {
-            var agency = await _unitofWork.Agencies.GetByIdAsync(request.Id);
+            var agency = await _unitOfWork.Agencies.GetByIdAsync(request.Id);
             if (agency == null)
                 throw new Exception("Agencija nije pronađena");
 
             var agencyToReturn = _mapper.Map<AgencyToReturnDto>(agency);
 
-            agencyToReturn.NumberOfBuildings = await _unitofWork.AgencyRequests.GetAgencyBuildingCount(agency.Id);
-            agencyToReturn.NumberOfApartments = await _unitofWork.AgencyRequests.GetAgencyApartmentCount(agency.Id);
-            agencyToReturn.Follow = await _unitofWork.UserAgencyFollows.IsUserFollowing(request.userId, request.Id);
+            agencyToReturn.NumberOfBuildings = await _unitOfWork.AgencyRequests.GetAgencyBuildingCount(agency.Id);
+            agencyToReturn.NumberOfApartments = await _unitOfWork.AgencyRequests.GetAgencyApartmentCount(agency.Id);
+            agencyToReturn.Follow = await _unitOfWork.UserAgencyFollows.IsUserFollowing(request.userId, request.Id);
 
             return agencyToReturn;
         }

@@ -5,40 +5,40 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
 {
     public class DeleteApartmentCommandHandler : IRequestHandler<DeleteApartmentCommand, string>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteApartmentCommandHandler(IUnitofWork unitofWork)
+        public DeleteApartmentCommandHandler(IUnitOfWork unitOfWork)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<string> Handle(DeleteApartmentCommand request, CancellationToken cancellationToken)
         {
-            var apartment = await _unitofWork.Apartments.GetApartmentById(request.Id);
+            var apartment = await _unitOfWork.Apartments.GetApartmentById(request.Id);
             if (apartment == null)
                 throw new Exception("Stan nije pronađen");
 
-            var contract = await _unitofWork.Contracts.GetContractsByApartmentId(apartment.Id);
-            var discountRequest = await _unitofWork.DiscountRequests.GetByApartmentId(apartment.Id);
-            var reservation = await _unitofWork.Reservations.GetByApartmentId(apartment.Id);
+            var contract = await _unitOfWork.Contracts.GetContractsByApartmentId(apartment.Id);
+            var discountRequest = await _unitOfWork.DiscountRequests.GetByApartmentId(apartment.Id);
+            var reservation = await _unitOfWork.Reservations.GetByApartmentId(apartment.Id);
 
             if (contract != null)
                 throw new Exception("Nije moguće izbrisati stan jer se nalazi pod ugovorom");
 
             if (discountRequest != null)
             {
-                _unitofWork.DiscountRequests.Remove(discountRequest);
+                _unitOfWork.DiscountRequests.Remove(discountRequest);
                 // Dodati novi unos u tabelu za notifikacije o tome da je stan za ovaj zahtev za popust izbrisan
             }
 
             if (reservation != null)
             {
-                _unitofWork.Reservations.Remove(reservation);
+                _unitOfWork.Reservations.Remove(reservation);
                 // Dodati novi unos u tabelu za notifikacije o tome da je stan za ovu rezervaciju izbrisan
             }
 
-            _unitofWork.Apartments.Remove(apartment);
-            await _unitofWork.Save();
+            _unitOfWork.Apartments.Remove(apartment);
+            await _unitOfWork.Save();
 
             return apartment.Id;
         }

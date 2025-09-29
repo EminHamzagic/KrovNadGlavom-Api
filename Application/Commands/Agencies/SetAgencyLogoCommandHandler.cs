@@ -6,18 +6,18 @@ namespace krov_nad_glavom_api.Application.Commands.Agencies
 {
     public class SetAgencyLogoCommandHandler : IRequestHandler<SetAgencyLogoCommand, string>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ICloudinaryService _cloudinaryService;
 
-        public SetAgencyLogoCommandHandler(IUnitofWork unitofWork, ICloudinaryService cloudinaryService)
+        public SetAgencyLogoCommandHandler(IUnitOfWork unitOfWork, ICloudinaryService cloudinaryService)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _cloudinaryService = cloudinaryService;
         }
         
         public async Task<string> Handle(SetAgencyLogoCommand request, CancellationToken cancellationToken)
         {
-            var agency = await _unitofWork.Agencies.GetByIdAsync(request.Dto.Id);
+            var agency = await _unitOfWork.Agencies.GetByIdAsync(request.Dto.Id);
             if (agency == null)
                 throw new Exception("Agencija nije pronađena");
 
@@ -28,8 +28,8 @@ namespace krov_nad_glavom_api.Application.Commands.Agencies
 
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.Dto.File, "KrovNadGlavom");
             agency.LogoUrl = imageUrl;
-            _unitofWork.Agencies.Update(agency);
-            await _unitofWork.Save();
+            _unitOfWork.Agencies.Update(agency);
+            await _unitOfWork.Save();
 
             return imageUrl;
         }

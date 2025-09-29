@@ -6,18 +6,18 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 {
     public class SetUserProfileImageCommandHandler : IRequestHandler<SetUserProfileImageCommand, string>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ICloudinaryService _cloudinaryService;
 
-        public SetUserProfileImageCommandHandler(IUnitofWork unitofWork, ICloudinaryService cloudinaryService)
+        public SetUserProfileImageCommandHandler(IUnitOfWork unitOfWork, ICloudinaryService cloudinaryService)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _cloudinaryService = cloudinaryService;
         }
         
         public async Task<string> Handle(SetUserProfileImageCommand request, CancellationToken cancellationToken)
         {
-            var user = await _unitofWork.Users.GetByIdAsync(request.InstallmentProofToSendDto.Id);
+            var user = await _unitOfWork.Users.GetByIdAsync(request.InstallmentProofToSendDto.Id);
             if (user == null)
                 throw new Exception("Korisnik nije pronađen");
 
@@ -28,8 +28,8 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.InstallmentProofToSendDto.File, "KrovNadGlavom");
             user.ImageUrl = imageUrl;
-            _unitofWork.Users.Update(user);
-            await _unitofWork.Save();
+            _unitOfWork.Users.Update(user);
+            await _unitOfWork.Save();
 
             return imageUrl;
         }

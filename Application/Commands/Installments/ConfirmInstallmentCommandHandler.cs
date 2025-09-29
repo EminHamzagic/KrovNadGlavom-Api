@@ -6,38 +6,38 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
 {
     public class ConfirmInstallmentCommandHandler : IRequestHandler<ConfirmInstallmentCommand, Installment>
     {
-        private readonly IUnitofWork _unitofWork;
-        public ConfirmInstallmentCommandHandler(IUnitofWork unitofWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public ConfirmInstallmentCommandHandler(IUnitOfWork unitOfWork)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Installment> Handle(ConfirmInstallmentCommand request, CancellationToken cancellationToken)
         {
-            var installment = await _unitofWork.Installments.GetByIdAsync(request.Id);
+            var installment = await _unitOfWork.Installments.GetByIdAsync(request.Id);
             if (installment == null)
                 throw new Exception("Rata nije pronađena");
 
             installment.IsConfirmed = true;
             installment.PaymentDate = DateTime.Now;
-            _unitofWork.Installments.Update(installment);
-            await _unitofWork.Save();
+            _unitOfWork.Installments.Update(installment);
+            await _unitOfWork.Save();
 
-            var contract = await _unitofWork.Contracts.GetByIdAsync(installment.ContractId);
-            var confirmedInstallments = await _unitofWork.Installments.GetConfirmedInstallmentsCount(installment.ContractId);
+            var contract = await _unitOfWork.Contracts.GetByIdAsync(installment.ContractId);
+            var confirmedInstallments = await _unitOfWork.Installments.GetConfirmedInstallmentsCount(installment.ContractId);
             if (contract.InstallmentCount == confirmedInstallments)
             {
                 contract.Status = "Paid";
             }
             else
             {
-                var seqNumber = await _unitofWork.Installments.GetNextSequenceNumber(contract.Id);
+                var seqNumber = await _unitOfWork.Installments.GetNextSequenceNumber(contract.Id);
 
                 decimal amount = contract.InstallmentAmount;
 
                 if (seqNumber == contract.InstallmentCount)
                 {
-                    var totalPaid = await _unitofWork.Installments.GetTotalPaidAmountAsync(contract.Id);
+                    var totalPaid = await _unitOfWork.Installments.GetTotalPaidAmountAsync(contract.Id);
                     amount = contract.Price - totalPaid;
                 }
                 var nextInstallment = new Installment
@@ -51,11 +51,11 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
                     CreatedAt = DateTime.Now
                 };
 
-                await _unitofWork.Installments.AddAsync(nextInstallment);
+                await _unitOfWork.Installments.AddAsync(nextInstallment);
             }
-            _unitofWork.Contracts.Update(contract);
+            _unitOfWork.Contracts.Update(contract);
 
-            await _unitofWork.Save();
+            await _unitOfWork.Save();
             return installment;
         }
     }

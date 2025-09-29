@@ -4,7 +4,7 @@ using krov_nad_glavom_api.Infrastructure.MySql.Repositories;
 
 namespace krov_nad_glavom_api.Application
 {
-    public class UnitOfWorkMySql : IUnitofWork
+    public class UnitOfWorkMySql : IUnitOfWork
     {
         private readonly krovNadGlavomDbContext _context;
 

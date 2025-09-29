@@ -7,27 +7,27 @@ namespace krov_nad_glavom_api.Application.Commands.Garages
 {
     public class UpdateGarageCommandHandler : IRequestHandler<UpdateGarageCommand, Garage>
     {
-        private readonly IUnitofWork _unitofWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UpdateGarageCommandHandler(IUnitofWork unitofWork, IMapper mapper)
+        public UpdateGarageCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitofWork = unitofWork;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<Garage> Handle(UpdateGarageCommand request, CancellationToken cancellationToken)
         {
-            var garage = await _unitofWork.Garages.GetGarageById(request.Id);
+            var garage = await _unitOfWork.Garages.GetGarageById(request.Id);
             if (garage == null)
                 throw new Exception("Garaža nije pronađena");
 
-            bool isSpotFree = await _unitofWork.Garages.IsSpotNumberFree(request.GarageToUpdateDto.SpotNumber, garage.BuildingId);
+            bool isSpotFree = await _unitOfWork.Garages.IsSpotNumberFree(request.GarageToUpdateDto.SpotNumber, garage.BuildingId);
             if (!isSpotFree)
                 throw new Exception("Broj garažnog mesta je zauzet");
 
             _mapper.Map(request.GarageToUpdateDto, garage);
-            _unitofWork.Garages.Update(garage);
+            _unitOfWork.Garages.Update(garage);
 
             return garage;
         }
