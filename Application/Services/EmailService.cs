@@ -50,39 +50,20 @@ namespace krov_nad_glavom_api.Application.Services
         {
 			return $@"
 				<html>
-				<head>
-					<style>
-						.container {{
-							font-family: Arial, sans-serif;
-							max-width: 600px;
-							margin: auto;
-							padding: 20px;
-							border: 1px solid #ddd;
-							border-radius: 10px;
-							background-color: #f9f9f9;
-						}}
-						.button {{
-							display: inline-block;
-							padding: 10px 20px;
-							margin-top: 20px;
-							font-size: 16px;
-							color: white;
-							background-color: #c7671e;
-                            color: black
-							text-decoration: none;
-							border-radius: 5px;
-						}}
-					</style>
-				</head>
-				<body>
-					<div class='container'>
-						<h2>Dobrodošli u KrovNadGlavom!</h2>
-						<p>Hvala vam na prijavi. Molimo vas verifikujte vaš profil klikom na dugme ispod:</p>
-						<a href='{verificationLink}' class='button'>Verifikuj profil</a>
-						<p>Ako niste poslali zahtev za ovo, slobodno ignorišite ovaj mail.</p>
-						<p>– NaviGo Team</p>
-					</div>
-				</body>
+				<body style='font-family: Arial, sans-serif; background-color: #f9f9f9; padding-top: 50px; padding-bottom: 50px'>
+                    <div style='max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px; background-color:#ffffff;'>
+                        <h2>Dobrodošli u KrovNadGlavom!</h2>
+                        <p>Hvala vam na prijavi. Molimo vas verifikujte vaš profil klikom na dugme ispod:</p>
+                        <a href='{verificationLink}' 
+                        style='display:inline-block; padding:10px 20px; margin-top:20px; 
+                                font-size:16px; background-color:#c7671e; color:#ffffff; 
+                                text-decoration:none; border-radius:5px;'>
+                            Verifikuj profil
+                        </a>
+                        <p>Ako niste poslali zahtev za ovo, slobodno ignorišite ovaj mail.</p>
+                        <p>– KrovNadGlavom Team</p>
+                    </div>
+                </body>
 				</html>";
         }
     }
