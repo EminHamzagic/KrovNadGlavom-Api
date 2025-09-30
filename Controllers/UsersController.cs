@@ -85,6 +85,38 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost("request-password-reset")]
+        public async Task<IActionResult> RequestUserPasswordReset(UserPasswordResetRequestDto userPasswordResetDto)
+        {
+            try
+            {
+                var command = new RequestPasswordResetCommand(userPasswordResetDto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("password-reset")]
+        public async Task<IActionResult> ResetUserPassword(UserPasswordResetDto userPasswordResetDto)
+        {
+            try
+            {
+                var command = new ResetPasswordCommand(userPasswordResetDto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<UserToReturnDto>> GetUser(string id)
         {

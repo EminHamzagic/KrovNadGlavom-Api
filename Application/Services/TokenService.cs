@@ -71,7 +71,7 @@ namespace krov_nad_glavom_api.Application.Services
                 return null;
             }
         }
-        
+
         public string GenerateEmailVerificationToken(string userId, string email)
         {
             var claims = new[]
@@ -87,6 +87,27 @@ namespace krov_nad_glavom_api.Application.Services
                 audience: _jWTSettings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(30),
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256)
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        
+        public string GeneratePasswordResetToken(string userId, string email)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userId),
+                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim("purpose", "passwordReset"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _jWTSettings.Issuer,
+                audience: _jWTSettings.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(15),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_key), SecurityAlgorithms.HmacSha256)
             );
 
