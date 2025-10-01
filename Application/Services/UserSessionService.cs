@@ -43,6 +43,12 @@ namespace krov_nad_glavom_api.Application.Services
             var refreshToken = Guid.NewGuid().ToString();
             var refreshExpiry = DateTime.UtcNow.AddHours(5);
 
+            var existingSession = await _unitOfWork.UserSessions.GetSessionByUserId(user.Id);
+            if (existingSession != null)
+            {
+                _unitOfWork.UserSessions.Remove(existingSession);
+            }
+
             var session = new UserSession
             {
                 Id = Guid.NewGuid().ToString(),

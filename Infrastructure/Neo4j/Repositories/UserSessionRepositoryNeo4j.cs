@@ -26,5 +26,17 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
             return null;
         }
+
+        public async Task<UserSession> GetSessionByUserId(string userId)
+        {
+            var query = $"MATCH (u:{_label} {{ UserId: $userId }}) RETURN u LIMIT 1";
+            await using var session = _context.Driver.AsyncSession();
+            var cursor = await session.RunAsync(query, new { userId });
+
+            if (await cursor.FetchAsync())
+                return cursor.Current["u"].As<INode>().ToEntity<UserSession>();
+
+            return null;
+        }
     }
 }

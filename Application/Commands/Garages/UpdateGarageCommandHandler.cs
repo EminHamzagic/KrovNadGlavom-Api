@@ -22,12 +22,14 @@ namespace krov_nad_glavom_api.Application.Commands.Garages
             if (garage == null)
                 throw new Exception("Garaža nije pronađena");
 
-            bool isSpotFree = await _unitOfWork.Garages.IsSpotNumberFree(request.GarageToUpdateDto.SpotNumber, garage.BuildingId);
+            bool isSpotFree = await _unitOfWork.Garages.IsSpotNumberFree(request.GarageToUpdateDto.SpotNumber, garage);
             if (!isSpotFree)
                 throw new Exception("Broj garažnog mesta je zauzet");
 
             _mapper.Map(request.GarageToUpdateDto, garage);
             _unitOfWork.Garages.Update(garage);
+
+            await _unitOfWork.Save();
 
             return garage;
         }

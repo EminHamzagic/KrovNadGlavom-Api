@@ -29,17 +29,23 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
 
         public Task<int> GetBuildingGarageCount(string buildingId)
         {
-            // synchronous version
             return Task.FromResult((int)_garages.CountDocuments(a => a.BuildingId == buildingId));
         }
 
-        public async Task<bool> IsSpotNumberFree(string spotNumber, string buildingId)
+        public async Task<bool> IsSpotNumberFree(string spotNumber, Garage garage)
         {
             var exists = await _garages
-                .Find(g => g.BuildingId == buildingId && g.SpotNumber == spotNumber)
+                .Find(g => g.BuildingId == garage.BuildingId && g.SpotNumber == spotNumber && g.Id != garage.Id)
                 .AnyAsync();
 
             return !exists;
+        }
+
+        public async Task<List<Garage>> GetGaragesByApartmentId(string apartmentId)
+        {
+            return await _garages
+                .Find(a => a.ApartmentId == apartmentId)
+                .ToListAsync();
         }
     }
 }

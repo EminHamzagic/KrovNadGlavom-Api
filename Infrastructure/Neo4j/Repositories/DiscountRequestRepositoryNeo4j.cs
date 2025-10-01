@@ -27,7 +27,7 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
         public async Task<List<DiscountRequest>> GetDiscountRequestsByUserId(string userId, string status)
         {
-            var query = $"MATCH (d:{_label} {{ UserId: $userId, Status: $status }}) RETURN d";
+            var query = $"MATCH (d:{_label} {{ UserId: $userId, Status: $status }}) RETURN d ORDER BY d.CreatedAt DESC";
             await using var session = _context.Driver.AsyncSession();
             var cursor = await session.RunAsync(query, new { userId, status });
 
@@ -40,7 +40,7 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
         public async Task<List<DiscountRequest>> GetDiscountRequestsByAgencyId(string agencyId, string status)
         {
-            var query = $"MATCH (d:{_label} {{ AgencyId: $agencyId, Status: $status }}) RETURN d";
+            var query = $"MATCH (d:{_label} {{ AgencyId: $agencyId, Status: $status }}) RETURN d ORDER BY d.CreatedAt DESC";
             await using var session = _context.Driver.AsyncSession();
             var cursor = await session.RunAsync(query, new { agencyId, status });
 
@@ -53,7 +53,7 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
         public async Task<List<DiscountRequest>> GetDiscountRequestsByCompanyId(string companyId, string status)
         {
-            var query = $"MATCH (d:{_label} {{ ConstructionCompanyId: $companyId, Status: $status }}) RETURN d";
+            var query = $"MATCH (d:{_label} {{ ConstructionCompanyId: $companyId, Status: $status }}) RETURN d ORDER BY d.CreatedAt DESC";
             await using var session = _context.Driver.AsyncSession();
             var cursor = await session.RunAsync(query, new { companyId, status });
 

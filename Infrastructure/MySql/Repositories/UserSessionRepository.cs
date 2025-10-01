@@ -17,5 +17,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         {
             return await _context.UserSessions.Where(u => u.RefreshToken == token).FirstOrDefaultAsync();
         }
+
+        public async Task<UserSession> GetSessionByUserId(string userId)
+        {
+            return await _context.UserSessions.Where(u => u.UserId == userId).FirstOrDefaultAsync();
+        }
     }
 }
