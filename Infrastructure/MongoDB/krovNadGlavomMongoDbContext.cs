@@ -27,6 +27,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB
         public IMongoCollection<DiscountRequest> DiscountRequests => _database.GetCollection<DiscountRequest>("DiscountRequest");
         public IMongoCollection<Contract> Contracts => _database.GetCollection<Contract>("Contract");
         public IMongoCollection<Installment> Installments => _database.GetCollection<Installment>("Installment");
+        public IMongoCollection<Notification> Notifications => _database.GetCollection<Notification>("Notification");
         
         public IMongoCollection<T> GetCollection<T>()
         {

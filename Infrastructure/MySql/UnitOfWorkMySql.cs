@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Domain.Interfaces;
 using krov_nad_glavom_api.Infrastructure.MySql;
 using krov_nad_glavom_api.Infrastructure.MySql.Repositories;
 
@@ -22,6 +23,7 @@ namespace krov_nad_glavom_api.Application
         public IPriceListRepository PriceLists { get; set; }
         public IReservationRepository Reservations { get; set; }
         public IUserAgencyFollowRepository UserAgencyFollows { get; set; }
+        public INotificationRepository Notifications { get; set; }
 
         public UnitOfWorkMySql(krovNadGlavomDbContext context)
         {
@@ -41,6 +43,7 @@ namespace krov_nad_glavom_api.Application
             PriceLists = new PriceListRepository(_context);
             Reservations = new ReservationRepository(_context);
             UserAgencyFollows = new UserAgencyFollowRepository(_context);
+            Notifications = new NotificationRepository(_context);
         }
 
         public async Task Save()

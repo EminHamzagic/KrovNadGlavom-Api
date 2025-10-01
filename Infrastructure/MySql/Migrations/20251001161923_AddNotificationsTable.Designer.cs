@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using krov_nad_glavom_api.Infrastructure.MySql;
 
@@ -11,9 +12,11 @@ using krov_nad_glavom_api.Infrastructure.MySql;
 namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
 {
     [DbContext(typeof(krovNadGlavomDbContext))]
-    partial class krovNadGlavomDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251001161923_AddNotificationsTable")]
+    partial class AddNotificationsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -384,9 +387,6 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Label")
                         .HasColumnType("longtext");

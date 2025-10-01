@@ -79,7 +79,7 @@ namespace krov_nad_glavom_api.Application.Services
                         style='display:inline-block; padding:10px 20px; margin-top:20px; 
                                 font-size:16px; background-color:#c7671e; color:#ffffff; 
                                 text-decoration:none; border-radius:5px;'>
-                            Verifikuj profil
+                            Resetuj lozinku
                         </a>
                         <p>Ako niste poslali zahtev za ovo, slobodno ignorišite ovaj mail.</p>
                         <p>– KrovNadGlavom Team</p>

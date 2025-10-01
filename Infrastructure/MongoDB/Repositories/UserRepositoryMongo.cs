@@ -33,5 +33,31 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .Find(u => ids.Contains(u.Id))
                 .ToListAsync();
         }
+
+        public async Task<User> GetUserByCompanyId(string companyId)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.ConstructionCompanyId, companyId);
+            var user = await _users.Find(filter).FirstOrDefaultAsync();
+
+            var doc = await _users.Find(Builders<User>.Filter.Empty).FirstOrDefaultAsync();
+            Console.WriteLine(doc.ToJson());
+
+            return await _users
+                .Find(u => u.ConstructionCompanyId == companyId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> GetUserByAgencyId(string agencyId)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.AgencyId, agencyId);
+            var user = await _users.Find(filter).FirstOrDefaultAsync();
+
+            var doc = await _users.Find(Builders<User>.Filter.Empty).FirstOrDefaultAsync();
+            Console.WriteLine(doc.ToJson());
+
+            return await _users
+                .Find(u => u.AgencyId == agencyId)
+                .FirstOrDefaultAsync();
+        }
     }
 }
