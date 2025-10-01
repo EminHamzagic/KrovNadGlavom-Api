@@ -22,11 +22,12 @@ namespace krov_nad_glavom_api.Application.Commands.Garages
             if ((await _unitOfWork.Garages.GetBuildingGarageCount(request.GarageToAddDto.BuildingId) + 1) > building.GarageSpotCount)
                 throw new Exception("Njie moguće dodati novo garažno mesto, sva su popunjena");
 
-            var isSpotFree = await _unitOfWork.Garages.IsSpotNumberFree(request.GarageToAddDto.SpotNumber, building.Id);
+            var garage = _mapper.Map<Garage>(request.GarageToAddDto);
+
+            var isSpotFree = await _unitOfWork.Garages.IsSpotNumberFree(request.GarageToAddDto.SpotNumber, garage);
             if (!isSpotFree)
                 throw new Exception("Broj garažnog mesta je zauzet");
 
-            var garage = _mapper.Map<Garage>(request.GarageToAddDto);
             garage.Id = Guid.NewGuid().ToString();
             await _unitOfWork.Garages.AddAsync(garage);
             await _unitOfWork.Save();

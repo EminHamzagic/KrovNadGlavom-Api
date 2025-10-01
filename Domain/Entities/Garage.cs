@@ -4,6 +4,7 @@ namespace krov_nad_glavom_api.Domain.Entities
     {
         public string Id { get; set; }
         public string BuildingId { get; set; }
+        public string ApartmentId { get; set; }
         public string SpotNumber { get; set; }
         public bool IsAvailable { get; set; }
         public bool IsDeleted { get; set; }

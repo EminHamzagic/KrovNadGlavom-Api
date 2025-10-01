@@ -21,17 +21,17 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 
 		public async Task<List<DiscountRequest>> GetDiscountRequestsByUserId(string userId, string status)
 		{
-			return await _context.DiscountRequests.Where(d => d.UserId == userId && d.Status == status).ToListAsync();
+			return await _context.DiscountRequests.Where(d => d.UserId == userId && d.Status == status).OrderByDescending(d => d.CreatedAt).ToListAsync();
 		}
 
 		public async Task<List<DiscountRequest>> GetDiscountRequestsByAgencyId(string agencyId, string status)
 		{
-			return await _context.DiscountRequests.Where(d => d.AgencyId == agencyId && d.Status == status).ToListAsync();
+			return await _context.DiscountRequests.Where(d => d.AgencyId == agencyId && d.Status == status).OrderByDescending(d => d.CreatedAt).ToListAsync();
 		}
 
 		public async Task<List<DiscountRequest>> GetDiscountRequestsByCompanyId(string companyId, string status)
 		{
-			return await _context.DiscountRequests.Where(d => d.ConstructionCompanyId == companyId && d.Status == status).ToListAsync();
+			return await _context.DiscountRequests.Where(d => d.ConstructionCompanyId == companyId && d.Status == status).OrderByDescending(d => d.CreatedAt).ToListAsync();
 		}
 
 		public async Task<DiscountRequest> GetByApartmentId(string apartmentId)

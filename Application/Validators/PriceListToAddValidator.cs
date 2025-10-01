@@ -12,6 +12,9 @@ namespace krov_nad_glavom_api.Application.Validators
 
             RuleFor(x => x.PenaltyPerM2)
                 .GreaterThanOrEqualTo(0).WithMessage("Kazna po m² mora biti 0 ili veća.");
+
+            RuleFor(x => x.GaragePrice)
+                .GreaterThanOrEqualTo(0).WithMessage("Cena garažnog mesta mora biti veća od 0.");
         }
     }
 }

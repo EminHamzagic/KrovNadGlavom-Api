@@ -19,5 +19,6 @@ namespace krov_nad_glavom_api.Data.DTO.Apartment
         public BuildingToReturnDto Building { get; set; }
         public Domain.Entities.Agency Agency { get; set; }
         public Domain.Entities.DiscountRequest DiscountRequest { get; set; }
+        public List<Domain.Entities.Garage> Garages { get; set; }
     }
 }

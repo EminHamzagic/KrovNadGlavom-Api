@@ -99,27 +99,38 @@ namespace krov_nad_glavom_api.Application.Utils
         {
             switch (source)
             {
-                case IQueryable<ApartmentToReturnDto> apartments:
+                case IQueryable<ApartmentWithBuildingDto> apartments:
                     {
-                        try
+                        switch (parameters.SortProperty?.ToLower())
                         {
-                            if (!string.IsNullOrEmpty(parameters.SortProperty))
-                            {
-                                if (parameters.SortType == "asc")
-                                {
-                                    return (IQueryable<T>)apartments.OrderBy(parameters.SortProperty);
-                                }
-                                else
-                                {
-                                    return (IQueryable<T>)apartments.OrderByDescending(parameters.SortProperty);
-                                }
-                            }
+                            case "area":
+                                return (IQueryable<T>)(parameters.SortType == "asc"
+                                    ? apartments.OrderBy(a => a.Apartment.Area)
+                                    : apartments.OrderByDescending(a => a.Apartment.Area));
+
+                            case "roomcount":
+                                return (IQueryable<T>)(parameters.SortType == "asc"
+                                    ? apartments.OrderBy(a => a.Apartment.RoomCount)
+                                    : apartments.OrderByDescending(a => a.Apartment.RoomCount));
+
+                            case "balconycount":
+                                return (IQueryable<T>)(parameters.SortType == "asc"
+                                    ? apartments.OrderBy(a => a.Apartment.BalconyCount)
+                                    : apartments.OrderByDescending(a => a.Apartment.BalconyCount));
+
+                            case "floor":
+                                return (IQueryable<T>)(parameters.SortType == "asc"
+                                    ? apartments.OrderBy(a => a.Apartment.Floor)
+                                    : apartments.OrderByDescending(a => a.Apartment.Floor));
+
+                            case "orientation":
+                                return (IQueryable<T>)(parameters.SortType == "asc"
+                                    ? apartments.OrderBy(a => a.Apartment.Orientation)
+                                    : apartments.OrderByDescending(a => a.Apartment.Orientation));
+
+                            default:
+                                return (IQueryable<T>)apartments.OrderByDescending(a => a.Apartment.Id);
                         }
-                        catch
-                        {
-                            Log.Information("You tried to order by property that does not exist");
-                        }
-                        return (IQueryable<T>)apartments.OrderByDescending(a => a.Id);
                     }
                 case IQueryable<Agency> agencies:
                     {
