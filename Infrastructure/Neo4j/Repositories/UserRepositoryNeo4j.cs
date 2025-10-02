@@ -42,5 +42,33 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
             }
             return list;
         }
+
+        public async Task<User> GetUserByCompanyId(string companyId)
+        {
+            await using var session = _context.Driver.AsyncSession();
+            var cursor = await session.RunAsync($"MATCH (u:{_label} {{ ConstructionCompanyId: $companyId }}) RETURN u LIMIT 1", new { companyId });
+
+
+            if (await cursor.FetchAsync())
+            {
+                return cursor.Current["u"].As<INode>().ToEntity<User>();
+            }
+
+            return null;
+        }
+
+        public async Task<User> GetUserByAgencyId(string agencyId)
+        {
+            await using var session = _context.Driver.AsyncSession();
+            var cursor = await session.RunAsync($"MATCH (u:{_label} {{ AgencyId: $agencyId }}) RETURN u LIMIT 1", new { agencyId });
+
+
+            if (await cursor.FetchAsync())
+            {
+                return cursor.Current["u"].As<INode>().ToEntity<User>();
+            }
+
+            return null;
+        }
     }
 }

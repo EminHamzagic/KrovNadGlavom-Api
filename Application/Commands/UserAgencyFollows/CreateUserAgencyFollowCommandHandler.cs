@@ -1,5 +1,6 @@
 using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 
@@ -9,8 +10,10 @@ namespace krov_nad_glavom_api.Application.Commands.UserAgencyFollows
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CreateUserAgencyFollowCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly INotificationService _notificationService;
+        public CreateUserAgencyFollowCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, INotificationService notificationService)
         {
+            _notificationService = notificationService;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -27,6 +30,7 @@ namespace krov_nad_glavom_api.Application.Commands.UserAgencyFollows
                 
             var userFollow = _mapper.Map<UserAgencyFollow>(request.UserAgencyFollowToAddDto);
             userFollow.Id = Guid.NewGuid().ToString();
+            await _notificationService.SendNotificationsForNewAgencyFollow(userFollow);
             await _unitOfWork.UserAgencyFollows.AddAsync(userFollow);
             await _unitOfWork.Save();
 

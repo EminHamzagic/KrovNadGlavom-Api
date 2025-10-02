@@ -19,5 +19,12 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .Find(u => u.RefreshToken == token)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<UserSession> GetSessionByUserId(string userId)
+        {
+            return await _userSessions
+                .Find(u => u.UserId == userId)
+                .FirstOrDefaultAsync();
+        }
     }
 }

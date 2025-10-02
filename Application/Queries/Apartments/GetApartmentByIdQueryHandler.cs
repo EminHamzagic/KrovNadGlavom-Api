@@ -34,6 +34,7 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
             apartmentToReturn.Reservation = await _unitOfWork.Reservations.GetByApartmentId(apartmentToReturn.Id);
             apartmentToReturn.CanRequestDiscount = await _unitOfWork.Reservations.CanUserReserve(request.userId, apartmentToReturn.Agency.Id);
             apartmentToReturn.DiscountRequest = await _unitOfWork.DiscountRequests.GetByApartmentAndUserId(apartmentToReturn.Id, request.userId);
+            apartmentToReturn.Garages = await _unitOfWork.Garages.GetGaragesByApartmentId(apartmentToReturn.Id);
 
             return apartmentToReturn;
         }

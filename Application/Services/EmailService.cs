@@ -66,5 +66,26 @@ namespace krov_nad_glavom_api.Application.Services
                 </body>
 				</html>";
         }
+        
+        public string GetPasswordResetHtmlBody(string resetLink)
+        {
+            return $@"
+				<html>
+				<body style='font-family: Arial, sans-serif; background-color: #f9f9f9; padding-top: 50px; padding-bottom: 50px'>
+                    <div style='max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px; background-color:#ffffff;'>
+                        <h2>Resetovanje lozinke</h2>
+                        <p>Da bi ste resetovali vašu lozinku, kliknite na dugme ispod:</p>
+                        <a href='{resetLink}' 
+                        style='display:inline-block; padding:10px 20px; margin-top:20px; 
+                                font-size:16px; background-color:#c7671e; color:#ffffff; 
+                                text-decoration:none; border-radius:5px;'>
+                            Resetuj lozinku
+                        </a>
+                        <p>Ako niste poslali zahtev za ovo, slobodno ignorišite ovaj mail.</p>
+                        <p>– KrovNadGlavom Team</p>
+                    </div>
+                </body>
+				</html>";
+        }
     }
 }

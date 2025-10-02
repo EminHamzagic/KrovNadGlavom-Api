@@ -55,6 +55,12 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 					Building = b
 				};
 
+			if (parameters.WithGarage != null)
+			{
+				var apartmentsWithGarageIds = await _context.Garages.Where(g => g.ApartmentId != null).Select(g => g.ApartmentId).ToListAsync();
+				apartmentsQuery = (parameters.WithGarage ?? false) ? apartmentsQuery.Where(a =>  apartmentsWithGarageIds.Contains(a.Apartment.Id)) : apartmentsQuery.Where(a =>  !apartmentsWithGarageIds.Contains(a.Apartment.Id));
+			}
+
 			apartmentsQuery = apartmentsQuery.Filter(parameters).Sort(parameters);
 
             var totalCount = apartmentsQuery.Count();

@@ -27,6 +27,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
         {
             return await _discountRequests
                 .Find(d => d.UserId == userId && d.Status == status)
+                .SortByDescending(d => d.CreatedAt)
                 .ToListAsync();
         }
 
@@ -34,6 +35,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
         {
             return await _discountRequests
                 .Find(d => d.AgencyId == agencyId && d.Status == status)
+                .SortByDescending(d => d.CreatedAt)
                 .ToListAsync();
         }
 
@@ -41,6 +43,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
         {
             return await _discountRequests
                 .Find(d => d.ConstructionCompanyId == companyId && d.Status == status)
+                .SortByDescending(d => d.CreatedAt)
                 .ToListAsync();
         }
 

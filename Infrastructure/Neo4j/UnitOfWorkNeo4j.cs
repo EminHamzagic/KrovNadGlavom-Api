@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Domain.Interfaces;
 using krov_nad_glavom_api.Infrastructure.Neo4j;
 using krov_nad_glavom_api.Infrastructure.Neo4j.Repositories;
 
@@ -22,6 +23,7 @@ namespace krov_nad_glavom_api.Application
         public IPriceListRepository PriceLists { get; set; }
         public IReservationRepository Reservations { get; set; }
         public IUserAgencyFollowRepository UserAgencyFollows { get; set; }
+        public INotificationRepository Notifications { get; set; }
 
         public UnitOfWorkNeo4j(krovNadGlavomNeo4jDbContext context)
         {
@@ -41,6 +43,7 @@ namespace krov_nad_glavom_api.Application
             PriceLists = new PriceListRepositoryNeo4j(_context);
             Reservations = new ReservationRepositoryNeo4j(_context);
             UserAgencyFollows = new UserAgencyFollowRepositoryNeo4j(_context);
+            Notifications = new NotificationRepositoryNeo4j(_context);
         }
 
         public Task Save() => Task.CompletedTask;

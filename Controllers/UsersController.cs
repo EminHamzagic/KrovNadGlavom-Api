@@ -59,7 +59,12 @@ namespace krov_nad_glavom_api.Controllers
         {
             try
             {
-                var command = new CreateUserCommand(dto);
+                var origin = Request.Headers["Origin"].ToString(); 
+                if (string.IsNullOrEmpty(origin))
+                {
+                    origin = $"{Request.Scheme}://{Request.Host}";
+                }
+                var command = new CreateUserCommand(dto, origin);
                 var userId = await _mediator.Send(command);
                 return Ok(userId);
             }
@@ -76,6 +81,43 @@ namespace krov_nad_glavom_api.Controllers
             try
             {
                 var command = new VerifyUserEmailCommand(verifyEmailRequestDto.Token);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("request-password-reset")]
+        public async Task<IActionResult> RequestUserPasswordReset(UserPasswordResetRequestDto userPasswordResetDto)
+        {
+            try
+            {
+                var origin = Request.Headers["Origin"].ToString(); 
+                if (string.IsNullOrEmpty(origin))
+                {
+                    origin = $"{Request.Scheme}://{Request.Host}";
+                }
+                var command = new RequestPasswordResetCommand(userPasswordResetDto, origin);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("password-reset")]
+        public async Task<IActionResult> ResetUserPassword(UserPasswordResetDto userPasswordResetDto)
+        {
+            try
+            {
+                var command = new ResetPasswordCommand(userPasswordResetDto);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }

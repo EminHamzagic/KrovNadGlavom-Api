@@ -20,6 +20,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql
         public DbSet<DiscountRequest> DiscountRequests { get; set; }
         public DbSet<Contract> Contracts { get; set; }
         public DbSet<Installment> Installments { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -44,7 +45,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql
                 .WithMany()
                 .HasForeignKey(u => u.AgencyId)
                 .OnDelete(DeleteBehavior.Restrict);
-                
+
             builder.Entity<ConstructionCompany>()
                 .HasKey(c => c.Id);
 
@@ -165,6 +166,14 @@ namespace krov_nad_glavom_api.Infrastructure.MySql
                 .HasOne<Contract>()
                 .WithMany()
                 .HasForeignKey(i => i.ContractId);
+                
+            // Notification
+            builder.Entity<Notification>()
+                .HasKey(a => a.Id);
+            builder.Entity<Notification>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(a => a.UserId);
         }
     }
 }

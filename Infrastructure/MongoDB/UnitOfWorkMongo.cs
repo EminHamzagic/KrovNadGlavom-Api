@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Domain.Interfaces;
 using krov_nad_glavom_api.Infrastructure.MongoDB.Repositories;
 
 namespace krov_nad_glavom_api.Infrastructure.MongoDB
@@ -21,6 +22,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB
         public IPriceListRepository PriceLists { get; set; }
         public IReservationRepository Reservations { get; set; }
         public IUserAgencyFollowRepository UserAgencyFollows { get; set; }
+        public INotificationRepository Notifications { get; set; }
 
         public UnitOfWorkMongo(krovNadGlavomMongoDbContext context)
         {
@@ -40,6 +42,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB
             PriceLists = new PriceListRepositoryMongo(_context);
             Reservations = new ReservationRepositoryMongo(_context);
             UserAgencyFollows = new UserAgencyFollowRepositoryMongo(_context);
+            Notifications = new NotificationRepositoryMongo(_context);
         }
 
         public async Task Save()

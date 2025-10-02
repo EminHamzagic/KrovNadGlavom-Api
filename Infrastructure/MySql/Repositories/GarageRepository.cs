@@ -27,10 +27,15 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		{
 			return Task.FromResult(_context.Garages.Where(a => a.BuildingId == buildingId).Count());
 		}
-		
-		public async Task<bool> IsSpotNumberFree(string spotNumber, string buildingId)
+
+		public async Task<bool> IsSpotNumberFree(string spotNumber, Garage garage)
 		{
-			return !await _context.Garages.AnyAsync(g => g.BuildingId == buildingId && g.SpotNumber == spotNumber);
+			return !await _context.Garages.AnyAsync(g => g.BuildingId == garage.BuildingId && g.SpotNumber == spotNumber && g.Id != garage.Id);
+		}
+		
+		public async Task<List<Garage>> GetGaragesByApartmentId(string apartmentId)
+		{
+			return await _context.Garages.Where(a => a.ApartmentId == apartmentId).ToListAsync();
 		}
     }
 }

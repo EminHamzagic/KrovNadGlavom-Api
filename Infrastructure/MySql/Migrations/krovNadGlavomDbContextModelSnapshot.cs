@@ -322,6 +322,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("ApartmentId")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("BuildingId")
                         .HasColumnType("varchar(255)");
 
@@ -377,6 +380,33 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                     b.ToTable("Installments");
                 });
 
+            modelBuilder.Entity("krov_nad_glavom_api.Domain.Entities.Notification", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("krov_nad_glavom_api.Domain.Entities.PriceList", b =>
                 {
                     b.Property<string>("Id")
@@ -384,6 +414,9 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
 
                     b.Property<string>("BuildingId")
                         .HasColumnType("varchar(255)");
+
+                    b.Property<decimal>("GaragePrice")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("PenaltyPerM2")
                         .HasColumnType("decimal(65,30)");
@@ -582,6 +615,13 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Migrations
                     b.HasOne("krov_nad_glavom_api.Domain.Entities.Contract", null)
                         .WithMany()
                         .HasForeignKey("ContractId");
+                });
+
+            modelBuilder.Entity("krov_nad_glavom_api.Domain.Entities.Notification", b =>
+                {
+                    b.HasOne("krov_nad_glavom_api.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("krov_nad_glavom_api.Domain.Entities.PriceList", b =>
