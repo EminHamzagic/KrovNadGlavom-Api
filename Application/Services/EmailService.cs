@@ -29,7 +29,7 @@ namespace krov_nad_glavom_api.Application.Services
             {
                 try
                 {
-                    await client.ConnectAsync(_emailConfig.MailServer, _emailConfig.MailPort, MailKit.Security.SecureSocketOptions.SslOnConnect);
+                    await client.ConnectAsync(_emailConfig.MailServer, _emailConfig.MailPort, MailKit.Security.SecureSocketOptions.StartTls);
 
                     await client.AuthenticateAsync(_emailConfig.AdminEmail, _emailConfig.Password);
 
@@ -37,6 +37,7 @@ namespace krov_nad_glavom_api.Application.Services
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($"SMTP error: {ex.Message}");
                     throw new InvalidOperationException("Failed to send email.", ex);
                 }
                 finally
