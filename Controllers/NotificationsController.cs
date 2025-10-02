@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Commands.Notifications;
+using krov_nad_glavom_api.Application.Queries.Notifications;
 using krov_nad_glavom_api.Application.Queries.Users;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
@@ -24,6 +25,21 @@ namespace krov_nad_glavom_api.Controllers
             try
             {
                 var command = new GetUserNotificationsQuery(id);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}/count")]
+        public async Task<ActionResult<int>> GetUserNotificationsCount(string id)
+        {
+            try
+            {
+                var command = new GetNotificationCountQuery(id);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }

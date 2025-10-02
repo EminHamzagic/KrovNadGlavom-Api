@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 
@@ -7,10 +8,13 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
     public class ConfirmInstallmentCommandHandler : IRequestHandler<ConfirmInstallmentCommand, Installment>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ConfirmInstallmentCommandHandler(IUnitOfWork unitOfWork)
+		private readonly INotificationService _notificationService;
+
+		public ConfirmInstallmentCommandHandler(IUnitOfWork unitOfWork, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
-        }
+			_notificationService = notificationService;
+		}
 
         public async Task<Installment> Handle(ConfirmInstallmentCommand request, CancellationToken cancellationToken)
         {
@@ -21,6 +25,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
             installment.IsConfirmed = true;
             installment.PaymentDate = DateTime.Now;
             _unitOfWork.Installments.Update(installment);
+            await _notificationService.SendNotificationsForInstallmentConfirm(installment);
             await _unitOfWork.Save();
 
             var contract = await _unitOfWork.Contracts.GetByIdAsync(installment.ContractId);
@@ -51,6 +56,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
                     CreatedAt = DateTime.Now
                 };
 
+                await _notificationService.SendNotificationsForInstallmentCreate(nextInstallment);
                 await _unitOfWork.Installments.AddAsync(nextInstallment);
             }
             _unitOfWork.Contracts.Update(contract);

@@ -7,6 +7,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<(List<Contract> contractPage, int totalCount, int totalPages)> GetContractsByUserId(string userId, QueryStringParameters parameters);
         Task<(List<Contract> contractPage, int totalCount, int totalPages)> GetContractsByAgencyId(string agencyId, QueryStringParameters parameters);
-        Task<Contract> GetContractsByApartmentId(string apartmentId);
+        Task<List<Contract>> GetContractsByApartmentIds(List<string> ids);
+        Task<Contract> GetContractByApartmentId(string apartmentId);
     }
 }

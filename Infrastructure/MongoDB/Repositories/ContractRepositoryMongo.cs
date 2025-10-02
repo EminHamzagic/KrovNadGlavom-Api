@@ -29,7 +29,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .ToList();
 
             var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
-            
+
             return Task.FromResult((contractsPage, totalCount, totalPages));
         }
 
@@ -48,15 +48,22 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .ToList();
 
             var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
-            
+
             return Task.FromResult((contractsPage, totalCount, totalPages));
         }
 
-        public async Task<Contract> GetContractsByApartmentId(string apartmentId)
+        public async Task<Contract> GetContractByApartmentId(string apartmentId)
         {
             return await _contracts
                 .Find(c => c.ApartmentId == apartmentId)
                 .FirstOrDefaultAsync();
+        }
+        
+        public async Task<List<Contract>> GetContractsByApartmentIds(List<string> ids)
+        {
+            return await _contracts
+                .Find(u => ids.Contains(u.Id) && u.Status != "Broken")
+                .ToListAsync();
         }
     }
 }

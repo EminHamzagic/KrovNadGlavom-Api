@@ -1,5 +1,6 @@
 using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 
@@ -9,12 +10,14 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+		private readonly INotificationService _notificationService;
 
-        public CreateContractCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+		public CreateContractCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-        }
+			_notificationService = notificationService;
+		}
 
         public async Task<Contract> Handle(CreateContractCommand request, CancellationToken cancellationToken)
         {
@@ -29,6 +32,8 @@ namespace krov_nad_glavom_api.Application.Commands.Contracts
             contract.Id = Guid.NewGuid().ToString();
 
             await _unitOfWork.Contracts.AddAsync(contract);
+
+            await _notificationService.SendNotificationsForContractCreate(contract);
 
             var firstInstallment = new Installment
             {

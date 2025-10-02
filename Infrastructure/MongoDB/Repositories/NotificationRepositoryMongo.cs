@@ -13,11 +13,16 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
         }
 
         public async Task<List<Notification>> GetNotificationsByUserId(string userId)
-		{
-			return await _notifications
+        {
+            return await _notifications
                 .Find(d => d.UserId == userId)
                 .SortByDescending(d => d.CreatedAt)
                 .ToListAsync();
+        }
+        
+        public Task<int> GetUserNotificationsCount(string userId)
+		{
+			return Task.FromResult((int)_notifications.CountDocuments(a => a.UserId == userId));
 		}
     }
 }

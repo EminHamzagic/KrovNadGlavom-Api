@@ -182,6 +182,7 @@ public static class Program
         services.AddSingleton<ICloudinaryService, CloudinaryService>();
         services.AddSingleton<IEmailService, EmailService>();
         services.AddScoped<IUserSessionService, UserSessionService>();
+        services.AddScoped<INotificationService, NotificationService>();
     }
 
     private static void ConfigureAutoMapper(IServiceCollection services)

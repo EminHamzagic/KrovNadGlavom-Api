@@ -18,5 +18,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		{
 			return await _context.Notifications.Where(d => d.UserId == userId).OrderByDescending(d => d.CreatedAt).ToListAsync();
 		}
+
+		public Task<int> GetUserNotificationsCount(string userId)
+		{
+			return Task.FromResult(_context.Notifications.Where(a => a.UserId == userId).Count());
+		}
     }
 }

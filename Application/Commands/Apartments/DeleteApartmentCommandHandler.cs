@@ -18,7 +18,7 @@ namespace krov_nad_glavom_api.Application.Commands.Apartments
             if (apartment == null)
                 throw new Exception("Stan nije pronađen");
 
-            var contract = await _unitOfWork.Contracts.GetContractsByApartmentId(apartment.Id);
+            var contract = await _unitOfWork.Contracts.GetContractByApartmentId(apartment.Id);
             var discountRequest = await _unitOfWork.DiscountRequests.GetByApartmentId(apartment.Id);
             var reservation = await _unitOfWork.Reservations.GetByApartmentId(apartment.Id);
 
