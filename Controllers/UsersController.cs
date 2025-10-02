@@ -59,7 +59,12 @@ namespace krov_nad_glavom_api.Controllers
         {
             try
             {
-                var command = new CreateUserCommand(dto);
+                var origin = Request.Headers["Origin"].ToString(); 
+                if (string.IsNullOrEmpty(origin))
+                {
+                    origin = $"{Request.Scheme}://{Request.Host}";
+                }
+                var command = new CreateUserCommand(dto, origin);
                 var userId = await _mediator.Send(command);
                 return Ok(userId);
             }
@@ -91,7 +96,12 @@ namespace krov_nad_glavom_api.Controllers
         {
             try
             {
-                var command = new RequestPasswordResetCommand(userPasswordResetDto);
+                var origin = Request.Headers["Origin"].ToString(); 
+                if (string.IsNullOrEmpty(origin))
+                {
+                    origin = $"{Request.Scheme}://{Request.Host}";
+                }
+                var command = new RequestPasswordResetCommand(userPasswordResetDto, origin);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }

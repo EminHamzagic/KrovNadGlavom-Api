@@ -24,7 +24,7 @@ namespace krov_nad_glavom_api.Application.Commands.Users
                 throw new Exception("Korisnik nije pronađen");
 
             var token = _tokenService.GeneratePasswordResetToken(user.Id, user.Email);
-            var link = $"http://localhost:5173/reset-password?token={token}";
+            var link = $"{request.Origin}/reset-password?token={token}";
 
             await _emailService.SendEmailAsync(user.Email, "Resetovanje lozinke", "Resetovanje lozinke", _emailService.GetPasswordResetHtmlBody(link));
 

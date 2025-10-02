@@ -1,3 +1,5 @@
+using krov_nad_glavom_api.Domain.Interfaces;
+
 namespace krov_nad_glavom_api.Application.Interfaces
 {
     public interface IUnitOfWork : IDisposable
@@ -16,6 +18,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
         IPriceListRepository PriceLists { get; }
         IReservationRepository Reservations { get; }
         IUserAgencyFollowRepository UserAgencyFollows { get; }
+        INotificationRepository Notifications { get; }
 
         Task Save();
     }

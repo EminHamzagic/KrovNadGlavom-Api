@@ -8,9 +8,11 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
     {
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly ICloudinaryService _cloudinaryService;
+        private readonly INotificationService _notificationService;
 
-        public SendInstallmentPaymentProofCommandHandler(IUnitOfWork unitOfWork, ICloudinaryService cloudinaryService)
+        public SendInstallmentPaymentProofCommandHandler(IUnitOfWork unitOfWork, ICloudinaryService cloudinaryService, INotificationService notificationService)
         {
+            _notificationService = notificationService;
 			_unitOfWork = unitOfWork;
 			_cloudinaryService = cloudinaryService;
         }
@@ -29,6 +31,7 @@ namespace krov_nad_glavom_api.Application.Commands.Installments
             var imageUrl = await _cloudinaryService.UploadImageAsync(request.InstallmentProofToSendDto.File, "KrovNadGlavom");
             installment.PaymentProof = imageUrl;
             _unitOfWork.Installments.Update(installment);
+            await _notificationService.SendNotificationsForInstallmentProof(installment);
             await _unitOfWork.Save();
 
             return imageUrl;

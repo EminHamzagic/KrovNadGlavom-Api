@@ -6,8 +6,10 @@ namespace krov_nad_glavom_api.Application.Commands.Users
     public class CreateUserCommand : IRequest<string>
     {
         public UserToAddDto UserToAddDto;
-        public CreateUserCommand(UserToAddDto userToAddDto)
+        public string Origin { get; set; }
+        public CreateUserCommand(UserToAddDto userToAddDto, string origin)
         {
+            Origin = origin;
             UserToAddDto = userToAddDto;
         }
     }

@@ -1,5 +1,6 @@
 using AutoMapper;
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 
@@ -9,9 +10,11 @@ namespace krov_nad_glavom_api.Application.Commands.DiscountRequests
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly INotificationService _notificationService;
 
-        public UpdateDiscountRequestCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateDiscountRequestCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, INotificationService notificationService)
         {
+            _notificationService = notificationService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -24,6 +27,7 @@ namespace krov_nad_glavom_api.Application.Commands.DiscountRequests
 
             _mapper.Map(request.DiscountRequestToUpdateDto, discountRequest);
             _unitOfWork.DiscountRequests.Update(discountRequest);
+            await _notificationService.SendNotificationsForDiscountRequestUpdate(discountRequest);
             await _unitOfWork.Save();
 
             return discountRequest;

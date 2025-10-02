@@ -38,7 +38,7 @@ namespace krov_nad_glavom_api.Application.Commands.Users
             await _unitOfWork.Users.AddAsync(user);
 
             var token = _tokenService.GenerateEmailVerificationToken(user.Id, user.Email);
-            var link = $"http://localhost:5173/verify-email?token={token}";
+            var link = $"{request.Origin}/verify-email?token={token}";
 
             await _emailService.SendEmailAsync(user.Email, "Verifikacija email-a", "Verifikacija email-a", _emailService.GetEmailVerificationHtmlBody(link));
             await _unitOfWork.Save();

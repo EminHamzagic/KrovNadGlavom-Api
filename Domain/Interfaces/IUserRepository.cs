@@ -6,5 +6,7 @@ namespace krov_nad_glavom_api.Application.Interfaces
     {
         Task<User> GetUserByEmail(string email);
         Task<List<User>> GetUsersByIds(List<string> ids);
+        Task<User> GetUserByCompanyId(string companyId);
+        Task<User> GetUserByAgencyId(string agencyId);
     }
 }

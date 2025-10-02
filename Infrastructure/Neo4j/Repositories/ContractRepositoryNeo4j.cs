@@ -49,7 +49,7 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
             await foreach (var record in cursor)
                 contracts.Add(record["c"].As<INode>().ToEntity<Contract>());
 
-            var filtered = contracts.ToList(); 
+            var filtered = contracts.ToList();
             var totalCount = filtered.Count;
             parameters.checkOverflow(totalCount);
 
@@ -63,7 +63,7 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
             return (contractPage, totalCount, totalPages);
         }
 
-        public async Task<Contract> GetContractsByApartmentId(string apartmentId)
+        public async Task<Contract> GetContractByApartmentId(string apartmentId)
         {
             var query = $"MATCH (c:{_label} {{ ApartmentId: $apartmentId }}) RETURN c LIMIT 1";
             await using var session = _context.Driver.AsyncSession();
@@ -73,6 +73,19 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
                 return cursor.Current["c"].As<INode>().ToEntity<Contract>();
 
             return null;
+        }
+        
+        public async Task<List<Contract>> GetContractsByApartmentIds(List<string> ids)
+        {
+            var query = $"MATCH (c:{_label}) WHERE c.Id IN $ids AND NOT c.Status = Broken RETURN c";
+            await using var session = _context.Driver.AsyncSession();
+            var cursor = await session.RunAsync(query, new { ids });
+
+            var list = new List<Contract>();
+            await foreach (var record in cursor)
+                list.Add(record["c"].As<INode>().ToEntity<Contract>());
+
+            return list;
         }
     }
 }

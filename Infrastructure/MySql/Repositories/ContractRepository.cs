@@ -48,9 +48,15 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
             
             return (contractsPage, totalCount, totalPages);
         }
-        public async Task<Contract> GetContractsByApartmentId(string apartmentId)
+
+        public async Task<Contract> GetContractByApartmentId(string apartmentId)
         {
             return await _context.Contracts.Where(c => c.ApartmentId == apartmentId).FirstOrDefaultAsync();
+        }
+        
+        public async Task<List<Contract>> GetContractsByApartmentIds(List<string> ids)
+        {
+            return await _context.Contracts.Where(c => ids.Contains(c.ApartmentId) && c.Status != "Broken").ToListAsync();
         }
     }
 }
