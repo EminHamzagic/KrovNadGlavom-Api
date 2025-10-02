@@ -1,0 +1,35 @@
+name: Docker ASP.NET Build and Publish
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up .NET Core SDK
+              uses: actions/setup-dotnet@v3
+              with:
+                  dotnet-version: "9.0"
+
+            - name: Restore dependencies
+              run: dotnet restore
+
+            - name: Build the application
+              run: dotnet build --configuration Release
+
+            - name: Publish the application
+              run: dotnet publish --configuration Release --output ./published
+
+            - name: Build the Docker image
+              run: docker build --tag eminhamzagic/krovnadglavom-api:latest .
+
+            - name: Publish Docker Image
+              run: |
+                  docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+                  docker push eminhamzagic/krovnadglavom-api:latest
