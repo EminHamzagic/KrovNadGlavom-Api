@@ -309,5 +309,58 @@ namespace krov_nad_glavom_api.Application.Services
 
             return true;
         }
+
+        public async Task<bool> SendNotificationsForLateContractInstllment(Contract contract)
+        {
+            var notification = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = contract.UserId,
+                Label = NotificationsLabelEnum.Placanje,
+                Title = "Kašnjenje uplate rate",
+                Message = $@"Zakasnili ste sa plaćanjem poslednje rate na ovom <a href='/contracts/{contract.Id}' class='text-primary underline' target='_blank'>ugovoru</a>.
+                             Ako zakasnite sa plaćanjem rate jos {4 - contract.LateCount} puta, ugovor će biti raskinut. Molimo vas obratite pažnju!",
+                CreatedAt = DateTime.Now
+            };
+
+            await _unitOfWork.Notifications.AddAsync(notification);
+            await _unitOfWork.Save();
+
+            return true;
+        }
+
+        public async Task<bool> SendNotificationsForContractInvalidated(Contract contract)
+        {
+            var agencyUser = await _unitOfWork.Users.GetUserByAgencyId(contract.AgencyId);
+
+            var notifications = new List<Notification>
+            {
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = contract.UserId,
+                    Label = NotificationsLabelEnum.Obaveštenje,
+                    Title = "Raskidanje ugovora",
+                    Message = $@"Poštovani, kako se zakasnili sa uplatom rate na ugovoru pod brojem {contract.Id.Substring(0, 6)} je od ovog trenutka zvanično raskinut.
+                            Biće vam vraćena količina nova u uznosu od 90% ukupne uplaćene svote, gde ostalih 10% ide agenciji u vidu nadoknade.",
+                    CreatedAt = DateTime.Now
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = agencyUser.Id,
+                    Label = NotificationsLabelEnum.Obaveštenje,
+                    Title = "Ugovor raskinut",
+                    Message = $@"Ugovor pod brojem {contract.Id.Substring(0, 6)} je od ovog trenutka raskinut. Razlog: kupac je 4. put kasnio sa uplatom mesečne rate.
+                                <a href='/apartments/{contract.ApartmentId}' class='text-primary underline' target='_blank'>Stan</a> pod ovim ugovorom je ponovo u prodaji.",
+                    CreatedAt = DateTime.Now
+                }
+			};
+
+            await _unitOfWork.Notifications.AddRangeAsync(notifications);
+            await _unitOfWork.Save();
+
+            return true;
+        }
     }
 }

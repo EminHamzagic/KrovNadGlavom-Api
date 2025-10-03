@@ -75,14 +75,82 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
             return null;
         }
         
+        public async Task<Contract> GetContractByApartmentIdAndUserId(string apartmentId, string userId)
+        {
+            var query = $"MATCH (c:{_label} {{ ApartmentId: $apartmentId, UserId: $userId }}) RETURN c LIMIT 1";
+            await using var session = _context.Driver.AsyncSession();
+            var cursor = await session.RunAsync(query, new { apartmentId, userId });
+
+            if (await cursor.FetchAsync())
+                return cursor.Current["c"].As<INode>().ToEntity<Contract>();
+
+            return null;
+        }
+
         public async Task<List<Contract>> GetContractsByApartmentIds(List<string> ids)
         {
-            var query = $"MATCH (c:{_label}) WHERE c.Id IN $ids AND NOT c.Status = Broken RETURN c";
+            var query = $"MATCH (c:{_label}) WHERE c.Id IN $ids AND NOT c.Status = Invalid RETURN c";
             await using var session = _context.Driver.AsyncSession();
             var cursor = await session.RunAsync(query, new { ids });
 
             var list = new List<Contract>();
             await foreach (var record in cursor)
+                list.Add(record["c"].As<INode>().ToEntity<Contract>());
+
+            return list;
+        }
+
+        public async Task<List<Contract>> GetLatePaymentContracts(User user)
+        {
+            var now = DateTime.UtcNow;
+
+            await using var session = _context.Driver.AsyncSession();
+
+            var installmentsQuery = @"
+                MATCH (i:Installment)
+                WHERE i.DueDate < $now AND i.IsConfirmed = false AND i.IsLate = false
+                RETURN DISTINCT i.ContractId AS contractId, i AS installment";
+
+            var installmentsCursor = await session.RunAsync(installmentsQuery, new { now });
+
+            var contractIds = new List<string>();
+            var lateInstallmentIds = new List<string>();
+
+            await foreach (var record in installmentsCursor)
+            {
+                contractIds.Add(record["contractId"].As<string>());
+
+                lateInstallmentIds.Add(record["installment"].As<INode>().Id.ToString());
+            }
+
+            if (!contractIds.Any())
+                return new List<Contract>();
+
+            if (lateInstallmentIds.Any())
+            {
+                var updateQuery = @"
+                    MATCH (i:Installment)
+                    WHERE id(i) IN $ids
+                    SET i.IsLate = true";
+
+                var nodeIds = lateInstallmentIds.Select(id => Convert.ToInt64(id)).ToList();
+                await session.RunAsync(updateQuery, new { ids = nodeIds });
+            }
+
+            var contractsQuery = user.AgencyId == null
+                ? $@"MATCH (c:{_label})
+                    WHERE c.Id IN $ids AND c.UserId = $userId
+                    RETURN c"
+                : $@"MATCH (c:{_label})
+                    WHERE c.Id IN $ids AND c.AgencyId = $agencyId
+                    RETURN c";
+
+            var contractsCursor = user.AgencyId == null
+                ? await session.RunAsync(contractsQuery, new { ids = contractIds, userId = user.Id })
+                : await session.RunAsync(contractsQuery, new { ids = contractIds, agencyId = user.AgencyId });
+
+            var list = new List<Contract>();
+            await foreach (var record in contractsCursor)
                 list.Add(record["c"].As<INode>().ToEntity<Contract>());
 
             return list;

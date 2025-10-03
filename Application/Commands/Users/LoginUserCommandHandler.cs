@@ -13,11 +13,13 @@ namespace krov_nad_glavom_api.Application.Commands.Users
         private readonly IMapper _mapper;
         private readonly ISecurePasswordHasher _securePasswordHasher;
         private readonly IUserSessionService _userSessionService;
+		private readonly IContractService _contractService;
 
-        public LoginUserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ISecurePasswordHasher securePasswordHasher, IUserSessionService userSessionService)
+		public LoginUserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ISecurePasswordHasher securePasswordHasher, IUserSessionService userSessionService, IContractService contractService)
         {
             _userSessionService = userSessionService;
-            _securePasswordHasher = securePasswordHasher;
+			_contractService = contractService;
+			_securePasswordHasher = securePasswordHasher;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -34,6 +36,8 @@ namespace krov_nad_glavom_api.Application.Commands.Users
             if (!user.IsVerified)
                 throw new Exception("Profil nije verifikovan. Molimo vas varifikujte vaš profil");
 
+            await _contractService.CheckUserContracts(user);
+
             var tokens = await _userSessionService.CreateUserSession(user);
 
             var userToReturn = _mapper.Map<User, UserToReturnDto>(user);
@@ -41,6 +45,7 @@ namespace krov_nad_glavom_api.Application.Commands.Users
             userToReturn.RefreshToken = tokens.RefreshToken;
 
             return userToReturn;
+
         }
     }
 }

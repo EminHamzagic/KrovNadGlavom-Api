@@ -10,5 +10,6 @@ namespace krov_nad_glavom_api.Domain.Entities
         public decimal InstallmentAmount { get; set; }
         public int InstallmentCount { get; set; }
         public string Status { get; set; }
+        public int LateCount { get; set; }
     }
 }
