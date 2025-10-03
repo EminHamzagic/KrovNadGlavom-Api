@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using krov_nad_glavom_api.Application.Commands.Users;
 using krov_nad_glavom_api.Application.Queries.Users;
 using krov_nad_glavom_api.Data.DTO.Google;
@@ -142,15 +144,31 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserToReturnDto>> UpdateUser(string id, UserToUpdateDto userToUpdateDto)
+        {
+            try
+            {
+                var command = new UpdateUserCommand(id, userToUpdateDto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("change-password")]
         public async Task<IActionResult> ChangePassword(UserChangePasswordDto dto)
         {
             try
             {
-                var userId = User.FindFirst("id")?.Value; // iz JWT tokena
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) 
+                     ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
                 var command = new ChangePasswordCommand(userId, dto);
                 var result = await _mediator.Send(command);
-                return Ok(new { success = result, message = "Lozinka uspe�no promenjena." });
+                return Ok(new { success = result, message = "Lozinka uspešno promenjena." });
             }
             catch (Exception ex)
             {

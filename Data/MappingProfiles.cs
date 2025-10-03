@@ -23,6 +23,7 @@ namespace krov_nad_glavom_api.Data
             //User mappings
             CreateMap<UserToAddDto, User>().ReverseMap();
             CreateMap<UserToReturnDto, User>().ReverseMap();
+            CreateMap<User, UserToUpdateDto>().ReverseMap();
 
             //ConstructionCompany mappings
             CreateMap<ConstructionCompanyToAddDto, ConstructionCompany>().ReverseMap();
