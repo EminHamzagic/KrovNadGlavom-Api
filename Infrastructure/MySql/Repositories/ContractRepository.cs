@@ -28,7 +28,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
                 .ToListAsync();
 
             var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
-            
+
             return (contractsPage, totalCount, totalPages);
         }
 
@@ -45,7 +45,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
                 .ToListAsync();
 
             var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
-            
+
             return (contractsPage, totalCount, totalPages);
         }
 
@@ -53,10 +53,44 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         {
             return await _context.Contracts.Where(c => c.ApartmentId == apartmentId).FirstOrDefaultAsync();
         }
-        
+
+        public async Task<Contract> GetContractByApartmentIdAndUserId(string apartmentId, string userId)
+        {
+            return await _context.Contracts.Where(c => c.ApartmentId == apartmentId && c.UserId == userId).FirstOrDefaultAsync();
+        }
+
         public async Task<List<Contract>> GetContractsByApartmentIds(List<string> ids)
         {
-            return await _context.Contracts.Where(c => ids.Contains(c.ApartmentId) && c.Status != "Broken").ToListAsync();
+            return await _context.Contracts.Where(c => ids.Contains(c.ApartmentId) && c.Status != "Invalid").ToListAsync();
         }
+
+        public async Task<List<Contract>> GetLatePaymentContracts(User user)
+        {
+            var lateInstallments = await _context.Installments.Where(i => i.DueDate < DateTime.Now && i.IsConfirmed == false && i.IsLate == false).ToListAsync();
+            if (lateInstallments.Any())
+            {
+                foreach (var item in lateInstallments)
+                {
+                    item.IsLate = true;
+                }
+                await _context.SaveChangesAsync();
+                var contractIds = lateInstallments.Select(i => i.ContractId).Distinct().ToList();
+                if (user.AgencyId == null && contractIds.Count > 0)
+                {
+                    return await _context.Contracts.Where(c => contractIds.Contains(c.Id) && c.UserId == user.Id).ToListAsync();
+                }
+                else
+                {
+                    return await _context.Contracts.Where(c => contractIds.Contains(c.Id) && c.AgencyId == user.AgencyId).ToListAsync();
+                }
+            }
+
+            return new List<Contract>();
+        }
+        
+        public async Task<List<Contract>> GetByUserId(string userId)
+		{
+			return await _context.Contracts.Where(u => u.UserId == userId).ToListAsync();
+		}
     }
 }

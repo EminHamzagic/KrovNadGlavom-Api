@@ -44,7 +44,7 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
         public async Task<(List<Agency> agenciesPage, int totalCount, int totalPages)> GetAgenciesQuery(QueryStringParameters parameters)
         {
             var all = await GetAllAsync();
-            var allQuery = all.AsQueryable();
+            var allQuery = all.Where(a => a.IsAllowed).AsQueryable();
 
             var filtered = allQuery.Filter(parameters).Sort(parameters).ToList();
 

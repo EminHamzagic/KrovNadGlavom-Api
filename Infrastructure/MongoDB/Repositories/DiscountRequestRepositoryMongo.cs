@@ -60,5 +60,13 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .Find(c => c.ApartmentId == apartmentId && c.UserId == userId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<DiscountRequest>> GetByUserId(string userId)
+		{
+			return await _discountRequests
+                .Find(d => d.UserId == userId)
+                .SortByDescending(d => d.CreatedAt)
+                .ToListAsync();
+		}
     }
 }

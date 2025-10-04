@@ -33,6 +33,7 @@ namespace krov_nad_glavom_api.Application.Utils
         public bool? WithGarage { get; set; }
         public string Status { get; set; }
         public string Orientation { get; set; }
+        public bool? IsAllowed { get; set; } = true;
 
         public void checkOverflow(int count) {
             if (((int)Math.Ceiling(count / (double)PageSize)) < PageNumber) {

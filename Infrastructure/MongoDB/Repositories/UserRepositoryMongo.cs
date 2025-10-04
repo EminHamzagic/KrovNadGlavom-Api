@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Domain.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -23,14 +24,14 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
             Console.WriteLine(doc.ToJson());
 
             return await _users
-                .Find(u => u.Email == email)
+                .Find(u => u.Email == email && !u.IsDeleted)
                 .FirstOrDefaultAsync();
         }
 
         public async Task<List<User>> GetUsersByIds(List<string> ids)
         {
             return await _users
-                .Find(u => ids.Contains(u.Id))
+                .Find(u => ids.Contains(u.Id) && !u.IsDeleted)
                 .ToListAsync();
         }
 
@@ -43,7 +44,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
             Console.WriteLine(doc.ToJson());
 
             return await _users
-                .Find(u => u.ConstructionCompanyId == companyId)
+                .Find(u => u.ConstructionCompanyId == companyId && !u.IsDeleted)
                 .FirstOrDefaultAsync();
         }
 
@@ -56,8 +57,29 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
             Console.WriteLine(doc.ToJson());
 
             return await _users
-                .Find(u => u.AgencyId == agencyId)
+                .Find(u => u.AgencyId == agencyId && !u.IsDeleted)
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<(List<User> userPage, int totalCount, int totalPages)> GetUsersPage(QueryStringParameters parameters)
+        {
+            var usersQuery = _users
+                .AsQueryable()
+                .Where(c => c.IsDeleted == false && c.IsAllowed == parameters.IsAllowed && c.Role != "Admin");
+
+            usersQuery = usersQuery.Filter(parameters).Sort(parameters);
+
+            var totalCount = usersQuery.Count();
+            parameters.checkOverflow(totalCount);
+
+            var usersPage = usersQuery
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+
+            return Task.FromResult((usersPage, totalCount, totalPages));
         }
     }
 }

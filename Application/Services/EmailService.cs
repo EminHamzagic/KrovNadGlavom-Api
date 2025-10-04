@@ -87,5 +87,43 @@ namespace krov_nad_glavom_api.Application.Services
                 </body>
 				</html>";
         }
+        
+        public string GetAllowedProfileHtmlBody(string origin)
+        {
+            return $@"
+				<html>
+				<body style='font-family: Arial, sans-serif; background-color: #f9f9f9; padding-top: 50px; padding-bottom: 50px'>
+                    <div style='max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px; background-color:#ffffff;'>
+                        <h2>Profil odobren</h2>
+                        <p>Vaš profil je uspešno odobren od strane administratora. Kliknite dugme ispod da bi ste otišli na prijavu:</p>
+                        <a href='{origin}/login' 
+                        style='display:inline-block; padding:10px 20px; margin-top:20px; 
+                                font-size:16px; background-color:#c7671e; color:#ffffff; 
+                                text-decoration:none; border-radius:5px;'>
+                            Prijavi se
+                        </a>
+                        <p>Ako niste poslali zahtev za ovo, slobodno ignorišite ovaj mail.</p>
+                        <p>– KrovNadGlavom Team</p>
+                    </div>
+                </body>
+				</html>";
+        }
+        
+        public string GetRejectedProfileBody(string reason)
+        {
+            return $@"
+				<html>
+				<body style='font-family: Arial, sans-serif; background-color: #f9f9f9; padding-top: 50px; padding-bottom: 50px'>
+                    <div style='max-width:600px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px; background-color:#ffffff;'>
+                        <h2>Zahtev za profil odbijen</h2>
+                        <p>Vaš zahtev za registrovanje je odbijen od strane administratora.</p>
+                        <p style='font-weight: 800'>Razlog:</p>
+                        <p>{reason.Replace("\n", "<br>")}</p>
+                        <p style='margin-top: 10px'>Ako niste poslali zahtev za ovo, slobodno ignorišite ovaj mail.</p>
+                        <p>– KrovNadGlavom Team</p>
+                    </div>
+                </body>
+				</html>";
+        }
     }
 }

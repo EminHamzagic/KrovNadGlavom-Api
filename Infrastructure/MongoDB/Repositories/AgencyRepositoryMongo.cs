@@ -30,7 +30,7 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
 
         public Task<(List<Agency> agenciesPage, int totalCount, int totalPages)> GetAgenciesQuery(QueryStringParameters parameters)
 		{
-			var agenciesQuery = _collection.AsQueryable().Where(a => a.Id != null);
+			var agenciesQuery = _collection.AsQueryable().Where(a => a.Id != null && a.IsAllowed == true);
 			agenciesQuery = agenciesQuery.Filter(parameters).Sort(parameters);
 
 			var totalCount = agenciesQuery.Count();

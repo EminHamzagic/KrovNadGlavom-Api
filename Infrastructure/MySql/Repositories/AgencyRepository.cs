@@ -26,7 +26,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 
 		public async Task<(List<Agency> agenciesPage, int totalCount, int totalPages)> GetAgenciesQuery(QueryStringParameters parameters)
 		{
-			var agenciesQuery = _context.Agencies.AsQueryable();
+			var agenciesQuery = _context.Agencies.Where(a => a.IsAllowed).AsQueryable();
 			agenciesQuery = agenciesQuery.Filter(parameters).Sort(parameters);
 
 			var totalCount = agenciesQuery.Count();

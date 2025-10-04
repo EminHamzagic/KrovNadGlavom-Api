@@ -1,3 +1,4 @@
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Domain.Entities;
 
 namespace krov_nad_glavom_api.Application.Interfaces
@@ -8,5 +9,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
         Task<List<User>> GetUsersByIds(List<string> ids);
         Task<User> GetUserByCompanyId(string companyId);
         Task<User> GetUserByAgencyId(string agencyId);
+        Task<(List<User> userPage, int totalCount, int totalPages)> GetUsersPage(QueryStringParameters parameters);
     }
 }

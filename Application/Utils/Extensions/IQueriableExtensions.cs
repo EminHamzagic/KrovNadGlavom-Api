@@ -28,30 +28,6 @@ namespace krov_nad_glavom_api.Application.Utils
             return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
         }
 
-        // public static async Task<int> CountSafeAsync<T>(
-        //     this IQueryable<T> query, 
-        //     CancellationToken cancellationToken = default)
-        // {
-        //     if (query is IMongoQueryable<T> mongoQuery)
-        //     {
-        //         return await mongoQuery.CountAsync(cancellationToken);
-        //     }
-
-        //     return await EntityFrameworkQueryableExtensions.CountAsync(query, cancellationToken);
-        // }
-
-        // public static async Task<List<T>> ToListSafeAsync<T>(
-        //     this IQueryable<T> query,
-        //     CancellationToken cancellationToken = default)
-        // {
-        //     if (query is IMongoQueryable<T> mongoQuery)
-        //     {
-        //         return await mongoQuery.ToListAsync(cancellationToken);
-        //     }
-
-        //     return await EntityFrameworkQueryableExtensions.ToListAsync(query, cancellationToken);
-        // }
-
         public static IQueryable<T> Filter<T>(this IQueryable<T> source, QueryStringParameters parameters)
         {
             switch (source)
@@ -90,6 +66,16 @@ namespace krov_nad_glavom_api.Application.Utils
                             || x.Address.ToLower().Contains(parameters.SearchText.ToLower()));
 
                         return (IQueryable<T>)buildings;
+                    }
+                case IQueryable<User> users:
+                    {
+                        if (!string.IsNullOrEmpty(parameters.SearchText))
+                            users = users.Where(x => x.Name.ToLower().Contains(parameters.SearchText.ToLower())
+                            || x.Lastname.ToLower().Contains(parameters.SearchText.ToLower())
+                            || x.Username.ToLower().Contains(parameters.SearchText.ToLower())
+                            || x.Email.ToLower().Contains(parameters.SearchText.ToLower()));
+
+                        return (IQueryable<T>)users;
                     }
             }
             return source;
@@ -175,6 +161,28 @@ namespace krov_nad_glavom_api.Application.Utils
                             Log.Information("You tried to order by property that does not exist");
                         }
                         return (IQueryable<T>)buildings.OrderByDescending(a => a.Id);
+                    }
+                case IQueryable<User> users:
+                    {
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(parameters.SortProperty))
+                            {
+                                if (parameters.SortType == "asc")
+                                {
+                                    return (IQueryable<T>)users.OrderBy(parameters.SortProperty);
+                                }
+                                else
+                                {
+                                    return (IQueryable<T>)users.OrderByDescending(parameters.SortProperty);
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            Log.Information("You tried to order by property that does not exist");
+                        }
+                        return (IQueryable<T>)users.OrderByDescending(a => a.Id);
                     }
             }
             return source;

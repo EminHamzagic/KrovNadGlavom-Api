@@ -18,5 +18,7 @@ namespace krov_nad_glavom_api.Domain.Entities
         public string ConstructionCompanyId { get; set; }
         public string AgencyId { get; set; }
         public bool IsVerified { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsAllowed { get; set; }
     }
 }

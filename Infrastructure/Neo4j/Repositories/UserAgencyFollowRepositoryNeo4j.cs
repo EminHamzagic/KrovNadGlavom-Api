@@ -60,5 +60,18 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
             return null;
         }
+
+        public async Task<List<UserAgencyFollow>> GetByUserId(string userId)
+		{
+			var query = $"MATCH (d:{_label} {{ UserId: $userId }}) RETURN d";
+            await using var session = _context.Driver.AsyncSession();
+            var cursor = await session.RunAsync(query, new { userId });
+
+            var list = new List<UserAgencyFollow>();
+            await foreach (var record in cursor)
+                list.Add(record["d"].As<INode>().ToEntity<UserAgencyFollow>());
+
+            return list;
+		}
     }
 }

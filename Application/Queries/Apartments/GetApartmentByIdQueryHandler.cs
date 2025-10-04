@@ -28,6 +28,9 @@ namespace krov_nad_glavom_api.Application.Queries.Apartments
             var building = await _unitOfWork.Buildings.GetByIdAsync(apartmentToReturn.BuildingId);
             var priceList = await _unitOfWork.PriceLists.GetPriceListByBuildingId(building.Id);
 
+            var exisitingContract = await _unitOfWork.Contracts.GetContractByApartmentIdAndUserId(request.id, request.userId);
+
+            apartmentToReturn.IsAvailable = exisitingContract == null;
             apartmentToReturn.Building = _mapper.Map<BuildingToReturnDto>(building);
             apartmentToReturn.Building.PriceList = priceList;
             apartmentToReturn.Agency = await _unitOfWork.AgencyRequests.GetAgencyByBuildingId(apartmentToReturn.BuildingId);

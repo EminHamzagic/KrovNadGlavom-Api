@@ -55,5 +55,12 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                 .Find(u => u.UserId == userId && u.AgencyId == agencyId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<UserAgencyFollow>> GetByUserId(string userId)
+		{
+			return await _userAgencyFollows
+                .Find(d => d.UserId == userId)
+                .ToListAsync();
+		}
     }
 }

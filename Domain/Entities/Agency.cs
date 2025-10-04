@@ -12,5 +12,6 @@ namespace krov_nad_glavom_api.Domain.Entities
         public string Description { get; set; }
         public string LogoUrl { get; set; }
         public string BankAccountNumber { get; set; }
+        public bool IsAllowed { get; set; }
     }
 }

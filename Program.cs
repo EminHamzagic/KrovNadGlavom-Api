@@ -183,6 +183,7 @@ public static class Program
         services.AddSingleton<IEmailService, EmailService>();
         services.AddScoped<IUserSessionService, UserSessionService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IContractService, ContractService>();
     }
 
     private static void ConfigureAutoMapper(IServiceCollection services)

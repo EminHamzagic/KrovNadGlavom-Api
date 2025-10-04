@@ -71,6 +71,23 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("paginated")]
+        public async Task<IActionResult> GetBuildingsPaginated([FromQuery] QueryStringParameters parameters)
+        {
+            try
+            {
+                var command = new GetBuildingsPageQuery(parameters);
+                var res = await _mediator.Send(command);
+                Response.Headers.Append("X-Pagination", res.getMetadata());
+                return Ok(res.Items);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSingleBuilding(string id)
         {
@@ -116,6 +133,7 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
         
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBuilding(string id)
         {

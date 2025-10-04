@@ -3,6 +3,7 @@ using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.AgencyRequest;
 using krov_nad_glavom_api.Domain.Entities;
+using ZstdSharp.Unsafe;
 
 namespace krov_nad_glavom_api.Application.Services
 {
@@ -306,6 +307,102 @@ namespace krov_nad_glavom_api.Application.Services
 
             await _unitOfWork.Notifications.AddAsync(notification);
             await _unitOfWork.Save();
+
+            return true;
+        }
+
+        public async Task<bool> SendNotificationsForLateContractInstllment(Contract contract)
+        {
+            var notification = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = contract.UserId,
+                Label = NotificationsLabelEnum.Placanje,
+                Title = "Kašnjenje uplate rate",
+                Message = $@"Zakasnili ste sa plaćanjem poslednje rate na ovom <a href='/contracts/{contract.Id}' class='text-primary underline' target='_blank'>ugovoru</a>.
+                             Ako zakasnite sa plaćanjem rate jos {4 - contract.LateCount} puta, ugovor će biti raskinut. Molimo vas obratite pažnju!",
+                CreatedAt = DateTime.Now
+            };
+
+            await _unitOfWork.Notifications.AddAsync(notification);
+            await _unitOfWork.Save();
+
+            return true;
+        }
+
+        public async Task<bool> SendNotificationsForContractInvalidated(Contract contract)
+        {
+            var agencyUser = await _unitOfWork.Users.GetUserByAgencyId(contract.AgencyId);
+
+            var notifications = new List<Notification>
+            {
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = contract.UserId,
+                    Label = NotificationsLabelEnum.Obaveštenje,
+                    Title = "Raskidanje ugovora",
+                    Message = $@"Poštovani, kako se zakasnili sa uplatom rate na ugovoru pod brojem {contract.Id.Substring(0, 6)} je od ovog trenutka zvanično raskinut.
+                            Biće vam vraćena količina nova u uznosu od 90% ukupne uplaćene svote, gde ostalih 10% ide agenciji u vidu nadoknade.",
+                    CreatedAt = DateTime.Now
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = agencyUser.Id,
+                    Label = NotificationsLabelEnum.Obaveštenje,
+                    Title = "Ugovor raskinut",
+                    Message = $@"Ugovor pod brojem {contract.Id.Substring(0, 6)} je od ovog trenutka raskinut. Razlog: kupac je 4. put kasnio sa uplatom mesečne rate.
+                                <a href='/apartments/{contract.ApartmentId}' class='text-primary underline' target='_blank'>Stan</a> pod ovim ugovorom je ponovo u prodaji.",
+                    CreatedAt = DateTime.Now
+                }
+            };
+
+            await _unitOfWork.Notifications.AddRangeAsync(notifications);
+            await _unitOfWork.Save();
+
+            return true;
+        }
+        
+        public async Task<bool> SendNotificationsForBuildingDelete(Building building)
+        {
+            var companyUser = await _unitOfWork.Users.GetUserByCompanyId(building.CompanyId);
+
+            var notification = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = companyUser.Id,
+                Label = NotificationsLabelEnum.Obaveštenje,
+                Title = "Zgrada uklonjena",
+                Message = $@"Zgrada sa brojem parcele {building.ParcelNumber} je uklonjena od strane administratora.",
+                CreatedAt = DateTime.Now
+            };
+
+            await _unitOfWork.Notifications.AddAsync(notification);
+            await _unitOfWork.Save();
+
+            return true;
+        }
+        
+        public async Task<bool> SendNotificationsForManagerRegister(User user)
+        {
+            var admin = await _unitOfWork.Users.GetUserByEmail("eminhamzagic7@gmail.com");
+
+            if (admin != null)
+            {
+                var notification = new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = admin.Id,
+                    Label = NotificationsLabelEnum.Obaveštenje,
+                    Title = "Novi zahtev za registraciju",
+                    Message = $@"Imate novi zahtev za registraciju " + (string.IsNullOrEmpty(user.AgencyId) ? "kompanije" : "agencije") + ". Kliknite <a href='/admin' class='text-primary underline' target='_blank'>ovde</a> da bi ste pregledali zahtev",
+                    CreatedAt = DateTime.Now
+                };
+
+                await _unitOfWork.Notifications.AddAsync(notification);
+                await _unitOfWork.Save();
+            }
 
             return true;
         }

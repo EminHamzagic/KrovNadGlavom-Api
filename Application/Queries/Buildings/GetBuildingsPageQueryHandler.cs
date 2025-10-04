@@ -5,18 +5,17 @@ using MediatR;
 
 namespace krov_nad_glavom_api.Application.Queries.Buildings
 {
-    public class GetBuildingsByCompanyIdQueryHandler : IRequestHandler<GetBuildingsByCompanyIdQuery, PaginatedResponse<Building>>
+    public class GetBuildingsPageQueryHandler : IRequestHandler<GetBuildingsPageQuery, PaginatedResponse<Building>>
     {
         private readonly IUnitOfWork _unitOfWork;
-
-        public GetBuildingsByCompanyIdQueryHandler(IUnitOfWork unitOfWork)
+        public GetBuildingsPageQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<PaginatedResponse<Building>> Handle(GetBuildingsByCompanyIdQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedResponse<Building>> Handle(GetBuildingsPageQuery request, CancellationToken cancellationToken)
         {
-            var (buildingsPage, totalCount, totalPages) = await _unitOfWork.Buildings.GetCompanyBuildings(request.comapnyId, request.parameters);
+            var (buildingsPage, totalCount, totalPages) = await _unitOfWork.Buildings.GetBuildingsPage(request.parameters);
 
             return new PaginatedResponse<Building>(
                 buildingsPage,
@@ -25,6 +24,6 @@ namespace krov_nad_glavom_api.Application.Queries.Buildings
                 request.parameters.PageSize,
                 totalPages
             );
-        }   
+        }
     }
 }

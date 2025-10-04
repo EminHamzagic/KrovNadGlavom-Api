@@ -5,5 +5,7 @@ namespace krov_nad_glavom_api.Application.Services.Interfaces
         Task SendEmailAsync(string email, string subject, string textMessage, string htmlMessage);
         string GetEmailVerificationHtmlBody(string verificationLink);
         string GetPasswordResetHtmlBody(string resetLink);
+        string GetAllowedProfileHtmlBody(string origin);
+        string GetRejectedProfileBody(string reason);
     }
 }

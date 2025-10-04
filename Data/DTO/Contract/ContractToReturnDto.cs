@@ -12,6 +12,7 @@ namespace krov_nad_glavom_api.Data.DTO.Contract
         public decimal InstallmentAmount { get; set; }
         public int InstallmentCount { get; set; }
         public string Status { get; set; }
+        public int LateCount { get; set; }
         public List<Domain.Entities.Installment> Installments { get; set; }
         public Domain.Entities.User User { get; set; }
         public Domain.Entities.Agency Agency { get; set; }

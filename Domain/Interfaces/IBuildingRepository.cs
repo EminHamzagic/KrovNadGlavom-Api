@@ -12,5 +12,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
         Task<List<Building>> GetBuildingsByIds(List<string> ids);
         Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetAllValidBuildings(string agencyId, QueryStringParameters parameters);
         Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetCompanyBuildings(string companyId, QueryStringParameters parameters);
+        Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetBuildingsPage(QueryStringParameters parameters);
     }
 }
