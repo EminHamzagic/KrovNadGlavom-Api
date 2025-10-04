@@ -74,7 +74,7 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
             return null;
         }
-        
+
         public async Task<Contract> GetContractByApartmentIdAndUserId(string apartmentId, string userId)
         {
             var query = $"MATCH (c:{_label} {{ ApartmentId: $apartmentId, UserId: $userId }}) RETURN c LIMIT 1";
@@ -120,7 +120,7 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
             {
                 contractIds.Add(record["contractId"].As<string>());
 
-                lateInstallmentIds.Add(record["installment"].As<INode>().Id.ToString());
+                lateInstallmentIds.Add(record["installment"].As<INode>().ElementId);
             }
 
             if (!contractIds.Any())
@@ -155,5 +155,18 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
             return list;
         }
+        
+        public async Task<List<Contract>> GetByUserId(string userId)
+		{
+			var query = $"MATCH (d:{_label} {{ UserId: $userId }}) RETURN d";
+            await using var session = _context.Driver.AsyncSession();
+            var cursor = await session.RunAsync(query, new { userId });
+
+            var list = new List<Contract>();
+            await foreach (var record in cursor)
+                list.Add(record["d"].As<INode>().ToEntity<Contract>());
+
+            return list;
+		}
     }
 }

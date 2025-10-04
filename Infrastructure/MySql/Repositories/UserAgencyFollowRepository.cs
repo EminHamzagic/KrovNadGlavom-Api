@@ -33,5 +33,10 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		{
 			return await _context.UserAgencyFollows.Where(u => u.UserId == userId && u.AgencyId == agencyId).FirstOrDefaultAsync();
 		}
+
+		public async Task<List<UserAgencyFollow>> GetByUserId(string userId)
+		{
+			return await _context.UserAgencyFollows.Where(u => u.UserId == userId).ToListAsync();
+		}
     }
 }

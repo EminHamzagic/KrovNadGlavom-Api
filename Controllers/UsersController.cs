@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using krov_nad_glavom_api.Application.Commands.Users;
 using krov_nad_glavom_api.Application.Queries.Users;
+using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.Google;
 using krov_nad_glavom_api.Data.DTO.Installment;
 using krov_nad_glavom_api.Data.DTO.User;
@@ -142,6 +143,38 @@ namespace krov_nad_glavom_api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }        
+
+        [HttpGet("{id}/followings")]
+        public async Task<IActionResult> GetUserFollowings(string id)
+        {
+            try
+            {
+                var command = new GetUserFollowingsQuery(id);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("paginated")]
+        public async Task<IActionResult> GetUsersPaginated([FromQuery] QueryStringParameters parameters)
+        {
+            try
+            {
+                var command = new GetUsersPaginatedQuery(parameters);
+                var res = await _mediator.Send(command);
+                Response.Headers.Append("X-Pagination", res.getMetadata());
+                return Ok(res.Items);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -150,6 +183,27 @@ namespace krov_nad_glavom_api.Controllers
             try
             {
                 var command = new UpdateUserCommand(id, userToUpdateDto);
+                var res = await _mediator.Send(command);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/profile-status")]
+        public async Task<ActionResult<bool>> UpdateRegistrationRequest(string id, UserRegStatusUpdateDto dto)
+        {
+            try
+            {
+                var origin = Request.Headers["Origin"].ToString(); 
+                if (string.IsNullOrEmpty(origin))
+                {
+                    origin = $"{Request.Scheme}://{Request.Host}";
+                }
+                var command = new UpdateUserRegistrationStatusCommand(id, dto, origin);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }
@@ -176,13 +230,13 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
-
-        [HttpGet("{id}/followings")]
-        public async Task<IActionResult> GetUserFollowings(string id)
+        [AllowAnonymous]
+        [HttpPut("image")]
+        public async Task<IActionResult> SetUserPfp([FromForm] InstallmentProofToSendDto dto)
         {
             try
             {
-                var command = new GetUserFollowingsQuery(id);
+                var command = new SetUserProfileImageCommand(dto);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }
@@ -192,13 +246,13 @@ namespace krov_nad_glavom_api.Controllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPut("image")]
-        public async Task<IActionResult> SetUserPfp([FromForm] InstallmentProofToSendDto dto)
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
         {
             try
             {
-                var command = new SetUserProfileImageCommand(dto);
+                var command = new DeleteUserCommand(id);
                 var res = await _mediator.Send(command);
                 return Ok(res);
             }

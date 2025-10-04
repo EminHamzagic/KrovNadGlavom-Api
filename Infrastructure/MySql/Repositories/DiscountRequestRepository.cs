@@ -35,13 +35,18 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 		}
 
 		public async Task<DiscountRequest> GetByApartmentId(string apartmentId)
-        {
-            return await _context.DiscountRequests.Where(c => c.ApartmentId == apartmentId).FirstOrDefaultAsync();
-        }
+		{
+			return await _context.DiscountRequests.Where(c => c.ApartmentId == apartmentId).FirstOrDefaultAsync();
+		}
 
 		public async Task<DiscountRequest> GetByApartmentAndUserId(string apartmentId, string userId)
-        {
-            return await _context.DiscountRequests.Where(c => c.ApartmentId == apartmentId && c.UserId == userId).FirstOrDefaultAsync();
-        }
+		{
+			return await _context.DiscountRequests.Where(c => c.ApartmentId == apartmentId && c.UserId == userId).FirstOrDefaultAsync();
+		}
+		
+		public async Task<List<DiscountRequest>> GetByUserId(string userId)
+		{
+			return await _context.DiscountRequests.Where(d => d.UserId == userId).OrderByDescending(d => d.CreatedAt).ToListAsync();
+		}
 	}
 }

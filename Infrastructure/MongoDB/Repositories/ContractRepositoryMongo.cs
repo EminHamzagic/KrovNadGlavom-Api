@@ -106,5 +106,12 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
                     .ToListAsync();
             }
         }
+
+        public async Task<List<Contract>> GetByUserId(string userId)
+		{
+			return await _contracts
+                .Find(d => d.UserId == userId)
+                .ToListAsync();
+		}
     }
 }

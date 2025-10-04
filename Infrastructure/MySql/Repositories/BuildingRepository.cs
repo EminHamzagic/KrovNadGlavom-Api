@@ -82,5 +82,24 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
 
 			return (buildingsPage, totalCount, totalPages);
 		}
+
+		public async Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetBuildingsPage(QueryStringParameters parameters)
+		{
+			var buildingsQuery = _context.Buildings.Where(u => !u.IsDeleted).AsQueryable();
+
+			buildingsQuery = buildingsQuery.Filter(parameters).Sort(parameters);
+
+			var totalCount = buildingsQuery.Count();
+			parameters.checkOverflow(totalCount);
+
+			var buildingsPage = await buildingsQuery
+				.Skip((parameters.PageNumber - 1) * parameters.PageSize)
+				.Take(parameters.PageSize)
+				.ToListAsync();
+
+			var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+
+			return (buildingsPage, totalCount, totalPages);
+		}
     }
 }

@@ -11,5 +11,6 @@ namespace krov_nad_glavom_api.Application.Interfaces
         Task<Contract> GetContractByApartmentId(string apartmentId);
         Task<Contract> GetContractByApartmentIdAndUserId(string apartmentId, string userId);
         Task<List<Contract>> GetLatePaymentContracts(User user);
+        Task<List<Contract>> GetByUserId(string userId);
     }
 }

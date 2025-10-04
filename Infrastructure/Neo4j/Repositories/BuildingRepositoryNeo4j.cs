@@ -135,5 +135,32 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
             return (buildingsPage, totalCount, totalPages);
         }
+
+        public async Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetBuildingsPage(QueryStringParameters parameters)
+		{
+			await using var session = _context.Driver.AsyncSession();
+
+            // 2. Get buildings not in approved list
+            var cursor = await session.RunAsync(
+                $"MATCH (b:{_label}) WHERE b.IsDeleted = false RETURN b"
+            );
+            var buildings = (await cursor.ToListAsync())
+                .Select(r => r["b"].As<INode>().ToEntity<Building>())
+                .ToList();
+
+            // 3. Apply filtering and sorting
+            var filtered = buildings.AsQueryable().Filter(parameters).Sort(parameters).ToList();
+            var totalCount = filtered.Count;
+            parameters.checkOverflow(totalCount);
+
+            var buildingsPage = filtered
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+
+            return (buildingsPage, totalCount, totalPages);
+		}
     }
 }

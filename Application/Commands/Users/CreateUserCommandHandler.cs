@@ -14,11 +14,13 @@ namespace krov_nad_glavom_api.Application.Commands.Users
 		private readonly ISecurePasswordHasher _securePasswordHasher;
         private readonly IEmailService _emailService;
 		private readonly ITokenService _tokenService;
+		private readonly INotificationService _notificationService;
 
-		public CreateUserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ISecurePasswordHasher securePasswordHasher, IEmailService emailService, ITokenService tokenService)
+		public CreateUserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, ISecurePasswordHasher securePasswordHasher, IEmailService emailService, ITokenService tokenService, INotificationService notificationService)
         {
             _emailService = emailService;
 			_tokenService = tokenService;
+			_notificationService = notificationService;
 			_mapper = mapper;
 			_securePasswordHasher = securePasswordHasher;
 			_unitOfWork = unitOfWork;
@@ -34,6 +36,13 @@ namespace krov_nad_glavom_api.Application.Commands.Users
             user.Id = Guid.NewGuid().ToString();
             user.PasswordHash = _securePasswordHasher.Hash(request.UserToAddDto.Password);
             user.IsVerified = false;
+            if (user.Role == "Manager")
+            {
+                user.IsAllowed = false;
+                await _notificationService.SendNotificationsForManagerRegister(user);
+            }
+            else
+                user.IsAllowed = true;
 
             await _unitOfWork.Users.AddAsync(user);
 

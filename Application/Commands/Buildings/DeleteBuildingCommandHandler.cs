@@ -1,4 +1,5 @@
 using krov_nad_glavom_api.Application.Interfaces;
+using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Domain.Entities;
 using MediatR;
 
@@ -7,8 +8,10 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
     public class DeleteBuildingCommandHandler : IRequestHandler<DeleteBuildingCommand, Building>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public DeleteBuildingCommandHandler(IUnitOfWork unitOfWork)
+        private readonly INotificationService _notificationService;
+        public DeleteBuildingCommandHandler(IUnitOfWork unitOfWork, INotificationService notificationService)
         {
+            _notificationService = notificationService;
             _unitOfWork = unitOfWork;
         }
 
@@ -32,6 +35,8 @@ namespace krov_nad_glavom_api.Application.Commands.Buildings
                 item.IsDeleted = true;
                 _unitOfWork.Garages.Update(item);
             }
+
+            await _notificationService.SendNotificationsForBuildingDelete(building);
 
             _unitOfWork.Buildings.Update(building);
             await _unitOfWork.Save();

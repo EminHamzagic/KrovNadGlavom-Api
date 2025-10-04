@@ -18,5 +18,7 @@ namespace krov_nad_glavom_api.Application.Services.Interfaces
         Task<bool> SendNotificationsForNewAgencyFollow(UserAgencyFollow userAgencyFollow);
         Task<bool> SendNotificationsForLateContractInstllment(Contract contract);
         Task<bool> SendNotificationsForContractInvalidated(Contract contract);
+        Task<bool> SendNotificationsForBuildingDelete(Building building);
+        Task<bool> SendNotificationsForManagerRegister(User user);
     }
 }

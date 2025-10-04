@@ -36,6 +36,9 @@ namespace krov_nad_glavom_api.Application.Commands.Users
             if (!user.IsVerified)
                 throw new Exception("Profil nije verifikovan. Molimo vas varifikujte vaš profil");
 
+            if (!user.IsAllowed)
+                throw new Exception("Profil odobren od strane administratora. Molimo vas sačekajte odobrenje.");
+
             await _contractService.CheckUserContracts(user);
 
             var tokens = await _userSessionService.CreateUserSession(user);

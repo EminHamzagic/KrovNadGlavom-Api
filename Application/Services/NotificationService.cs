@@ -3,6 +3,7 @@ using krov_nad_glavom_api.Application.Services.Interfaces;
 using krov_nad_glavom_api.Application.Utils;
 using krov_nad_glavom_api.Data.DTO.AgencyRequest;
 using krov_nad_glavom_api.Domain.Entities;
+using ZstdSharp.Unsafe;
 
 namespace krov_nad_glavom_api.Application.Services
 {
@@ -355,10 +356,53 @@ namespace krov_nad_glavom_api.Application.Services
                                 <a href='/apartments/{contract.ApartmentId}' class='text-primary underline' target='_blank'>Stan</a> pod ovim ugovorom je ponovo u prodaji.",
                     CreatedAt = DateTime.Now
                 }
-			};
+            };
 
             await _unitOfWork.Notifications.AddRangeAsync(notifications);
             await _unitOfWork.Save();
+
+            return true;
+        }
+        
+        public async Task<bool> SendNotificationsForBuildingDelete(Building building)
+        {
+            var companyUser = await _unitOfWork.Users.GetUserByCompanyId(building.CompanyId);
+
+            var notification = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = companyUser.Id,
+                Label = NotificationsLabelEnum.Obaveštenje,
+                Title = "Zgrada uklonjena",
+                Message = $@"Zgrada sa brojem parcele {building.ParcelNumber} je uklonjena od strane administratora.",
+                CreatedAt = DateTime.Now
+            };
+
+            await _unitOfWork.Notifications.AddAsync(notification);
+            await _unitOfWork.Save();
+
+            return true;
+        }
+        
+        public async Task<bool> SendNotificationsForManagerRegister(User user)
+        {
+            var admin = await _unitOfWork.Users.GetUserByEmail("eminhamzagic7@gmail.com");
+
+            if (admin != null)
+            {
+                var notification = new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = admin.Id,
+                    Label = NotificationsLabelEnum.Obaveštenje,
+                    Title = "Novi zahtev za registraciju",
+                    Message = $@"Imate novi zahtev za registraciju " + (string.IsNullOrEmpty(user.AgencyId) ? "kompanije" : "agencije") + ". Kliknite <a href='/admin' class='text-primary underline' target='_blank'>ovde</a> da bi ste pregledali zahtev",
+                    CreatedAt = DateTime.Now
+                };
+
+                await _unitOfWork.Notifications.AddAsync(notification);
+                await _unitOfWork.Save();
+            }
 
             return true;
         }

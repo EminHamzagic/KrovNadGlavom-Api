@@ -106,5 +106,27 @@ namespace krov_nad_glavom_api.Infrastructure.MongoDB.Repositories
 
             return Task.FromResult((buildingsPage, totalCount, totalPages));
         }
+
+        public Task<(List<Building> buildingsPage, int totalCount, int totalPages)> GetBuildingsPage(QueryStringParameters parameters)
+		{
+			var buildingsQuery = _buildings
+                .AsQueryable()
+                .Where(u => !u.IsDeleted);
+
+            buildingsQuery = buildingsQuery.Filter(parameters).Sort(parameters);
+
+            var totalCount = buildingsQuery.Count();
+
+            parameters.checkOverflow(totalCount);
+
+            var buildingsPage = buildingsQuery
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
+
+            return Task.FromResult((buildingsPage, totalCount, totalPages));
+		}
     }
 }

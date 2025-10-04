@@ -87,5 +87,18 @@ namespace krov_nad_glavom_api.Infrastructure.Neo4j.Repositories
 
             return null;
         }
+
+        public async Task<List<DiscountRequest>> GetByUserId(string userId)
+		{
+			var query = $"MATCH (d:{_label} {{ UserId: $userId }}) RETURN d ORDER BY d.CreatedAt DESC";
+            await using var session = _context.Driver.AsyncSession();
+            var cursor = await session.RunAsync(query, new { userId});
+
+            var list = new List<DiscountRequest>();
+            await foreach (var record in cursor)
+                list.Add(record["d"].As<INode>().ToEntity<DiscountRequest>());
+
+            return list;
+		}
     }
 }

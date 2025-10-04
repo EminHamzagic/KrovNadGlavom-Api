@@ -28,7 +28,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
                 .ToListAsync();
 
             var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
-            
+
             return (contractsPage, totalCount, totalPages);
         }
 
@@ -45,7 +45,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
                 .ToListAsync();
 
             var totalPages = (int)Math.Ceiling((double)totalCount / parameters.PageSize);
-            
+
             return (contractsPage, totalCount, totalPages);
         }
 
@@ -58,7 +58,7 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
         {
             return await _context.Contracts.Where(c => c.ApartmentId == apartmentId && c.UserId == userId).FirstOrDefaultAsync();
         }
-        
+
         public async Task<List<Contract>> GetContractsByApartmentIds(List<string> ids)
         {
             return await _context.Contracts.Where(c => ids.Contains(c.ApartmentId) && c.Status != "Invalid").ToListAsync();
@@ -84,8 +84,13 @@ namespace krov_nad_glavom_api.Infrastructure.MySql.Repositories
                     return await _context.Contracts.Where(c => contractIds.Contains(c.Id) && c.AgencyId == user.AgencyId).ToListAsync();
                 }
             }
-            
+
             return new List<Contract>();
         }
+        
+        public async Task<List<Contract>> GetByUserId(string userId)
+		{
+			return await _context.Contracts.Where(u => u.UserId == userId).ToListAsync();
+		}
     }
 }
